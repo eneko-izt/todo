@@ -14,21 +14,18 @@ class CreateTasksTable extends Migration
      */
     public function up()
     {
-        // TODO: ordena, timespamps beti bukaeran
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
             $table->longText('text');
             $table->string('active')->default(false);
-            // TODO: ezin da nulable izan, beti norbaitek sortzen dut task bat Ikusi 14319 ataza
-            $table->unsignedBigInteger('user_id')->nullable(true);
-            // TODO: ezin da nulable izan, beti zutabe batean egon beharko du Ikusi 14319 ataza
-            $table->unsignedBigInteger('column_id')->nullable(true);
+            $table->integer('order')->default(0);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('column_id');
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('column_id')->references('id')->on('columns');
 
-            //TODO: order zutabea falta da Ikusi 14319 ataza
+            $table->timestamps();
         });
     }
 

@@ -13,10 +13,8 @@ class CreateTagTaskTable extends Migration
      */
     public function up()
     {
-        // TODO: ordena, timespamps beti bukaeran
         Schema::create('tag_task', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
             $table->unsignedBigInteger('tag_id');
             $table->unsignedBigInteger('task_id');
 
@@ -24,6 +22,8 @@ class CreateTagTaskTable extends Migration
 
             $table->foreign('tag_id')->references('id')->on('tags');
             $table->foreign('task_id')->references('id')->on('tasks');
+
+            $table->timestamps();
         });
     }
 

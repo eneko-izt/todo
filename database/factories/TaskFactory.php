@@ -9,7 +9,8 @@ $factory->define(Task::class, function (Faker $faker) {
     return [
         'text' => $faker->sentence,
         'active' => $faker->boolean,
-        // TODO: foreing keyak falta dira
+        'column_id' => App\Column::inRandomOrder()->first()->id,
+        'user_id' => App\User::inRandomOrder()->first()->id,
         'created_at' => now(),
         'updated_at' => now()
     ];

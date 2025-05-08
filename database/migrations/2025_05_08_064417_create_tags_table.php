@@ -13,12 +13,11 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        // TODO: ordena, timespamps beti bukaeran
         Schema::create('tags', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
             $table->string('name');
             $table->string('colour');
+            $table->timestamps();
         });
     }
 

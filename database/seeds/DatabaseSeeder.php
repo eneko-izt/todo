@@ -27,11 +27,13 @@ class DatabaseSeeder extends Seeder
             // Attach a random column to the task
             $task->column_id = App\Column::inRandomOrder()->first()->id;
             $task->save();
+        });
 
+        $tags = App\Tag::all();
+
+        App\Task::all()->each(function ($task) use ($tags) {
             // Attach random tags to the task
-            // TODO: rand???? eta 100 tag baldin badaude? Bakarrik lehengo hirurak erabiliko dira?
-            $tags = App\Tag::inRandomOrder()->take(rand(1, 3))->pluck('id');
-            $task->tags()->attach($tags);
+            $task->tags()->attach($tags->random(rand(1, 3))->pluck('id')->toArray());
         });
     }
 }

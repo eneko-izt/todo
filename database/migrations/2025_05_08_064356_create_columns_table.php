@@ -13,13 +13,12 @@ class CreateColumnsTable extends Migration
      */
     public function up()
     {
-        // TODO: ordena, timespamps beti bukaeran
         Schema::create('columns', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
             $table->string('name');
             $table->string('colour');
             $table->boolean('active')->default(false);
+            $table->timestamps();
         }
         );
     }
