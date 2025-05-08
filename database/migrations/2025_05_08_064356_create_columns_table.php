@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateColumnsTable extends Migration
 {
@@ -13,6 +13,7 @@ class CreateColumnsTable extends Migration
      */
     public function up()
     {
+        // TODO: ordena, timespamps beti bukaeran
         Schema::create('columns', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();

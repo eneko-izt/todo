@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             $task->save();
 
             // Attach random tags to the task
+            // TODO: rand???? eta 100 tag baldin badaude? Bakarrik lehengo hirurak erabiliko dira?
             $tags = App\Tag::inRandomOrder()->take(rand(1, 3))->pluck('id');
             $task->tags()->attach($tags);
         });
