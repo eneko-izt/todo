@@ -21,7 +21,7 @@
                         <div class="col-md-2 text-right">
                             <a href="{{ route('welcome') }}" class="btn btn-primary">Home</a>
                             <a href="{{ route('home') }}" class="btn btn-primary">Go to Dashboard</a>
-                            <a href="#" class="btn btn-primary">Columns</a>
+                            <a href="{{ route('columns') }}" class="btn btn-primary">Columns</a>
                             <a href="https://www.naiz.eus/" class="btn btn-primary">Naiz</a>
                         </div>
                     </div>
