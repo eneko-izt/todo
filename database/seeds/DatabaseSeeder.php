@@ -11,7 +11,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // Create a default user easy to remember
+        factory(App\User::class)->create([
+            'name' => 'izt',
+            'email' => 'izt@izt.com',
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => 'izt'
+            ]);
+
         // Create 10 users
+       
         factory(App\User::class, 10)->create();
 
         factory(App\Column::class, 3)->create();
