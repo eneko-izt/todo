@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+@section('breadcrumb')
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Columns</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
