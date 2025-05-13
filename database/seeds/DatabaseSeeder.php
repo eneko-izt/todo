@@ -45,5 +45,10 @@ class DatabaseSeeder extends Seeder
             // Attach random tags to the task
             $task->tags()->attach($tags->random(rand(1, 3))->pluck('id')->toArray());
         });
+
+        // create additional column with no tasks attached
+        factory(App\Column::class)->create([
+            'name' => 'No tasks'
+        ]);
     }
 }
