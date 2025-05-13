@@ -26,7 +26,7 @@ class ColumnsController extends Controller
      */
     public function index()
     {
-        $columns = Column::simplePaginate(1);
+        $columns = Column::simplePaginate(10);
         return view('columns', ['columns' => $columns]);
     }
 
