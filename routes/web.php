@@ -18,4 +18,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/columns', 'ColumnsController@index')->name('columns'); //TODO: normalean CRUD-etan erabiltzen diren name-ak dira columns.index, columns.create, .....
+Route::get('/columns', 'ColumnsController@index')->name('columns.index');

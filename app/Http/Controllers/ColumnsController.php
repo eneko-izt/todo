@@ -26,9 +26,8 @@ class ColumnsController extends Controller
      */
     public function index()
     {
-        $columns = Column::simplePaginate(10);
+        $columns = Column::withCount('tasks')->simplePaginate(10);
 
-        //TODO: kontsulta errepikatuak daude, abisatu ta azaltzen dizut
-        return view('columns', ['columns' => $columns]); //TODO: sinplifikatzeko, parametroak pasatzeko bistetara egin dezakezu compact('columns')
+        return view('columns/index', compact('columns'));
     }
 }

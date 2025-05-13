@@ -16,11 +16,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'izt',
             'email' => 'izt@izt.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt('izt'),
             'remember_token' => 'izt'
             ]);
-        
-            //TODO: bilatu nola gorde pasaworda bcrypt moduan
 
         // Create 10 users
        
