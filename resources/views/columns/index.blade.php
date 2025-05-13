@@ -10,8 +10,6 @@
 </nav>
 @endsection
 
-{{-- //TODO: active eremua falta da --}}
-
 @section('content')
 <div class="container">
     <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
@@ -19,6 +17,7 @@
             <tr>
                 <th>Column</th>
                 <th>Colour</th>
+                <th>Active</th>
                 <th></th>
                 <th></th>
             </tr> 
@@ -27,6 +26,7 @@
             <tr>
                 <td>{{ $column->name()}}</td>
                 <td class="p-2 text-white badge mr-5" style="background-color: {{ $column->colour}};">{{ $column->colour}}</td>
+                <td>{{ $column->active}}</td>
                 <td><button>Edit</button></td>
                 @if ($column->tasks_count == 0)
                     <td><button>Delete</button></td>
