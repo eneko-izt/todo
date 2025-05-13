@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Column;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ColumnsController extends Controller
 {
@@ -27,7 +27,8 @@ class ColumnsController extends Controller
     public function index()
     {
         $columns = Column::simplePaginate(10);
-        return view('columns', ['columns' => $columns]);
-    }
 
+        //TODO: kontsulta errepikatuak daude, abisatu ta azaltzen dizut
+        return view('columns', ['columns' => $columns]); //TODO: sinplifikatzeko, parametroak pasatzeko bistetara egin dezakezu compact('columns')
+    }
 }

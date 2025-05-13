@@ -10,6 +10,12 @@
 </nav>
 @endsection
 
+{{-- TODO: active eremua falta da --}}
+{{-- TODO: Col 3 izenburuak kendu --}}
+{{-- TODO: Col 4 sobran dago --}}
+{{-- TODO: nonbaiten, Column zutabearen gainean koma bat agertzen da --}}
+{{-- TODO: zaindu identazioa, errazagoa da kodea irakurtzea --}}
+
 @section('content')
 <div class="container">
     <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
