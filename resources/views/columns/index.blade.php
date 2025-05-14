@@ -10,8 +10,8 @@
     </nav>
 
     <div class="d-flex justify-content-between">
-        <button>New</button>
-        <button>Recycle bin</button>
+        <a href="#" class="btn btn-primary btn-sm">New</a>
+        <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm">Trash</a>
     </div>
 @endsection
 

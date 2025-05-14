@@ -35,7 +35,7 @@
                         </td>
                         <td>{{ $column->active }}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm">Restore</button>
+                            <a class="btn btn-primary btn-sm">Restore</a>
                         </td>
                     </tr>
 
