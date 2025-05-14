@@ -51,9 +51,5 @@ class DatabaseSeeder extends Seeder
             'name' => 'No tasks'
         ]);
 
-        factory(App\Column::class, 20)->create()->each(function ($column) {
-            // Attach a random user to the column
-            $column->delete();
-        });
     }
 }
