@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Column;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class ColumnsController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        $columns = Column::withCount('tasks')->simplePaginate(10);
+
+        return view('columns.index', compact('columns'));
+    }
+}
