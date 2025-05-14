@@ -26,7 +26,7 @@ class ColumnsController extends Controller
      */
     public function index()
     {
-        $columns = Column::withCount('tasks')->simplePaginate(10);
+        $columns = Column::withCount('tasks')->paginate(10);
 
         return view('columns.index', compact('columns'));
     }

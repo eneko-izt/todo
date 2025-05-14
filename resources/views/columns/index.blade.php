@@ -5,9 +5,14 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Columns</li>
+            <li class="breadcrumb-item active" aria-current="page">Columns ({{ $columns->total() }})</li>
         </ol>
     </nav>
+
+    <div class="d-flex justify-content-between">
+        <button>New</button>
+        <button>Recycle bin</button>
+    </div>
 @endsection
 
 @section('content')
