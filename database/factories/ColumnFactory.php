@@ -13,4 +13,6 @@ $factory->define(Column::class, function (Faker $faker) {
         'created_at' => now(),
         'updated_at' => now()
     ];
+    // TODO: deleted_at osatzea falta da, aleatorioki null edo datatime bat, horrela Seederrean aparte gehitutakoak ez dira behar 
+    // eta logika mantentzeko, ezabatuta dauden zutabeak ezin dute eduki taks-ik.
 });
