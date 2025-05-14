@@ -28,6 +28,6 @@ class ColumnsController extends Controller
     {
         $columns = Column::withCount('tasks')->simplePaginate(10);
 
-        return view('columns/index', compact('columns'));
+        return view('columns.index', compact('columns'));
     }
 }
