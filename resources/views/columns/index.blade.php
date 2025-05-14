@@ -5,7 +5,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Columns ({{$columns->total()}})</li>
+            <li class="breadcrumb-item active" aria-current="page">Columns ({{ $columns->total() }})</li>
         </ol>
     </nav>
 

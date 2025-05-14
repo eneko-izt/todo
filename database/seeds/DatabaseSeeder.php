@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => bcrypt('pasahitza'),
             'remember_token' => ''
-            ]);
+        ]);
 
         // Create 10 users
-       
+
         factory(App\User::class, 10)->create();
 
         factory(App\Column::class, 30)->create();
