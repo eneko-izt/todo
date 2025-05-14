@@ -30,4 +30,11 @@ class ColumnsController extends Controller
 
         return view('columns.index', compact('columns'));
     }
+
+    public function trash()
+    {
+        $columns = Column::onlyTrashed()->paginate(10);
+
+        return view('columns.trash', compact('columns'));
+    }
 }

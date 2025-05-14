@@ -50,5 +50,6 @@ class DatabaseSeeder extends Seeder
         factory(App\Column::class)->create([
             'name' => 'No tasks'
         ]);
+
     }
 }

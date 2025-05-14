@@ -5,14 +5,10 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Columns ({{ $columns->total() }})</li>
+            <li class="breadcrumb-item"><a href="{{ route('columns.index') }}">Columns</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->total() }})</li>
         </ol>
     </nav>
-
-    <div class="d-flex justify-content-between">
-        <a href="#" class="btn btn-primary btn-sm">New</a>
-        <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm">Trash</a>
-    </div>
 @endsection
 
 @section('content')
@@ -39,10 +35,7 @@
                         </td>
                         <td>{{ $column->active }}</td>
                         <td>
-                            <button>Edit</button>
-                            @if ($column->tasks_count == 0)
-                                <button>Delete</button>
-                            @endif
+                            <a class="btn btn-primary btn-sm">Restore</a>
                         </td>
                     </tr>
 

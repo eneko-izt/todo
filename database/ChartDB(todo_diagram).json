@@ -1,8 +1,8 @@
 {
   "id": "0",
   "name": "todo_diagram",
-  "createdAt": "2025-05-09T06:48:29.763Z",
-  "updatedAt": "2025-05-09T06:48:29.763Z",
+  "createdAt": "2025-05-14T12:46:58.409Z",
+  "updatedAt": "2025-05-14T12:46:58.409Z",
   "databaseType": "mysql",
   "tables": [
     {
@@ -86,7 +86,7 @@
         },
         {
           "id": "8",
-          "name": "timestamps",
+          "name": "created_at",
           "type": {
             "id": "timestamp",
             "name": "timestamp"
@@ -95,6 +95,18 @@
           "nullable": true,
           "primaryKey": false,
           "createdAt": 1746709548682
+        },
+        {
+          "id": "9",
+          "name": "updated_at",
+          "type": {
+            "id": "timestamp",
+            "name": "timestamp"
+          },
+          "unique": false,
+          "nullable": true,
+          "primaryKey": false,
+          "createdAt": 1746709566249
         }
       ],
       "indexes": [],
@@ -106,13 +118,13 @@
       "width": 224
     },
     {
-      "id": "9",
+      "id": "10",
       "name": "Columns",
       "x": -1120.2499999999995,
       "y": -338.625,
       "fields": [
         {
-          "id": "10",
+          "id": "11",
           "name": "id",
           "type": {
             "id": "bigint",
@@ -124,7 +136,7 @@
           "createdAt": 1746707083165
         },
         {
-          "id": "11",
+          "id": "12",
           "name": "name",
           "type": {
             "id": "varchar",
@@ -137,7 +149,7 @@
           "characterMaximumLength": ""
         },
         {
-          "id": "12",
+          "id": "13",
           "name": "colour",
           "type": {
             "id": "varchar",
@@ -150,7 +162,7 @@
           "characterMaximumLength": ""
         },
         {
-          "id": "13",
+          "id": "14",
           "name": "active",
           "type": {
             "id": "boolean",
@@ -162,8 +174,8 @@
           "createdAt": 1746707284383
         },
         {
-          "id": "14",
-          "name": "timestamps",
+          "id": "15",
+          "name": "created_at",
           "type": {
             "id": "timestamp",
             "name": "timestamp"
@@ -172,6 +184,30 @@
           "nullable": true,
           "primaryKey": false,
           "createdAt": 1746709722891
+        },
+        {
+          "id": "16",
+          "name": "modified_at",
+          "type": {
+            "id": "timestamp",
+            "name": "timestamp"
+          },
+          "unique": false,
+          "nullable": true,
+          "primaryKey": false,
+          "createdAt": 1747226555335
+        },
+        {
+          "id": "17",
+          "name": "deleted_at",
+          "type": {
+            "id": "timestamp",
+            "name": "timestamp"
+          },
+          "unique": false,
+          "nullable": true,
+          "primaryKey": false,
+          "createdAt": 1747226567834
         }
       ],
       "indexes": [],
@@ -182,13 +218,13 @@
       "diagramId": "phpuwu8eyvwb"
     },
     {
-      "id": "15",
+      "id": "18",
       "name": "Tags",
       "x": -105.99999999999977,
       "y": -674.625,
       "fields": [
         {
-          "id": "16",
+          "id": "19",
           "name": "id",
           "type": {
             "id": "bigint",
@@ -200,7 +236,7 @@
           "createdAt": 1746707306463
         },
         {
-          "id": "17",
+          "id": "20",
           "name": "name",
           "type": {
             "id": "varchar",
@@ -212,7 +248,7 @@
           "createdAt": 1746707328215
         },
         {
-          "id": "18",
+          "id": "21",
           "name": "colour",
           "type": {
             "id": "varchar",
@@ -222,11 +258,23 @@
           "nullable": false,
           "primaryKey": false,
           "createdAt": 1746707404661,
-          "characterMaximumLength": ""
+          "characterMaximumLength": "255"
         },
         {
-          "id": "19",
-          "name": "timestamps",
+          "id": "22",
+          "name": "active",
+          "type": {
+            "id": "boolean",
+            "name": "boolean"
+          },
+          "unique": false,
+          "nullable": false,
+          "primaryKey": false,
+          "createdAt": 1747226698081
+        },
+        {
+          "id": "23",
+          "name": "created_at",
           "type": {
             "id": "timestamp",
             "name": "timestamp"
@@ -234,7 +282,19 @@
           "unique": false,
           "nullable": true,
           "primaryKey": false,
-          "createdAt": 1746773032547
+          "createdAt": 1747226716363
+        },
+        {
+          "id": "24",
+          "name": "updated_at",
+          "type": {
+            "id": "timestamp",
+            "name": "timestamp"
+          },
+          "unique": false,
+          "nullable": true,
+          "primaryKey": false,
+          "createdAt": 1747226726317
         }
       ],
       "indexes": [],
@@ -245,72 +305,10 @@
       "diagramId": "phpuwu8eyvwb"
     },
     {
-      "id": "20",
+      "id": "25",
       "name": "tag_task",
       "x": -430.625,
       "y": -707.125,
-      "fields": [
-        {
-          "id": "21",
-          "name": "id",
-          "type": {
-            "id": "bigint",
-            "name": "bigint"
-          },
-          "unique": true,
-          "nullable": false,
-          "primaryKey": true,
-          "createdAt": 1746708427960
-        },
-        {
-          "id": "22",
-          "name": "tag_id",
-          "type": {
-            "id": "bigint",
-            "name": "bigint"
-          },
-          "unique": false,
-          "nullable": false,
-          "primaryKey": false,
-          "createdAt": 1746708447031
-        },
-        {
-          "id": "23",
-          "name": "task_id",
-          "type": {
-            "id": "bigint",
-            "name": "bigint"
-          },
-          "unique": false,
-          "nullable": false,
-          "primaryKey": false,
-          "createdAt": 1746708577017
-        },
-        {
-          "id": "24",
-          "name": "timestamps",
-          "type": {
-            "id": "timestamp",
-            "name": "timestamp"
-          },
-          "unique": false,
-          "nullable": true,
-          "primaryKey": false,
-          "createdAt": 1746773178842
-        }
-      ],
-      "indexes": [],
-      "color": "#ff6363",
-      "createdAt": 1746708427960,
-      "isView": false,
-      "order": 4,
-      "diagramId": "phpuwu8eyvwb"
-    },
-    {
-      "id": "25",
-      "name": "Tasks",
-      "x": -782.7499999999999,
-      "y": -643.875,
       "fields": [
         {
           "id": "26",
@@ -322,10 +320,60 @@
           "unique": true,
           "nullable": false,
           "primaryKey": true,
-          "createdAt": 1746707451232
+          "createdAt": 1746708427960
         },
         {
           "id": "27",
+          "name": "tag_id",
+          "type": {
+            "id": "bigint",
+            "name": "bigint"
+          },
+          "unique": false,
+          "nullable": false,
+          "primaryKey": false,
+          "createdAt": 1746708447031
+        },
+        {
+          "id": "28",
+          "name": "task_id",
+          "type": {
+            "id": "bigint",
+            "name": "bigint"
+          },
+          "unique": false,
+          "nullable": false,
+          "primaryKey": false,
+          "createdAt": 1746708577017
+        }
+      ],
+      "indexes": [],
+      "color": "#ff6363",
+      "createdAt": 1746708427960,
+      "isView": false,
+      "order": 4,
+      "diagramId": "phpuwu8eyvwb"
+    },
+    {
+      "id": "29",
+      "name": "Tasks",
+      "x": -782.7499999999999,
+      "y": -643.875,
+      "fields": [
+        {
+          "id": "30",
+          "name": "id",
+          "type": {
+            "id": "bigint",
+            "name": "bigint"
+          },
+          "unique": true,
+          "nullable": false,
+          "primaryKey": true,
+          "createdAt": 1746707451232
+        },
+        {
+          "id": "31",
           "name": "text",
           "type": {
             "id": "longtext",
@@ -337,7 +385,7 @@
           "createdAt": 1746707482800
         },
         {
-          "id": "28",
+          "id": "32",
           "name": "active",
           "type": {
             "id": "boolean",
@@ -349,7 +397,7 @@
           "createdAt": 1746707516981
         },
         {
-          "id": "29",
+          "id": "33",
           "name": "order",
           "type": {
             "id": "int",
@@ -358,10 +406,10 @@
           "unique": false,
           "nullable": false,
           "primaryKey": false,
-          "createdAt": 1746773105209
+          "createdAt": 1747226618302
         },
         {
-          "id": "30",
+          "id": "34",
           "name": "user_id",
           "type": {
             "id": "bigint",
@@ -373,7 +421,7 @@
           "createdAt": 1746708123044
         },
         {
-          "id": "31",
+          "id": "35",
           "name": "columnd_id",
           "type": {
             "id": "bigint",
@@ -385,8 +433,8 @@
           "createdAt": 1746708133191
         },
         {
-          "id": "32",
-          "name": "timestamps",
+          "id": "36",
+          "name": "created_at",
           "type": {
             "id": "timestamp",
             "name": "timestamp"
@@ -394,7 +442,19 @@
           "unique": false,
           "nullable": true,
           "primaryKey": false,
-          "createdAt": 1746709834847
+          "createdAt": 1747226647855
+        },
+        {
+          "id": "37",
+          "name": "updated_at",
+          "type": {
+            "id": "timestamp",
+            "name": "timestamp"
+          },
+          "unique": false,
+          "nullable": true,
+          "primaryKey": false,
+          "createdAt": 1747226659098
         }
       ],
       "indexes": [],
@@ -407,47 +467,47 @@
   ],
   "relationships": [
     {
-      "id": "33",
+      "id": "38",
       "name": "tag_task_tag_id_fk",
-      "sourceTableId": "20",
-      "targetTableId": "15",
-      "sourceFieldId": "22",
-      "targetFieldId": "16",
+      "sourceTableId": "25",
+      "targetTableId": "18",
+      "sourceFieldId": "27",
+      "targetFieldId": "19",
       "sourceCardinality": "many",
       "targetCardinality": "one",
       "createdAt": 1746708635358,
       "diagramId": "phpuwu8eyvwb"
     },
     {
-      "id": "34",
+      "id": "39",
       "name": "tag_task_task_id_fk",
-      "sourceTableId": "20",
-      "targetTableId": "25",
-      "sourceFieldId": "23",
-      "targetFieldId": "26",
+      "sourceTableId": "25",
+      "targetTableId": "29",
+      "sourceFieldId": "28",
+      "targetFieldId": "30",
       "sourceCardinality": "many",
       "targetCardinality": "one",
       "createdAt": 1746708723253,
       "diagramId": "phpuwu8eyvwb"
     },
     {
-      "id": "35",
+      "id": "40",
       "name": "Tasks_columnd_id_fk",
-      "sourceTableId": "25",
-      "targetTableId": "9",
-      "sourceFieldId": "31",
-      "targetFieldId": "10",
+      "sourceTableId": "29",
+      "targetTableId": "10",
+      "sourceFieldId": "35",
+      "targetFieldId": "11",
       "sourceCardinality": "many",
       "targetCardinality": "one",
       "createdAt": 1746708394130,
       "diagramId": "phpuwu8eyvwb"
     },
     {
-      "id": "36",
+      "id": "41",
       "name": "Tasks_user_id_fk",
-      "sourceTableId": "25",
+      "sourceTableId": "29",
       "targetTableId": "1",
-      "sourceFieldId": "30",
+      "sourceFieldId": "34",
       "targetFieldId": "2",
       "sourceCardinality": "many",
       "targetCardinality": "one",
