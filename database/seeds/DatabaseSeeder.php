@@ -13,23 +13,23 @@ class DatabaseSeeder extends Seeder
     {
         // Create a default user easy to remember
         factory(App\User::class)->create([
-            'name' => 'izt',
-            'email' => 'izt@izt.com',
+            'name' => 'admin',
+            'email' => 'admin@izt.eus',
             'email_verified_at' => now(),
-            'password' => bcrypt('izt'),
-            'remember_token' => 'izt'
-            ]);
+            'password' => bcrypt('pasahitza'),
+            'remember_token' => ''
+        ]);
 
         // Create 10 users
-       
+
         factory(App\User::class, 10)->create();
 
-        factory(App\Column::class, 3)->create();
+        factory(App\Column::class, 30)->create();
 
         factory(App\Tag::class, 10)->create();
 
 
-        factory(App\Task::class, 20)->create()->each(function ($task) {
+        factory(App\Task::class, 40)->create()->each(function ($task) {
             // Attach a random user to the task
             $task->user_id = App\User::inRandomOrder()->first()->id;
             $task->save();
