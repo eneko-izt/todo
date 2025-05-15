@@ -23,15 +23,17 @@
                 <label class="label" for="name">Name</label>
                 <div class="control">
                     <input 
-                        class="input @error('name') is-danger @enderror"
+                        class="input @error('name') help is-danger @enderror"
                         type="text" 
                         name="name" 
                         id="name" 
-                        maxlength="255" 
+                        value="{{ old('name') }}"
+                        maxlength="255"
+                        style="@error('name') color:#d8000c @enderror"
                         required>
 
                     @error('name')
-                        <p class="help is-danger">{{ $errors->first('name') }}</p>
+                        <p class="help is-danger" style="color:#d8000c">{{ $errors->first('name') }}</p>
                     @enderror
                 </div>
             </div>
@@ -43,11 +45,13 @@
                         type="text" 
                         name="colour" 
                         id="colour" 
+                        value="{{ old('colour') }}"
                         maxlength="10" 
+                        style="@error('colour') color:#d8000c @enderror"
                         required>
 
                     @error('colour')
-                        <p class="help is-danger">{{ $errors->first('colour') }}</p>
+                        <p class="help is-danger" style="color:#d8000c">{{ $errors->first('colour') }}</p>
                     @enderror
                 </div>
             </div>
