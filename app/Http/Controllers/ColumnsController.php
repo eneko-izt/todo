@@ -58,7 +58,7 @@ class ColumnsController extends Controller
     protected function validateColumn()
     {
         return request()->validate([
-            'name' => ['required', 'max:255'],
+            'name' => ['required', 'unique:columns', 'max:255'],
             'colour' => 'required|max:10'
         ]);
     }
