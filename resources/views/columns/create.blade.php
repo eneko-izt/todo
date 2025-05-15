@@ -29,6 +29,10 @@
                         id="name" 
                         maxlength="255" 
                         required>
+
+                    @error('name')
+                        <p class="help is-danger">{{ $errors->first('name') }}</p>
+                    @enderror
                 </div>
             </div>
             <div class="field">
@@ -41,6 +45,10 @@
                         id="colour" 
                         maxlength="10" 
                         required>
+
+                    @error('colour')
+                        <p class="help is-danger">{{ $errors->first('colour') }}</p>
+                    @enderror
                 </div>
             </div>
             <div class="field">
