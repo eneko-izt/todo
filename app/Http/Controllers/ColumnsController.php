@@ -37,4 +37,9 @@ class ColumnsController extends Controller
 
         return view('columns.trash', compact('columns'));
     }
+
+    public function create()
+    {
+        return view('columns.create');
+    }
 }
