@@ -20,3 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/columns', 'ColumnsController@index')->name('columns.index');
 Route::get('/columns/trash', 'ColumnsController@trash')->name('columns.trash');
+Route::get('/columns/create', 'ColumnsController@create')->name('columns.create');
