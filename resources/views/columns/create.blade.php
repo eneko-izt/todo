@@ -14,29 +14,47 @@
 @section('content')
 
     <div class="container">
-        <div class="field">
-            <label class="label" for="name">Name</label>
-            <div class="control">
-                <input class="input" type="text" name="name" id="name" maxlength="255" required>
+        <h1 class="title">New Column</h1>
+
+        <form action="{{ route('columns.store') }}" method="POST">
+            @csrf
+            
+            <div class="field">
+                <label class="label" for="name">Name</label>
+                <div class="control">
+                    <input 
+                        class="input @error('name') is-danger @enderror"
+                        type="text" 
+                        name="name" 
+                        id="name" 
+                        maxlength="255" 
+                        required>
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <label class="label" for="colour">Colour</label>
-            <div class="control">
-                <input class="input" type="text" name="colour" id="colour" maxlength="10" required>
+            <div class="field">
+                <label class="label" for="colour">Colour</label>
+                <div class="control">
+                    <input 
+                        class="input @error('colour') is-danger @enderror"
+                        type="text" 
+                        name="colour" 
+                        id="colour" 
+                        maxlength="10" 
+                        required>
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <input type="checkbox" name="active" id="active" checked>
-                <label class="label" for="active">Active</label>
+            <div class="field">
+                <div class="control">
+                    <input type="checkbox" name="active" id="active" checked>
+                    <label class="label" for="active">Active</label>
+                </div>
             </div>
-        </div>
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link" type="">New</button>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit">Create</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
 @endsection

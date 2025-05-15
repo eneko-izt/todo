@@ -42,4 +42,24 @@ class ColumnsController extends Controller
     {
         return view('columns.create');
     }
+
+    public function store()
+    {
+        $this->validateColumn();
+
+        $column = new Column(request(['name', 'colour']));
+        $column->active = request('active') == 'on' ? 1 : 0;
+
+        $column->save();
+
+        return redirect(route("columns.index"));
+    }
+
+    protected function validateColumn()
+    {
+        return request()->validate([
+            'name' => 'required',
+            'colour' => 'required'
+        ]);
+    }
 }
