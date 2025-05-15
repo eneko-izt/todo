@@ -57,7 +57,8 @@
             </div>
             <div class="field">
                 <div class="control">
-                    <input type="checkbox" name="active" id="active" checked>
+                    <input type="checkbox" name="active" {{ ( empty(old('active')) && !empty(old('submit')) ? '' : ' checked' ) }}>
+                    <input type="hidden" name="submit" value="submit">
                     <label class="label" for="active">Active</label>
                 </div>
             </div>
