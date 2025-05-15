@@ -22,3 +22,4 @@ Route::get('/columns', 'ColumnsController@index')->name('columns.index');
 Route::post('/columns', 'ColumnsController@store')->name('columns.store');
 Route::get('/columns/trash', 'ColumnsController@trash')->name('columns.trash');
 Route::get('/columns/create', 'ColumnsController@create')->name('columns.create');
+//TODO: rutak ordenatu controllerean bezala index, transh, create, store, edit, update.... horrela errezagoa da bilatzea
