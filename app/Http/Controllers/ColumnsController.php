@@ -68,13 +68,6 @@ class ColumnsController extends Controller
     {
         $this->validateColumn(true);
 
-        // $column = new Column();
-        // $column->name = request('name');
-        // $column->colour = request('colour');
-        // $column->active = request('active') == 'on' ? 1 : 0;
-
-        // $column->save();
-
         return redirect(route("columns.index"));
     }
 
