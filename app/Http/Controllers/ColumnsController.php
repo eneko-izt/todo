@@ -40,7 +40,11 @@ class ColumnsController extends Controller
 
     public function create()
     {
-        return view('columns.create');
+        return $this->loadEditView(new Column([
+            'name' => '',
+            'colour' => '',
+            'active' => 1
+        ]));
     }
 
     public function store()
@@ -55,11 +59,42 @@ class ColumnsController extends Controller
         return redirect(route("columns.index"));
     }
 
-    protected function validateColumn()
+    public function edit($id)
     {
-        return request()->validate([
-            'name' => ['required', 'unique:columns', 'max:255'],
+        return $this->loadEditView(Column::findOrFail($id));
+    }
+
+    public function update()
+    {
+        $this->validateColumn(true);
+
+        // $column = new Column();
+        // $column->name = request('name');
+        // $column->colour = request('colour');
+        // $column->active = request('active') == 'on' ? 1 : 0;
+
+        // $column->save();
+
+        return redirect(route("columns.index"));
+    }
+
+
+    protected function loadEditView(Column $column)
+    {
+        return view('columns.edit')->withColumn($column);
+    }
+
+    protected function validateColumn(bool $update = false)
+    {
+        $array = [
+            'name' => ['required', 'max:255'],
             'colour' => 'required|max:10'
-        ]);
+        ];
+
+        if (!$update) {
+            $array['name'][] = 'unique:columns';
+        }
+
+        return request()->validate($array);
     }
 }

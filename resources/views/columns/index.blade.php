@@ -39,7 +39,9 @@
                         </td>
                         <td>{{ $column->active }}</td>
                         <td>
-                            <button>Edit</button>
+                            <a class="btn btn-primary btn-sm" href='{{ route('columns.edit', $column->id) }}'">
+                                Edit
+                            </a>
                             @if ($column->tasks_count == 0)
                                 <button>Delete</button>
                             @endif
