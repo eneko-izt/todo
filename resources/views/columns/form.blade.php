@@ -27,7 +27,7 @@
                         type="text" 
                         name="name" 
                         id="name" 
-                        value="{{ old('name') }}"
+                        value="{{ old('name', $column->name ?? '') }}"
                         maxlength="255"
                         style="@error('name') color:#d8000c @enderror"
                         required>

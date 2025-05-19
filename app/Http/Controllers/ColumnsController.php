@@ -43,8 +43,9 @@ class ColumnsController extends Controller
         $title = 'New column';
         $button = 'Create';
         $route = route('columns.store');
+        $column = new Column();
         
-       return view('columns.form', compact('title', 'button', 'route'));
+       return view('columns.form', compact('title', 'button', 'route', 'column'));
     }
 
     public function store()
@@ -61,10 +62,10 @@ class ColumnsController extends Controller
 
     public function edit($id)
     {
-        $column = Column::findOrFail($id);
         $title = 'Edit column';
         $button = 'Edit';
         $route = route('columns.update', $id);
+        $column = Column::findOrFail($id);
 
         return view('columns.form', compact('title', 'button', 'route', 'column'));
     }
