@@ -45,7 +45,7 @@
                         type="text" 
                         name="colour" 
                         id="colour" 
-                        value="{{ old('colour') }}"
+                        value="{{ old('colour', $column->colour ?? '') }}"
                         maxlength="10" 
                         style="@error('colour') color:#d8000c @enderror"
                         required>
@@ -57,8 +57,18 @@
             </div>
             <div class="field">
                 <div class="control">
-                    <input type="checkbox" name="active" {{ ( empty(old('active')) && !empty(old('submit')) ? '' : ' checked' ) }}>
-                    <input type="hidden" name="submit" value="submit">
+                    <input 
+                        type="checkbox" 
+                        name="active" 
+                        @if (old('active') == 'on' && !$column->exists)
+                            checked
+                        @elseif (old('active') == null && !$column->exists && $errors->isEmpty())
+                            checked
+                        @elseif ($column->exists && $column->active ) //TODO: check if this is correct  
+                            checked
+                        @endif
+                        
+                    >
                     <label class="label" for="active">Active</label>
                 </div>
             </div>
