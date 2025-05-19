@@ -22,3 +22,5 @@ Route::get('/columns', 'ColumnsController@index')->name('columns.index');
 Route::get('/columns/trash', 'ColumnsController@trash')->name('columns.trash');
 Route::get('/columns/create', 'ColumnsController@create')->name('columns.create');
 Route::post('/columns', 'ColumnsController@store')->name('columns.store');
+Route::get('/columns/edit/{id}', 'ColumnsController@edit')->name('columns.edit');
+Route::post('/columns/{id}', 'ColumnsController@update')->name('columns.update');

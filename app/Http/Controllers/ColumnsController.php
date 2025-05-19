@@ -40,7 +40,11 @@ class ColumnsController extends Controller
 
     public function create()
     {
-        return view('columns.create');
+        $title = 'New column';
+        $button = 'Create';
+        $route = route('columns.store');
+        
+       return view('columns.form', compact('title', 'button', 'route'));
     }
 
     public function store()
@@ -53,6 +57,16 @@ class ColumnsController extends Controller
         $column->save();
 
         return redirect(route("columns.index"));
+    }
+
+    public function edit($id)
+    {
+        $column = Column::findOrFail($id);
+        $title = 'Edit column';
+        $button = 'Edit';
+        $route = route('columns.update', $id);
+
+        return view('columns.form', compact('title', 'button', 'route', 'column'));
     }
 
     protected function validateColumn()
