@@ -63,11 +63,23 @@ class ColumnsController extends Controller
     public function edit($id)
     {
         $title = 'Edit column';
-        $button = 'Edit';
+        $button = 'Save';
         $route = route('columns.update', $id);
         $column = Column::findOrFail($id);
 
         return view('columns.form', compact('title', 'button', 'route', 'column'));
+    }
+
+    public function update($id)
+    {
+        $this->validateColumn();
+
+        $column = new Column(request(['name', 'colour']));
+        $column->active = request('active') == 'on' ? 1 : 0;
+
+        // $column->save();
+
+        return redirect(route("columns.index"));
     }
 
     protected function validateColumn()
