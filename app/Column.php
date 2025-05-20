@@ -19,7 +19,7 @@ class Column extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function name()
+    public function getUpperName()
     {
         return Str::upper($this->name);
     }

@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ route('columns.index') }}">Columns</a></li>
-            <li class="breadcrumb-item active" aria-current="page">New</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
         </ol>
     </nav>
 @endsection
@@ -14,9 +14,9 @@
 @section('content')
 
     <div class="container">
-        <h1 class="title">New Column</h1>
+        <h1 class="title">{{ $title }}</h1>
 
-        <form action="{{ route('columns.store') }}" method="POST">
+        <form action="{{ $route }}" method="POST">
             @csrf
             
             <div class="field">
@@ -27,7 +27,7 @@
                         type="text" 
                         name="name" 
                         id="name" 
-                        value="{{ old('name') }}"
+                        value="{{ old('name', $column->name ?? '') }}"
                         maxlength="255"
                         style="@error('name') color:#d8000c @enderror"
                         required>
@@ -45,7 +45,7 @@
                         type="text" 
                         name="colour" 
                         id="colour" 
-                        value="{{ old('colour') }}"
+                        value="{{ old('colour', $column->colour ?? '') }}"
                         maxlength="10" 
                         style="@error('colour') color:#d8000c @enderror"
                         required>
@@ -57,14 +57,24 @@
             </div>
             <div class="field">
                 <div class="control">
-                    <input type="checkbox" name="active" {{ ( empty(old('active')) && !empty(old('submit')) ? '' : ' checked' ) }}>
-                    <input type="hidden" name="submit" value="submit">
+                    <input 
+                        type="checkbox" 
+                        name="active" 
+                        @if (old('active') == 'on' && !$column->exists)
+                            checked
+                        @elseif (old('active') == null && !$column->exists && $errors->isEmpty())
+                            checked
+                        @elseif ($column->exists && $column->active ) //TODO: check if this is correct  
+                            checked
+                        @endif
+                        
+                    >
                     <label class="label" for="active">Active</label>
                 </div>
             </div>
             <div class="field is-grouped">
                 <div class="control">
-                    <button class="button is-link" type="submit">Create</button>
+                    <button class="button is-link" type="submit">{{$button}}</button>
                 </div>
             </div>
         </form>

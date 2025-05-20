@@ -31,7 +31,7 @@
                 @forelse ($columns as $column)
                     <tr>
                         <td>
-                            {{ $column->name() }}
+                            {{ $column->getUpperName() }}
                         </td>
                         <td class="p-2 text-white badge mr-5"
                             style="background-color: {{ $column->colour }};">
@@ -39,7 +39,7 @@
                         </td>
                         <td>{{ $column->active }}</td>
                         <td>
-                            <button>Edit</button>
+                            <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             @if ($column->tasks_count == 0)
                                 <button>Delete</button>
                             @endif
