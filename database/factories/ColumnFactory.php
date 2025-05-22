@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Column::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
+        'name' => $faker->unique()->word,
         'colour' => $faker->hexColor,
         'active' => $faker->boolean,
         'created_at' => now(),

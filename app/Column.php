@@ -10,9 +10,8 @@ class Column extends Model
 {
     use SoftDeletes;
 
-    protected $guarded = [];
-    // protected $fillable = ['name', 'colour', 'active'];
-    // TODO: segurtasunagatik hobe da eremuak banan banan zerrendatzea fillable propieatateetan. Guarded hutsa erabiltzean errezagoa da tranpeatzea
+    //protected $guarded = [];
+    protected $fillable = ['name', 'colour', 'active'];
 
     public function tasks()
     {

@@ -64,7 +64,11 @@
                             checked
                         @elseif (old('active') == null && !$column->exists && $errors->isEmpty())
                             checked
-                        @elseif ($column->exists && $column->active ) //TODO: check if this is correct  
+                        @elseif (old('active') == 'on' && $column->exists)
+                            checked
+                        @elseif ($column->exists && $column->active && old('active') == null && $errors->isEmpty())
+                            checked
+                        @elseif ($column->exists && old('active') == 'on' )
                             checked
                         @endif
                         
