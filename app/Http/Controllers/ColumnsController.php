@@ -50,7 +50,7 @@ class ColumnsController extends Controller
 
     public function store()
     {
-        $this->validateColumn();
+        $this->validateColumnCreate();
 
         $column = new Column(request(['name', 'colour']));
         $column->active = request('active') == 'on' ? 1 : 0;
@@ -72,20 +72,32 @@ class ColumnsController extends Controller
 
     public function update($id)
     {
-        $this->validateColumn();
 
-        $column = new Column(request(['name', 'colour']));
+        $column = Column::findOrFail($id);
+
+        $column->name = request('name');
+        $column->colour = request('colour');
         $column->active = request('active') == 'on' ? 1 : 0;
 
-        // $column->save();
+        $this->validateColumnUpdate($id);
+
+        $column->save();
 
         return redirect(route("columns.index"));
     }
 
-    protected function validateColumn()
+    protected function validateColumnCreate()
     {
         return request()->validate([
-            'name' => ['required', 'unique:columns', 'max:255'],
+            'name' => ['required', 'unique:columns', 'max:255',],
+            'colour' => 'required|max:10'
+        ]);
+    }
+
+    protected function validateColumnUpdate($id)
+    {
+        return request()->validate([
+            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('columns')->ignore($id)],
             'colour' => 'required|max:10'
         ]);
     }
