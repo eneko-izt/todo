@@ -86,6 +86,19 @@ class ColumnsController extends Controller
         return redirect(route("columns.index"));
     }
 
+    public function delete($id)
+    {
+        $column = Column::findOrFail($id);
+
+        if ($column->tasks()->count() > 0) {
+            return redirect(route("columns.index"))->with('error', 'You cannot delete this column because it has tasks.');
+        }
+
+        $column->delete();
+
+        return redirect(route("columns.index"));
+    }
+
     protected function validateColumnCreate()
     {
         return request()->validate([
