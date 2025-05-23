@@ -27,7 +27,7 @@
                 @forelse ($columns as $column)
                     <tr>
                         <td>
-                            {{ $column->name() }}
+                            {{ $column->getUpperName() }}
                         </td>
                         <td class="p-2 text-white badge mr-5"
                             style="background-color: {{ $column->colour }};">
@@ -36,6 +36,12 @@
                         <td>{{ $column->active }}</td>
                         <td>
                             <a class="btn btn-primary btn-sm">Restore</a>
+                            <a 
+                                class="btn btn-primary btn-sm"
+                                onclick="return confirm('Are you sure you want to completely delete this column?')"
+                                href="{{ route('columns.destroy', $column->id) }}">
+                                Delete
+                            </a>
                         </td>
                     </tr>
 

@@ -86,6 +86,15 @@ class ColumnsController extends Controller
         return redirect(route("columns.index"));
     }
 
+    public function destroy($id)
+    {
+        $column = Column::withTrashed()->findOrFail($id);
+
+        $column->forceDelete();
+
+        return redirect(route("columns.trash"));
+    }
+
     protected function validateColumnCreate()
     {
         return request()->validate([
