@@ -46,12 +46,15 @@
                         <td>
                             <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             @if ($column->tasks_count == 0)
-                                <a 
-                                    class="btn btn-primary btn-sm"
-                                    onclick="return confirm('Are you sure you want to delete this column?')"
-                                    href="{{ route('columns.delete', $column->id) }}" >
-                                    Delete
-                                </a>
+                                <form action="{{ route('columns.delete', $column->id) }}" method="POST">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this column?')">
+                                        Delete
+                                    </button>
+                                </form>
                             @endif
                         </td>
                     </tr>
