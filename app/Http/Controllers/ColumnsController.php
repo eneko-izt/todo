@@ -86,6 +86,14 @@ class ColumnsController extends Controller
         return redirect(route("columns.index"));
     }
 
+    public function restore($id)
+    {
+        $column = Column::withTrashed()->findOrFail($id);
+        $column->deleted_at = null;
+        $column->restore();
+        return redirect(route("columns.trash"));
+    }
+
     protected function validateColumnCreate()
     {
         return request()->validate([
