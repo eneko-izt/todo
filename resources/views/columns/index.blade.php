@@ -12,57 +12,55 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="dataTables_scrollHeadInner"
-            style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
+    <div class="dataTables_scrollHeadInner"
+        style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
 
-            @if (session('error'))
-                <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
-            @endif
+        @if (session('error'))
+            <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
+        @endif
 
-            <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
-                width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
+        <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
+            width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
+            <tr>
+                <th>Column</th>
+                <th>Colour</th>
+                <th>Active</th>
+                <th></th>
+            </tr>
+
+            @forelse ($columns as $column)
                 <tr>
-                    <th>Column</th>
-                    <th>Colour</th>
-                    <th>Active</th>
-                    <th></th>
+                    <td>
+                        {{ $column->getUpperName() }}
+                    </td>
+                    <td class="p-2 text-white badge mr-5"
+                        style="background-color: {{ $column->colour }};">
+                        {{ $column->colour }}
+                    </td>
+                    <td>{{ $column->active }}</td>
+                    <td>
+                        <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        @if ($column->tasks_count == 0)
+                            <form action="{{ route('columns.delete', $column->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this column?')">
+                                    Delete
+                                </button>
+                            </form>
+                        @endif
+                    </td>
                 </tr>
 
-                @forelse ($columns as $column)
-                    <tr>
-                        <td>
-                            {{ $column->getUpperName() }}
-                        </td>
-                        <td class="p-2 text-white badge mr-5"
-                            style="background-color: {{ $column->colour }};">
-                            {{ $column->colour }}
-                        </td>
-                        <td>{{ $column->active }}</td>
-                        <td>
-                            <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                            @if ($column->tasks_count == 0)
-                                <form action="{{ route('columns.delete', $column->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
+            @empty
+                <p>No columns found.</p>
+            @endforelse
 
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary btn-sm"
-                                        onclick="return confirm('Are you sure you want to delete this column?')">
-                                        Delete
-                                    </button>
-                                </form>
-                            @endif
-                        </td>
-                    </tr>
-
-                @empty
-                    <p>No columns found.</p>
-                @endforelse
-
-            </table>
-            {{ $columns->links() }}
-        </div>
+        </table>
+        {{ $columns->links() }}
     </div>
 @endsection
