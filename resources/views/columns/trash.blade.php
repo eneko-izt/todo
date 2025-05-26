@@ -35,7 +35,16 @@
                         </td>
                         <td>{{ $column->active }}</td>
                         <td>
-                            <a class="btn btn-primary btn-sm">Restore</a>
+                            <form action="{{ route('columns.restore', $column->id) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Are you sure you want to restore this column?')">
+                                    Restore
+                                </button>
+                            </form>
                         </td>
                     </tr>
 
