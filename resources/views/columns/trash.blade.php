@@ -36,13 +36,16 @@
                         <td>{{ $column->active }}</td>
                         <td>
                             <a class="btn btn-primary btn-sm">Restore</a>
-                            <a 
-                                class="btn btn-primary btn-sm"
-                                onclick="return confirm('Are you sure you want to completely delete this column?')"
-                                href="{{ route('columns.destroy', $column->id) }}">
-                                Delete
-                            </a>
-                        </td>
+                            <form action="{{ route('columns.destroy', $column->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button 
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Are you sure you want to completely delete this column?')">
+                                    Delete
+                                </button>
+                            </form>
+                       </td>
                     </tr>
 
                 @empty
