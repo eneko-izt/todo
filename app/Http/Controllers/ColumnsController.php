@@ -101,6 +101,13 @@ class ColumnsController extends Controller
         return redirect(route("columns.index"));
     }
 
+    public function restore($id)
+    {
+        $column = Column::withTrashed()->findOrFail($id);
+        $column->restore();
+        return redirect(route("columns.trash"));
+    }
+
     public function destroy($id)
     {
         $column = Column::withTrashed()->findOrFail($id);

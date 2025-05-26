@@ -25,4 +25,5 @@ Route::post('/columns', 'ColumnsController@store')->name('columns.store');
 Route::get('/columns/edit/{id}', 'ColumnsController@edit')->name('columns.edit');
 Route::patch('/columns/{id}', 'ColumnsController@update')->name('columns.update');
 Route::delete('/columns/delete/{id}', 'ColumnsController@delete')->name('columns.delete');
+Route::patch('/columns/restore/{id}', 'ColumnsController@restore')->name('columns.restore');
 Route::delete('/columns/destroy/{id}', 'ColumnsController@destroy')->name('columns.destroy');
