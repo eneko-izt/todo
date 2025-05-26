@@ -38,7 +38,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        @yield('breadcrumb')
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
+                                @yield('breadcrumb')
                     </ul>
 
                     <!-- Right Side Of Navbar -->
