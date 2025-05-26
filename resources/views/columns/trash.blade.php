@@ -27,7 +27,7 @@
                 @forelse ($columns as $column)
                     <tr>
                         <td>
-                            {{ $column->name() }}
+                            {{ $column->getUpperName() }}
                         </td>
                         <td class="p-2 text-white badge mr-5"
                             style="background-color: {{ $column->colour }};">
