@@ -19,6 +19,11 @@
     <div class="container">
         <div class="dataTables_scrollHeadInner"
             style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
+
+            @if (session('error'))
+                <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
+            @endif
+
             <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
                 width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
                 <tr>
@@ -41,7 +46,17 @@
                         <td>
                             <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             @if ($column->tasks_count == 0)
-                                <button>Delete</button>
+                                <form action="{{ route('columns.delete', $column->id) }}" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this column?')">
+                                        Delete
+                                    </button>
+                                </form>
                             @endif
                         </td>
                     </tr>
