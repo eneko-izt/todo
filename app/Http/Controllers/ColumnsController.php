@@ -43,9 +43,10 @@ class ColumnsController extends Controller
         $title = 'New column';
         $button = 'Create';
         $route = route('columns.store');
+        $routeMethod = 'POST';
         $column = new Column();
         
-       return view('columns.form', compact('title', 'button', 'route', 'column'));
+       return view('columns.form', compact('title', 'button', 'route', 'routeMethod', 'column'));
     }
 
     public function store()
@@ -65,9 +66,10 @@ class ColumnsController extends Controller
         $title = 'Edit column';
         $button = 'Save';
         $route = route('columns.update', $id);
+        $routeMethod = 'PATCH';
         $column = Column::findOrFail($id);
 
-        return view('columns.form', compact('title', 'button', 'route', 'column'));
+        return view('columns.form', compact('title', 'button', 'route', 'routeMethod', 'column'));
     }
 
     public function update($id)
@@ -103,6 +105,15 @@ class ColumnsController extends Controller
     {
         $column = Column::withTrashed()->findOrFail($id);
         $column->restore();
+        return redirect(route("columns.trash"));
+    }
+
+    public function destroy($id)
+    {
+        $column = Column::withTrashed()->findOrFail($id);
+
+        $column->forceDelete();
+
         return redirect(route("columns.trash"));
     }
 

@@ -18,6 +18,7 @@
 
         <form action="{{ $route }}" method="POST">
             @csrf
+            @method( $routeMethod )
             
             <div class="field">
                 <label class="label" for="name">Name</label>

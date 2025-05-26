@@ -45,7 +45,16 @@
                                     Restore
                                 </button>
                             </form>
-                        </td>
+                            <form action="{{ route('columns.destroy', $column->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button 
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Are you sure you want to completely delete this column?')">
+                                    Delete
+                                </button>
+                            </form>
+                       </td>
                     </tr>
 
                 @empty
