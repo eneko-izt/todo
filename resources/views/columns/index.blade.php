@@ -47,8 +47,8 @@
                             <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             @if ($column->tasks_count == 0)
                                 <form action="{{ route('columns.delete', $column->id) }}" method="POST">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    @csrf
+                                    @method('DELETE')
 
                                     <button
                                         type="submit"
