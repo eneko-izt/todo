@@ -43,6 +43,10 @@
                                 <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                                 @yield('breadcrumb')
+                            </ol>
+                        </nav>
+
+                        @yield('create_trash')
                     </ul>
 
                     <!-- Right Side Of Navbar -->

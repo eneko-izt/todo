@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-            <li class="breadcrumb-item"><a href="{{ route('columns.index') }}">Columns</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->total() }})</li>
-        </ol>
-    </nav>
+    <li class="breadcrumb-item"><a href="{{ route('columns.index') }}">Columns</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->total() }})</li>
 @endsection
 
 @section('content')

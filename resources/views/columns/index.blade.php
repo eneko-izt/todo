@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-            <li class="breadcrumb-item active" aria-current="page">Columns ({{ $columns->total() }})</li>
-        </ol>
-    </nav>
+    <li class="breadcrumb-item active" aria-current="page">Columns ({{ $columns->total() }})</li>
+@endsection
 
+@section('create_trash')
     <div class="d-flex justify-content-between">
         <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm">New</a>
         <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm">Trash</a>
