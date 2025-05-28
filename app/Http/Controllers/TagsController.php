@@ -34,6 +34,7 @@ class TagsController extends Controller
     public function trash()
     {
         $tags = Tag::onlyTrashed()->paginate(10);
+
         return view('tags.trash', compact('tags'));
     }
 }
