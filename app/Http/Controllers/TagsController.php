@@ -61,6 +61,36 @@ class TagsController extends Controller
         return redirect(route("tags.index"));
     }
 
+    public function delete($id)
+    {
+        $tag = Tag::findOrFail($id);
+
+        if ($tag->tasks()->count() > 0) {
+            return redirect(route("tags.index"))->with('error', 'You cannot delete this tag because it has tasks.');
+        }
+
+        $tag->delete();
+
+        return redirect(route("tags.index"));
+    }
+
+    public function restore($id)
+    {
+        $tag = Tag::withTrashed()->findOrFail($id);
+        $tag->restore();
+        
+        return redirect(route("tags.trash"));
+    }
+
+    public function destroy($id)
+    {
+        $tag = Tag::withTrashed()->findOrFail($id);
+
+        $tag->forceDelete();
+
+        return redirect(route("tags.trash"));
+    }
+
     protected function validateTagCreate()
     {
         return request()->validate([
