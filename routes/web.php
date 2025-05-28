@@ -33,6 +33,8 @@ Route::get('/tags', 'TagsController@index')->name('tags.index');
 Route::get('/tags/trash', 'TagsController@trash')->name('tags.trash');
 Route::get('/tags/create', 'TagsController@create')->name('tags.create');
 Route::post('/tags', 'TagsController@store')->name('tags.store');
+Route::get('/tags/edit/{id}', 'TagsController@edit')->name('tags.edit');
+Route::patch('/tags/{id}', 'TagsController@update')->name('tag.update');
 Route::delete('/tags/delete/{id}', 'TagsController@delete')->name('tags.delete');
 Route::patch('/tags/restore/{id}', 'TagsController@restore')->name('tags.restore');
 Route::delete('/tags/destroy/{id}', 'TagsController@destroy')->name('tags.destroy');
