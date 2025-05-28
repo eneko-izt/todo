@@ -44,8 +44,5 @@ class DatabaseSeeder extends Seeder
             // Attach random tags to the task
             $task->tags()->attach($tags->random(rand(0, 2))->pluck('id')->toArray());
         });
-
-        // TODO: komeni zaigu task batzuk edukitzea etiketarik gabe.
-        // TODO: ezabatu duzu 'No task' column, zergatik?
     }
 }
