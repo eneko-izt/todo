@@ -26,8 +26,7 @@ class DatabaseSeeder extends Seeder
 
         factory(App\Column::class, 30)->create();
 
-        factory(App\Tag::class, 10)->create();
-
+        factory(App\Tag::class, 20)->create();
 
         factory(App\Task::class, 40)->create()->each(function ($task) {
             // Attach a random user to the task
@@ -43,12 +42,7 @@ class DatabaseSeeder extends Seeder
 
         App\Task::all()->each(function ($task) use ($tags) {
             // Attach random tags to the task
-            $task->tags()->attach($tags->random(rand(1, 3))->pluck('id')->toArray());
+            $task->tags()->attach($tags->random(rand(0, 2))->pluck('id')->toArray());
         });
-
-        // create additional column with no tasks attached
-        factory(App\Column::class)->create([
-            'name' => 'No tasks'
-        ]);
     }
 }

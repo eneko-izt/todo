@@ -23,7 +23,8 @@
                                 Dashboard</a>
                             <a href="{{ route('columns.index') }}"
                                 class="btn btn-primary">Columns</a>
-                            <a href="https://www.naiz.eus/" class="btn btn-primary">Naiz</a>
+                            <a href="{{ route('tags.index') }}"
+                                class="btn btn-primary">Tags</a>
                         </div>
                     </div>
                 </div>
