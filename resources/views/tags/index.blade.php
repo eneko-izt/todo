@@ -41,7 +41,7 @@
                     </td>
                     <td>{{ $tag->active }}</td>
                     <td>
-                        <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ route('tags.edit', $tag->id) }}" class="btn btn-primary btn-sm">Edit</a>
                         @if ($tag->tasks_count == 0)
                             <form action="" method="POST">
                                 @csrf

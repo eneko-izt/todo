@@ -69,7 +69,7 @@ class TagsController extends Controller
         $routeMethod = 'PATCH';
         $tag = Tag::findOrFail($id);
 
-        return view('tag.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
+        return view('tags.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
     }
 
     public function update($id)
@@ -84,7 +84,7 @@ class TagsController extends Controller
 
         $tag->save();
 
-        return redirect(route("tag.index"));
+        return redirect(route("tags.index"));
     }
 
     protected function validateTagCreate()
