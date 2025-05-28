@@ -37,4 +37,35 @@ class TagsController extends Controller
 
         return view('tags.trash', compact('tags'));
     }
+
+    public function create()
+    {
+        $title = 'New tag';
+        $button = 'Create';
+        $route = route('tags.store');
+        $routeMethod = 'POST';
+        $tag = new Tag();
+        
+       return view('tags.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
+    }
+
+    public function store()
+    {
+        $this->validateTagCreate();
+
+        $tag = new Tag(request(['name', 'colour']));
+        $tag->active = request('active') == 'on' ? 1 : 0;
+
+        $tag->save();
+
+        return redirect(route("tags.index"));
+    }
+
+    protected function validateTagCreate()
+    {
+        return request()->validate([
+            'name' => ['required', 'unique:tags', 'max:255',],
+            'colour' => 'required|max:10'
+        ]);
+    }
 }
