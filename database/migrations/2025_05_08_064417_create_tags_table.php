@@ -19,6 +19,7 @@ class CreateTagsTable extends Migration
             $table->string('colour');
             $table->boolean('active')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
