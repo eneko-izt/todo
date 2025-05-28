@@ -27,3 +27,5 @@ Route::patch('/columns/{id}', 'ColumnsController@update')->name('columns.update'
 Route::delete('/columns/delete/{id}', 'ColumnsController@delete')->name('columns.delete');
 Route::patch('/columns/restore/{id}', 'ColumnsController@restore')->name('columns.restore');
 Route::delete('/columns/destroy/{id}', 'ColumnsController@destroy')->name('columns.destroy');
+
+Route::get('/tags/trash', 'TagsController@trash')->name('tags.trash');
