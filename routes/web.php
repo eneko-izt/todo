@@ -31,3 +31,5 @@ Route::delete('/columns/destroy/{id}', 'ColumnsController@destroy')->name('colum
 
 Route::get('/tags', 'TagsController@index')->name('tags.index');
 Route::get('/tags/trash', 'TagsController@trash')->name('tags.trash');
+Route::get('/tags/create', 'TagsController@create')->name('tags.create');
+Route::post('/tags', 'TagsController@store')->name('tags.store');

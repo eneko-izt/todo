@@ -15,7 +15,7 @@ class CreateColumnsTable extends Migration
     {
         Schema::create('columns', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('colour');
             $table->boolean('active')->default(false);
             $table->timestamps();
