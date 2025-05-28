@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/columns', 'ColumnsController@index')->name('columns.index');
 Route::get('/columns/trash', 'ColumnsController@trash')->name('columns.trash');
 Route::get('/columns/create', 'ColumnsController@create')->name('columns.create');
@@ -27,5 +28,8 @@ Route::patch('/columns/{id}', 'ColumnsController@update')->name('columns.update'
 Route::delete('/columns/delete/{id}', 'ColumnsController@delete')->name('columns.delete');
 Route::patch('/columns/restore/{id}', 'ColumnsController@restore')->name('columns.restore');
 Route::delete('/columns/destroy/{id}', 'ColumnsController@destroy')->name('columns.destroy');
+
+Route::get('/tags', 'TagsController@index')->name('tags.index');
+
 
 Route::get('/tags/trash', 'TagsController@trash')->name('tags.trash');

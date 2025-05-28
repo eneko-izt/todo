@@ -10,7 +10,6 @@ class Column extends Model
 {
     use SoftDeletes;
 
-    //protected $guarded = [];
     protected $fillable = ['name', 'colour', 'active'];
 
     public function tasks()
