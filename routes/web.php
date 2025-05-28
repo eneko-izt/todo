@@ -30,6 +30,4 @@ Route::patch('/columns/restore/{id}', 'ColumnsController@restore')->name('column
 Route::delete('/columns/destroy/{id}', 'ColumnsController@destroy')->name('columns.destroy');
 
 Route::get('/tags', 'TagsController@index')->name('tags.index');
-
-
 Route::get('/tags/trash', 'TagsController@trash')->name('tags.trash');

@@ -7,7 +7,7 @@
 @section('create_trash')
     <div class="d-flex justify-content-between">
         <a href="#" class="btn btn-primary btn-sm">New</a>
-        <a href="#" class="btn btn-primary btn-sm">Trash</a>
+        <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm">Trash</a>
     </div>
 @endsection
 

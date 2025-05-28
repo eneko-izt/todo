@@ -11,6 +11,7 @@ $factory->define(Tag::class, function (Faker $faker) {
         'colour' => $faker->hexColor,
         'active' => $faker->boolean,
         'created_at' => now(),
-        'updated_at' => now()
+        'updated_at' => now(),
+        'deleted_at' => rand(0, 3) == 0 ? now() : null // Randomly set deleted_at to null or now()
     ];
 });

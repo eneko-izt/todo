@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
 
         factory(App\Column::class, 30)->create();
 
-        factory(App\Tag::class, 20)->create();
+        factory(App\Tag::class, 50)->create();
 
         factory(App\Task::class, 40)->create()->each(function ($task) {
             // Attach a random user to the task
