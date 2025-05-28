@@ -105,6 +105,7 @@ class ColumnsController extends Controller
     {
         $column = Column::withTrashed()->findOrFail($id);
         $column->restore();
+        
         return redirect(route("columns.trash"));
     }
 
