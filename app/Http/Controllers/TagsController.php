@@ -61,10 +61,44 @@ class TagsController extends Controller
         return redirect(route("tags.index"));
     }
 
+    public function edit($id)
+    {
+        $title = 'Edit tag';
+        $button = 'Save';
+        $route = route('tag.update', $id);
+        $routeMethod = 'PATCH';
+        $tag = Tag::findOrFail($id);
+
+        return view('tag.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
+    }
+
+    public function update($id)
+    {
+        $tag = Tag::findOrFail($id);
+
+        $tag->name = request('name');
+        $tag->colour = request('colour');
+        $tag->active = request('active') == 'on' ? 1 : 0;
+
+        $this->validateTagUpdate($id);
+
+        $tag->save();
+
+        return redirect(route("tag.index"));
+    }
+
     protected function validateTagCreate()
     {
         return request()->validate([
             'name' => ['required', 'unique:tags', 'max:255',],
+            'colour' => 'required|max:10'
+        ]);
+    }
+
+    protected function validateTagUpdate($id)
+    {
+        return request()->validate([
+            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('tags')->ignore($id)],
             'colour' => 'required|max:10'
         ]);
     }
