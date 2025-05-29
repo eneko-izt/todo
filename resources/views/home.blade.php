@@ -8,13 +8,11 @@
 <a href="{{ route('columns.index') }}" class="btn btn-primary">Columns</a>
 <a href="{{ route('tags.index') }}" class="btn btn-primary">Tags</a>
 
-<div class="d-flex justify-content-between mt-5">
-
-    <div class="d-flex justify-content-between w-100">    
+    <div class="d-lg-flex justify-content-between w-100 mt-5" >    
         @forelse ($columns as $column)
 
-            <div class="p-2 text-white @if (!$loop->first) ml-2 @endif"
-                style="width: {{ 100 / $columns->count() }}%; height:150px; background-color: {{ $column->colour }};">
+            <div class="p-2 text-white @if (!$loop->first) ml-lg-2 @endif"
+                style="min-width: {{ 100 / $columns->count() }}%; height:150px; background-color: {{ $column->colour }};">
                 {{ $column->name }}
             </div>
 
@@ -22,7 +20,5 @@
             <p>No columns found.</p>
         @endforelse
     </div>
-   
-</div>
 
 @endsection
