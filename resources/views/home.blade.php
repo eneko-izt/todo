@@ -12,7 +12,7 @@
         @forelse ($columns as $column)
 
             <div class="p-2 text-white @if (!$loop->first) ml-lg-2 @endif"
-                style="min-width: {{ 100 / $columns->count() }}%; height:150px; background-color: {{ $column->colour }};">
+                style="min-width: {{ 100 / $columns->count() }}%; min-height: 150px; background-color: {{ $column->colour }};">
                 {{ $column->name }}
             </div>
 
