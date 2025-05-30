@@ -35,3 +35,5 @@ Route::get('/tags/create', 'TagsController@create')->name('tags.create');
 Route::post('/tags', 'TagsController@store')->name('tags.store');
 Route::get('/tags/edit/{id}', 'TagsController@edit')->name('tags.edit');
 Route::patch('/tags/{id}', 'TagsController@update')->name('tag.update');
+
+Route::patch('/tasks/{id}/activate/{value}', 'TasksController@activate')->name('tasks.activate');
