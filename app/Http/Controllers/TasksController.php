@@ -34,4 +34,10 @@ class TasksController extends Controller
 
         return redirect(route("home"));
     }
+
+    public function store()
+    {
+        dd(request()->all());
+        return redirect(route("columns.index"));
+    }
 }

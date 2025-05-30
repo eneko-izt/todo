@@ -37,3 +37,4 @@ Route::get('/tags/edit/{id}', 'TagsController@edit')->name('tags.edit');
 Route::patch('/tags/{id}', 'TagsController@update')->name('tag.update');
 
 Route::patch('/tasks/{id}/activate/{value}', 'TasksController@activate')->name('tasks.activate');
+Route::post('/tasks', 'TasksController@store')->name('tasks.store');

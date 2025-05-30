@@ -19,6 +19,8 @@
                     @include('tasks.task', ['task' => $task])
                 @endforeach
 
+                @include('tasks.new')
+
             </div>
 
         @empty
