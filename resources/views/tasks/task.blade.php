@@ -12,4 +12,10 @@
     <p>
         {{ $task->id }}: {{ $task->text }}
     </p>
+    <hr>
+    <p>
+        @foreach ( $task->tags()->where('active', true)->get() as $tag)
+            @if (!$loop->first) , @endif {{ $tag->getUpperName() }}
+        @endforeach
+    </p>
 </div>
