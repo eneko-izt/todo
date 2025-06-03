@@ -37,7 +37,23 @@ class TasksController extends Controller
 
     public function store()
     {
-        dd(request()->all());
-        return redirect(route("columns.index"));
+
+        $attributes = $this->validateTaskCreate();
+        
+        $attributes['active'] = 1;
+        $attributes['user_id'] = auth()->id();
+        $attributes['column_id'] = request('column_id');
+
+        Task::create($attributes);
+
+        return redirect(route("home"));
+    }
+
+    protected function validateTaskCreate()
+    {
+        return request()->validate([
+            'text' => ['required', 'max:255',],
+            'order' => 'required|numeric|min:0|max:100'
+        ]);
     }
 }

@@ -20,9 +20,15 @@
                 max="100"
                 required
             >
-                <div class="control">
-                    <button class="btn btn-primary bottom" type="submit">New</button>
-                </div>
+            <input 
+                type="hidden" 
+                name="column_id" 
+                id="column_id" 
+                value="{{ $column->id ?? '' }}"
+            >
+            <div class="control">
+                <button class="btn btn-primary bottom" type="submit">New</button>
+            </div>
         </div>
     </form>
 </div>

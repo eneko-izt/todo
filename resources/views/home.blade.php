@@ -19,7 +19,7 @@
                     @include('tasks.task', ['task' => $task])
                 @endforeach
 
-                @include('tasks.new')
+                @include('tasks.new', ['column' => $column])
 
             </div>
 
