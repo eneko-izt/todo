@@ -8,8 +8,8 @@
                 id="text" 
                 rows="3" 
                 maxlength="255"
-                required>
-            </textarea>
+                space
+                required></textarea>
             <label for="fname">Order:</label>
             <input 
                 type="number" 
