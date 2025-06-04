@@ -43,7 +43,7 @@
                     <td>
                         <a href="{{ route('tags.edit', $tag->id) }}" class="btn btn-primary btn-sm">Edit</a>
                         @if ($tag->tasks_count == 0)
-                            <form action="" method="POST">
+                            <form action="{{ route('tags.delete', $tag->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
 
