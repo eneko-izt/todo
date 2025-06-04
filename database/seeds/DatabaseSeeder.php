@@ -24,11 +24,11 @@ class DatabaseSeeder extends Seeder
 
         factory(App\User::class, 10)->create();
 
-        factory(App\Column::class, 30)->create();
+        factory(App\Column::class, 10)->create();
 
-        factory(App\Tag::class, 50)->create();
+        factory(App\Tag::class, 20)->create();
 
-        factory(App\Task::class, 40)->create()->each(function ($task) {
+        factory(App\Task::class, 20)->create()->each(function ($task) {
             // Attach a random user to the task
             $task->user_id = App\User::inRandomOrder()->first()->id;
             $task->save();

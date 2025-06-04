@@ -43,8 +43,13 @@ class TasksController extends Controller
         $attributes['active'] = 1;
         $attributes['user_id'] = auth()->id();
         $attributes['column_id'] = request('column_id');
+        $attributes['order'] = request('order', 0);
+        $attributes['text'] = request('text');
 
-        Task::create($attributes);
+        $tags['tags'] = request('tags', []);
+
+        $task =Task::create($attributes);
+        $task->tags()->attach($tags['tags']);
 
         return redirect(route("home"));
     }

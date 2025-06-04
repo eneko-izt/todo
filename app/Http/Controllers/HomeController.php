@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Column;
+use App\Tag;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,8 @@ class HomeController extends Controller
     public function index()
     {
         $columns = Column::where('active', true)->get();
+        $tags = Tag::active()->get();
 
-        return view('home', compact('columns'));
+        return view('home', compact('columns', 'tags'));
     }
 }

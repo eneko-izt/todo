@@ -2,6 +2,8 @@
     <form action="{{ route('tasks.store') }}" method="POST">
         @csrf
         <div>
+
+            <label for="input">Text:</label>
             <textarea 
                 class="form-control mb-2 @error('name') help is-danger @enderror" 
                 name="text" 
@@ -32,15 +34,30 @@
                 <p class="help is-danger" style="color:#d8000c">{{ $errors->first('order') }}</p>
             @enderror
 
+            <label for="input">Tags:</label>
+            <select 
+                class="form-control select2"
+                name="tags[]"
+                id="tags"
+                style="width: 100%;"
+                multiple
+            >
+                @foreach($tags as $tag)
+                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                @endforeach
+            </select>
+
             <input 
                 type="hidden" 
                 name="column_id" 
                 id="column_id" 
                 value="{{ $column->id ?? '' }}"
             >
+
             <div class="control">
                 <button class="btn btn-primary bottom" type="submit">New</button>
             </div>
+
         </div>
     </form>
 </div>
