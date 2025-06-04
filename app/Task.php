@@ -25,4 +25,9 @@ class Task extends Model
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

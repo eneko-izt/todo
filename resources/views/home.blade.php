@@ -15,7 +15,7 @@
                 style="min-width: {{ 100 / $columns->count() }}%; min-height: 150px; background-color: {{ $column->colour }};">
                 {{ $column->name }}
 
-                @foreach ( $column->tasks->where('active', true)->sortBy('order') as $task)
+                @foreach ( $column->activeTasks as $task)
                     @include('tasks.task', ['task' => $task])
                 @endforeach
 
