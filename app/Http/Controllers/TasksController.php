@@ -26,11 +26,11 @@ class TasksController extends Controller
      */
 
      
-    public function activate($id, bool $value)
+    public function delete($id)
     {
         $task = Task::findOrFail($id);
-        $task->active = $value ? 1 : 0;
-        $task->save();
+
+        $task->delete();
 
         return redirect(route("home"));
     }

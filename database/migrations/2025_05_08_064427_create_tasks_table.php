@@ -26,7 +26,9 @@ class CreateTasksTable extends Migration
             $table->longText('text');
             $table->string('active')->default(false);
             $table->integer('order')->default(0);
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

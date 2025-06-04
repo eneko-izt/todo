@@ -1,7 +1,7 @@
 <div border="1" class="p-2 mb-2 bg-light text-dark rounded">
-    <form action="{{ route('tasks.activate', ['id' => $task->id, 'value' => '0'] ) }}" method="POST">
+    <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
         @csrf
-        @method('PATCH')
+        @method('DELETE')
         <button 
             type="submit" 
             class="btn btn-primary float-right"
