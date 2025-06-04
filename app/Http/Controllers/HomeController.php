@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Column;
 use App\Tag;
+use App\Column;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

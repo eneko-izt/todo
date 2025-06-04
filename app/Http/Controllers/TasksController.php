@@ -25,21 +25,12 @@ class TasksController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-     
-    public function delete($id)
-    {
-        $task = Task::findOrFail($id);
-
-        $task->delete();
-
-        return redirect(route("home"));
-    }
 
     public function store()
     {
 
         $attributes = $this->validateTaskCreate();
-        
+
         $attributes['active'] = 1;
         $attributes['user_id'] = auth()->id();
         $attributes['column_id'] = request('column_id');
@@ -48,8 +39,17 @@ class TasksController extends Controller
 
         $tags['tags'] = request('tags', []);
 
-        $task =Task::create($attributes);
+        $task = Task::create($attributes);
         $task->tags()->attach($tags['tags']);
+
+        return redirect(route("home"));
+    }
+
+    public function delete($id)
+    {
+        $task = Task::findOrFail($id);
+
+        $task->delete();
 
         return redirect(route("home"));
     }

@@ -45,8 +45,8 @@ class TagsController extends Controller
         $route = route('tags.store');
         $routeMethod = 'POST';
         $tag = new Tag();
-        
-       return view('tags.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
+
+        return view('tags.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
     }
 
     public function store()
@@ -104,7 +104,7 @@ class TagsController extends Controller
     {
         $tag = Tag::withTrashed()->findOrFail($id);
         $tag->restore();
-        
+
         return redirect(route("tags.trash"));
     }
 
