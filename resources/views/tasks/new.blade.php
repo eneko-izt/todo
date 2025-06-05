@@ -3,9 +3,9 @@
         @csrf
         <div>
 
-            <label for="input">Text:</label>
+            <label for="text">Text:</label>
             <textarea 
-                class="form-control mb-2 @error('name') help is-danger @enderror" 
+                class="form-control mb-2 @error('text') help is-danger @enderror" 
                 name="text" 
                 id="text"
                 rows="3"
@@ -18,7 +18,7 @@
                 <p class="help is-danger" style="color:#d8000c">{{ $errors->first('text') }}</p>
             @enderror
 
-            <label for="input">Order:</label>
+            <label for="order">Order:</label>
             <input 
                 type="number" 
                 class="form-control mb-2 @error('order') help is-danger @enderror" 
