@@ -5,33 +5,33 @@
 
             <label for="text">Text:</label>
             <textarea 
-                class="form-control mb-2 @error('text') help is-danger @enderror" 
-                name="text" 
-                id="text"
+                class="form-control mb-2 @error('text'.$column->id) help is-danger @enderror" 
+                name={{ 'text'.$column->id }}
+                id={{ 'text'.$column->id }}
                 rows="3"
                 maxlength="255"
                 style="@error('text') color:#d8000c @enderror"
                 required
             >{{ old('text') }}</textarea>
 
-            @error('text')
-                <p class="help is-danger" style="color:#d8000c">{{ $errors->first('text') }}</p>
+            @error('text'.$column->id)
+                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
             <label for="order">Order:</label>
             <input 
                 type="number" 
-                class="form-control mb-2 @error('order') help is-danger @enderror" 
-                name="order" 
-                id="order" 
-                value="{{ old('order') }}"
+                class="form-control mb-2 @error('order'.$column->id) help is-danger @enderror" 
+                name={{ 'order'.$column->id }}
+                id={{ 'order'.$column->id }}
+                value="{{ old('order'.$column->id) }}"
                 min="0"
                 max="100"
-                style="@error('order') color:#d8000c @enderror"
+                style="@error('order'.$column->id) color:#d8000c @enderror"
                 required
             >
-            @error('order')
-                <p class="help is-danger" style="color:#d8000c">{{ $errors->first('order') }}</p>
+            @error('order'.$column->id)
+                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
             <label for="input">Tags:</label>
