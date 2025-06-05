@@ -40,6 +40,9 @@ class TasksController extends Controller
         $tags['tags'] = request('tags', []);
 
         $task = Task::create($attributes);
+
+        $this->validateTagTaskCreate();
+
         $task->tags()->attach($tags['tags']);
 
         return redirect(route("home"));
@@ -58,7 +61,9 @@ class TasksController extends Controller
     {
         return request()->validate([
             'text'.$column_id => ['required', 'max:255',],
-            'order'.$column_id => 'required|numeric|min:0|max:100'
+            'order'.$column_id => 'required|numeric|min:0|max:100',
+            'column_id' => 'required|exists:columns,id',
+            'user_id' => 'required|exists:users,id'
         ], [
             'text'.$column_id.'.required' => 'The task text is required.',
             'text'.$column_id.'.max' => 'The task text may not be greater than 255 characters.',

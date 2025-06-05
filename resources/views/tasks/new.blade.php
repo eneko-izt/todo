@@ -10,9 +10,9 @@
                 id={{ 'text'.$column->id }}
                 rows="3"
                 maxlength="255"
-                style="@error('text') color:#d8000c @enderror"
+                style="@error('text'.$column->id) color:#d8000c @enderror"
                 required
-            >{{ old('text') }}</textarea>
+            >{{ old('text'.$column->id) }}</textarea>
 
             @error('text'.$column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
