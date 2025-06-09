@@ -13,6 +13,7 @@ $factory->define(Task::class, function (Faker $faker) {
         'active' => $faker->boolean,
         'order' => $faker->randomNumber(),
         'created_at' => now(),
-        'updated_at' => now()
+        'updated_at' => now(),
+        'deleted_at' => rand(0, 3) == 0 ? now() : null // Randomly set deleted_at to null or now()
     ];
 });

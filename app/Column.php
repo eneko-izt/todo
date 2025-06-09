@@ -21,4 +21,9 @@ class Column extends Model
     {
         return Str::upper($this->name);
     }
+
+    public function activeTasks()
+    {
+        return $this->tasks()->active()->orderBy('order');
+    }
 }

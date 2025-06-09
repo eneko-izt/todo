@@ -39,5 +39,5 @@ Route::delete('/tags/delete/{id}', 'TagsController@delete')->name('tags.delete')
 Route::patch('/tags/restore/{id}', 'TagsController@restore')->name('tags.restore');
 Route::delete('/tags/destroy/{id}', 'TagsController@destroy')->name('tags.destroy');
 
-Route::patch('/tasks/{id}/activate/{value}', 'TasksController@activate')->name('tasks.activate');
+Route::delete('/tasks/delete/{id}', 'TasksController@delete')->name('tasks.delete');
 Route::post('/tasks', 'TasksController@store')->name('tasks.store');

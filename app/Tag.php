@@ -21,4 +21,9 @@ class Tag extends Model
     {
         return Str::upper($this->name);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

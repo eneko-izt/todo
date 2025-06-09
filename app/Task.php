@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['text', 'order', 'user_id', 'column_id', 'active'];
 
     public function user()
@@ -21,5 +24,10 @@ class Task extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
     }
 }
