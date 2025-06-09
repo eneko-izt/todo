@@ -3,10 +3,10 @@
 @section('content')
 
 <h3>{{ Date('Y-m-d') }}</h3>
-<a href="{{ route('welcome') }}" class="btn btn-primary">Home</a>
-<a href="{{ route('home') }}" class="btn btn-primary">Go to Dashboard</a>
-<a href="{{ route('columns.index') }}" class="btn btn-primary">Columns</a>
-<a href="{{ route('tags.index') }}" class="btn btn-primary">Tags</a>
+<a href="{{ route('welcome') }}" class="btn btn-primary" title="Go to Welcome page">Home</a>
+<a href="{{ route('home') }}" class="btn btn-primary" title="Go to Dashboard">Go to Dashboard</a>
+<a href="{{ route('columns.index') }}" class="btn btn-primary" title="Go to Columns page">Columns</a>
+<a href="{{ route('tags.index') }}" class="btn btn-primary" title="Go to Tags page">Tags</a>
 
     <div class="d-lg-flex justify-content-between w-100 mt-5" >    
         @forelse ($columns as $column)

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('tags.index') }}">Tags</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('tags.index') }}" alt="Tags">Tags</a></li>
     <li class="breadcrumb-item active" aria-current="page">Trash ({{ $tags->total() }})</li>
 @endsection
 
@@ -34,6 +34,7 @@
                             <button
                                 type="submit"
                                 class="btn btn-primary btn-sm"
+                                title="Restore this tag"
                                 onclick="return confirm('Are you sure you want to restore this tag?')">
                                 Restore
                             </button>
@@ -41,8 +42,10 @@
                         <form action="{{ route('tags.destroy', $tag->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button 
+                            <button
+                                type="submit"
                                 class="btn btn-primary btn-sm"
+                                title="Delete this tag"
                                 onclick="return confirm('Are you sure you want to completely delete this tag?')">
                                 Delete
                             </button>

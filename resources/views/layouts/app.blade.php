@@ -40,8 +40,8 @@
                     <ul class="navbar-nav mr-auto">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('welcome') }}" alt="Welcome">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('home') }}" alt="Dashboard">Dashboard</a></li>
                                 @yield('breadcrumb')
                             </ol>
                         </nav>

@@ -6,8 +6,8 @@
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
-        <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm">New</a>
-        <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm">Trash</a>
+        <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm" title = "Create a tag" alt = "Create a tag">New</a>
+        <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm" title = "View deleted tags" alt = "View deleted tags">Trash</a>
     </div>
 @endsection
 
@@ -41,7 +41,10 @@
                     </td>
                     <td>{{ $tag->active }}</td>
                     <td>
-                        <a href="{{ route('tags.edit', $tag->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ route('tags.edit', $tag->id) }}" 
+                            class="btn btn-primary btn-sm" 
+                            title="Edit this tag"
+                            alt="Edit this tag">Edit</a>
                         @if ($tag->tasks_count == 0)
                             <form action="{{ route('tags.delete', $tag->id) }}" method="POST">
                                 @csrf
@@ -50,6 +53,7 @@
                                 <button
                                     type="submit"
                                     class="btn btn-primary btn-sm"
+                                    title="Delete this tag"
                                     onclick="return confirm('Are you sure you want to delete this tag?')">
                                     Delete
                                 </button>

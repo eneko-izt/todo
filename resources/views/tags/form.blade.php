@@ -72,7 +72,7 @@
         </div>
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-link" type="submit">{{$button}}</button>
+                <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>
             </div>
         </div>
     </form>

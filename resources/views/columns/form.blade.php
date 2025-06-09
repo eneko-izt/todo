@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('columns.index') }}">Columns</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('columns.index') }}" alt="Columns">Columns</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
 @endsection
 
@@ -72,7 +72,7 @@
         </div>
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-link" type="submit">{{$button}}</button>
+                <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>
             </div>
         </div>
     </form>
