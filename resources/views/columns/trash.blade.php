@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('columns.index') }}">Columns</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('columns.index') }}" alt="Columns">Columns</a></li>
     <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->total() }})</li>
 @endsection
 
@@ -34,6 +34,7 @@
                             <button
                                 type="submit"
                                 class="btn btn-primary btn-sm"
+                                title="Restore this column"
                                 onclick="return confirm('Are you sure you want to restore this column?')">
                                 Restore
                             </button>
@@ -43,6 +44,7 @@
                             @method('DELETE')
                             <button 
                                 class="btn btn-primary btn-sm"
+                                title="Delete this column"
                                 onclick="return confirm('Are you sure you want to completely delete this column?')">
                                 Delete
                             </button>

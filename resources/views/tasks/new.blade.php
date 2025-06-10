@@ -55,7 +55,7 @@
             >
 
             <div class="control">
-                <button class="btn btn-primary bottom" type="submit">New</button>
+                <button class="btn btn-primary bottom" type="submit" Title="Create a new task">New</button>
             </div>
 
         </div>

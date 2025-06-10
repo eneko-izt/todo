@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">Columns ({{ $columns->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page" alt="Columns">Columns ({{ $columns->total() }})</li>
 @endsection
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
-        <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm">New</a>
-        <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm">Trash</a>
+        <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm" title = "Create a column" alt = "Create a column">New</a>
+        <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm" title = "View deleted columns" alt = "View deleted columns">Trash</a>
     </div>
 @endsection
 
@@ -39,7 +39,10 @@
                     </td>
                     <td>{{ $column->active }}</td>
                     <td>
-                        <a href="{{ route('columns.edit', $column->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ route('columns.edit', $column->id) }}" 
+                            class="btn btn-primary btn-sm" 
+                            title="Edit this column"
+                            alt="Edit this column">Edit</a>
                         @if ($column->tasks_count == 0)
                             <form action="{{ route('columns.delete', $column->id) }}" method="POST">
                                 @csrf
@@ -48,6 +51,7 @@
                                 <button
                                     type="submit"
                                     class="btn btn-primary btn-sm"
+                                    title="Delete this column"
                                     onclick="return confirm('Are you sure you want to delete this column?')">
                                     Delete
                                 </button>

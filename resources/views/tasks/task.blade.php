@@ -5,6 +5,7 @@
         <button 
             type="submit" 
             class="btn btn-primary float-right"
+            title="Remove this task"
             onclick="return confirm('Are you sure you want to remove this task?')"
         >X
         </button>
