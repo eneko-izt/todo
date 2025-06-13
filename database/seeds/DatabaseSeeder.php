@@ -43,22 +43,23 @@ class DatabaseSeeder extends Seeder
             $task->tags()->attach($tags->random(rand(0, 2))->pluck('id')->toArray());
         });
 
-        factory(App\Role::class)->create([
+        $roleAdmin = factory(App\Role::class)->create([
             'name' => 'admin'
         ]);
 
-        factory(App\Role::class)->create([
+        $roleUser = factory(App\Role::class)->create([
             'name' => 'user'
         ]);
 
-        App\User::where('name', 'admin')->first()->roles()->attach(App\Role::where('name', 'admin')->first()->id);
+        App\User::where('name', 'admin')->first()->roles()->attach($roleAdmin->id);
 
-        App\User::where('name', '<>', 'admin')->get()->random(6)->each(function ($user) {
-            $user->roles()->attach(App\Role::where('name', 'user')->first()->id);
+        App\User::where('name', '<>', 'admin')->get()->random(6)->each(function ($user) use ($roleUser) {
+            $user->roles()->attach($roleUser->id);
         });
 
-        App\User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) {
-            $user->roles()->attach(App\Role::where('name', 'admin')->first()->id);
+        App\User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) use ($roleAdmin) {
+            $user->roles()->attach($roleAdmin->id);
+
         });
     }
 }
