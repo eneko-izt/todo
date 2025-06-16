@@ -25,6 +25,7 @@ class CreateRoleUserTable extends Migration
             $table->unique(['role_id', 'user_id']);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
