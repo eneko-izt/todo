@@ -20,8 +20,6 @@ class DatabaseSeeder extends Seeder
             'remember_token' => ''
         ]);
 
-        // Create 10 users
-
         factory(App\User::class, 10)->create();
 
         factory(App\Column::class, 10)->create();
@@ -43,6 +41,25 @@ class DatabaseSeeder extends Seeder
         App\Task::all()->each(function ($task) use ($tags) {
             // Attach random tags to the task
             $task->tags()->attach($tags->random(rand(0, 2))->pluck('id')->toArray());
+        });
+
+        $roleAdmin = factory(App\Role::class)->create([
+            'name' => 'admin'
+        ]);
+
+        $roleUser = factory(App\Role::class)->create([
+            'name' => 'user'
+        ]);
+
+        App\User::where('name', 'admin')->first()->roles()->attach($roleAdmin->id);
+
+        App\User::where('name', '<>', 'admin')->get()->random(6)->each(function ($user) use ($roleUser) {
+            $user->roles()->attach($roleUser->id);
+        });
+
+        App\User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) use ($roleAdmin) {
+            $user->roles()->attach($roleAdmin->id);
+
         });
     }
 }

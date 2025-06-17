@@ -41,4 +41,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function scopeAdmin($query)
+    {
+        return $query->whereHas('roles', function ($q) {
+            $q->where('name', 'admin');
+        });
+    }
+
+    public function scopeUser($query)
+    {
+        return $query->whereHas('roles', function ($q) {
+            $q->where('name', 'user');
+        });
+    }
 }
