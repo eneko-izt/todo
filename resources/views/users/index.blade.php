@@ -7,7 +7,6 @@
 @section('create_trash')
     <div class="d-flex justify-content-between">
         <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm" title = "Create a user" alt = "Create a user">New</a>
-        <a href="{{ route('users.trash') }}" class="btn btn-primary btn-sm" title = "View deleted users" alt = "View deleted users">Trash</a>
     </div>
 @endsection
 
@@ -40,20 +39,6 @@
                             class="btn btn-primary btn-sm" 
                             title="Edit this user"
                             alt="Edit this user">Edit</a>
-                        @if ($user->tasks_count == 0)
-                            <form action="{{ route('users.delete', $user->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-sm"
-                                    title="Delete this user"
-                                    onclick="return confirm('Are you sure you want to delete this user?')">
-                                    Delete
-                                </button>
-                            </form>
-                        @endif
                     </td>
                 </tr>
 

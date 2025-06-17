@@ -43,7 +43,6 @@ Route::delete('/tasks/delete/{id}', 'TasksController@delete')->name('tasks.delet
 Route::post('/tasks', 'TasksController@store')->name('tasks.store');
 
 Route::get('/users', 'UsersController@index')->name('users.index');
-Route::get('/users/trash', 'UsersController@trash')->name('users.trash');
 Route::get('/users/create', 'UsersController@create')->name('users.create');
 Route::post('/users', 'UsersController@store')->name('users.store');
 Route::get('/users/edit/{id}', 'UsersController@edit')->name('users.edit');

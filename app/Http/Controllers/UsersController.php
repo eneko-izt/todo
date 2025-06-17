@@ -26,16 +26,19 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::withCount('tasks')->paginate(10);
+        $users = User::paginate(10);
         return view('users.index', compact('users'));
-    }
-
-    public function trash()
-    {
     }
 
     public function create()
     {
+        $title = 'New user';
+        $button = 'Create';
+        $route = route('users.store');
+        $routeMethod = 'POST';
+        $user = new User();
+
+        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user'));
     }
 
     public function store()
@@ -44,6 +47,13 @@ class UsersController extends Controller
 
     public function edit($id)
     {
+        $title = 'Edit user';
+        $button = 'Save';
+        $route = route('users.update', $id);
+        $routeMethod = 'PATCH';
+        $user = User::findOrFail($id);
+
+        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user'));
     }
 
     public function update($id)
