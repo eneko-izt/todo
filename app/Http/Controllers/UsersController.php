@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,6 +44,16 @@ class UsersController extends Controller
 
     public function store()
     {
+        $this->validateUserCreate();
+
+        $user = new User(request(['name', 'active', 'email']));
+        $user->active = request('active') == 'on' ? 1 : 0;
+        //$user->password = bcrypt(Str::random(8));
+        $user->password = bcrypt('password'); // Default password, can be changed later
+
+        $user->save();
+
+        return redirect(route("users.index"));
     }
 
     public function edit($id)
@@ -58,17 +69,32 @@ class UsersController extends Controller
 
     public function update($id)
     {
+        $user = User::findOrFail($id);
+
+        $user->name = request('name');
+        $user->email = request('email');
+        $user->active = request('active') == 'on' ? 1 : 0;
+
+        $this->validateUserUpdate($id);
+
+        $user->save();
+
+        return redirect(route("users.index"));
     }
 
-    public function delete($id)
+    protected function validateUserCreate()
     {
+        return request()->validate([
+            'name' => ['required', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users']
+        ]);
     }
 
-    public function restore($id)
+    protected function validateUserUpdate($id)
     {
-    }
-
-    public function destroy($id)
-    {
+        return request()->validate([
+            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
+            'email' => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)]
+        ]);
     }
 }

@@ -35,6 +35,9 @@
                         {{ $user->email }}
                     </td>
                     <td>
+                        {{ $user->active ? 'Yes' : 'No' }}
+                    </td>
+                    <td>
                         <a href="{{ route('users.edit', $user->id) }}" 
                             class="btn btn-primary btn-sm" 
                             title="Edit this user"

@@ -49,6 +49,27 @@
                 @enderror
             </div>
         </div>
+        <div class="field">
+            <div class="control">
+                <input 
+                    type="checkbox" 
+                    name="active" 
+                    @if (old('active') == 'on' && !$user->exists)
+                        checked
+                    @elseif (old('active') == null && !$user->exists && $errors->isEmpty())
+                        checked
+                    @elseif (old('active') == 'on' && $user->exists)
+                        checked
+                    @elseif ($user->exists && $user->active && old('active') == null && $errors->isEmpty())
+                        checked
+                    @elseif ($user->exists && old('active') == 'on' )
+                        checked
+                    @endif
+                    
+                >
+                <label class="label" for="active">Active</label>
+            </div>
+        </div>
         <div class="field is-grouped">
             <div class="control">
                 <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>
