@@ -7,6 +7,7 @@
 <a href="{{ route('home') }}" class="btn btn-primary" title="Go to Dashboard">Go to Dashboard</a>
 <a href="{{ route('columns.index') }}" class="btn btn-primary" title="Go to Columns page">Columns</a>
 <a href="{{ route('tags.index') }}" class="btn btn-primary" title="Go to Tags page">Tags</a>
+<a href="{{ route('users.index') }}" class="btn btn-primary" title="Go to Users page">Users</a>
 
     <div class="d-lg-flex justify-content-between w-100 mt-5" >    
         @forelse ($columns as $column)
