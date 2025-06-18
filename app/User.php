@@ -47,20 +47,31 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class)->withPivot(['deleted_at']);
     }
 
-    public function scopeAdmin($query)
+    public function isAdmin()
     {
-        return $query->whereHas('roles', function ($q) {
-            $q->where('name', 'admin');
-        });
+        return $this->hasRole('admin');
     }
 
-    public function scopeUser($query)
+    public function isUser()
     {
-        return $query->whereHas('roles', function ($q) {
-            $q->where('name', 'user');
-        });
+        return $this->hasRole('user');
+    }
+
+    public function hasRole($roleName)
+    {
+        if ($this->existsRole($roleName))
+        {
+            return $this->roles->where('name', $roleName)->first()->pivot->deleted_at === null;
+        }
+        return false;
+    }
+
+    public function existsRole($roleName)
+    {
+        $roles = $this->roles->where('name', $roleName);
+        return $roles->count() > 0;
     }
 }

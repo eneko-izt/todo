@@ -27,7 +27,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::with('roles')->paginate(10);
         return view('users.index', compact('users'));
     }
 
@@ -46,12 +46,25 @@ class UsersController extends Controller
     {
         $this->validateUserCreate();
 
-        $user = new User(request(['name', 'active', 'email']));
+        $user = new User(request(['name', 'email']));
         $user->active = request('active') == 'on' ? 1 : 0;
         //$user->password = bcrypt(Str::random(8));
         $user->password = bcrypt('password'); // Default password, can be changed later
 
+        $isAdmin = request('isAdmin') == 'on' ? 1 : 0;
+        $isUser = request('isUser') == 'on' ? 1 : 0;
+
         $user->save();
+
+        if ($isAdmin) 
+        {
+            $user->roles()->attach(DB::table('roles')->where('name', 'admin')->first()->id);
+        }
+        
+        if ($isUser) 
+        {
+            $user->roles()->attach(DB::table('roles')->where('name', 'user')->first()->id);
+        }
 
         return redirect(route("users.index"));
     }
@@ -77,7 +90,48 @@ class UsersController extends Controller
 
         $this->validateUserUpdate($id);
 
+        $isAdmin = request('isAdmin') == 'on' ? 1 : 0;
+        $isUser = request('isUser') == 'on' ? 1 : 0;
+
         $user->save();
+
+        if ($isAdmin != $user->isAdmin()) 
+        {
+            if ($isAdmin)
+            {
+                if ($user->existsRole('admin')) 
+                {
+                    $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'admin')->first()->id, ['deleted_at' => null]);
+                } 
+                else 
+                {
+                    $user->roles()->attach(DB::table('roles')->where('name', 'admin')->first()->id);
+                }
+            }
+            else 
+            {
+                $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'admin')->first()->id, ['deleted_at' => now()]);
+            }
+        }
+
+        if ($isUser != $user->isUser()) 
+        {
+            if ($isUser)
+            {
+                if ($user->existsRole('user')) 
+                {
+                    $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'user')->first()->id, ['deleted_at' => null]);
+                } 
+                else 
+                {
+                    $user->roles()->attach(DB::table('roles')->where('name', 'user')->first()->id);
+                }
+            }
+            else 
+            {
+                $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'user')->first()->id, ['deleted_at' => now()]);
+            }
+        }
 
         return redirect(route("users.index"));
     }

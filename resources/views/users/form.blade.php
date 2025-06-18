@@ -70,6 +70,48 @@
                 <label class="label" for="active">Active</label>
             </div>
         </div>
+        <div class="field">
+            <div class="control">
+                <input 
+                    type="checkbox" 
+                    name="isAdmin" 
+                    @if (old('isAdmin') == 'on' && !$user->exists)
+                        checked
+                    @elseif (old('isAdmin') == null && !$user->exists && $errors->isEmpty())
+                        checked
+                    @elseif (old('isAdmin') == 'on' && $user->exists)
+                        checked
+                    @elseif ($user->exists && $user->IsAdmin() && old('isAdmin') == null && $errors->isEmpty())
+                        checked
+                    @elseif ($user->exists && old('isAdmin') == 'on' )
+                        checked
+                    @endif
+                    
+                >
+                <label class="label" for="isAdmin">Admin</label>
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <input 
+                    type="checkbox" 
+                    name="isUser" 
+                    @if (old('isUser') == 'on' && !$user->exists)
+                        checked
+                    @elseif (old('isUser') == null && !$user->exists && $errors->isEmpty())
+                        checked
+                    @elseif (old('isUser') == 'on' && $user->exists)
+                        checked
+                    @elseif ($user->exists && $user->IsUser() && old('isUser') == null && $errors->isEmpty())
+                        checked
+                    @elseif ($user->exists && old('isUser') == 'on' )
+                        checked
+                    @endif
+                    
+                >
+                <label class="label" for="isUser">User</label>
+            </div>
+        </div>
         <div class="field is-grouped">
             <div class="control">
                 <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>

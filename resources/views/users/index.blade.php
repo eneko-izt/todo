@@ -21,8 +21,12 @@
         <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
             width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
             <tr>
-                <th>Name</th>
-                <th>Email</th>
+                <th width="20%">Name</th>
+                <th width="20%">Email</th>
+                <th width="10%">Active</th>
+                <th width="10%">Admin</th>
+                <th width="10%">User</th>
+                <th width="10%"></th>
                 <th></th>
             </tr>
 
@@ -36,6 +40,12 @@
                     </td>
                     <td>
                         {{ $user->active ? 'Yes' : 'No' }}
+                    </td>
+                    <td>
+                        {{ $user->isAdmin() ? 'Yes' : 'No' }}
+                    </td>
+                    <td>
+                        {{ $user->isUser() ? 'Yes' : 'No' }}
                     </td>
                     <td>
                         <a href="{{ route('users.edit', $user->id) }}" 
