@@ -31,6 +31,7 @@
                 @enderror
             </div>
         </div>
+
         <div class="field">
             <label class="label" for="email">Email</label>
             <div class="control">
@@ -49,6 +50,7 @@
                 @enderror
             </div>
         </div>
+
         <div class="field">
             <div class="control">
                 <input 
@@ -65,58 +67,36 @@
                     @elseif ($user->exists && old('active') == 'on' )
                         checked
                     @endif
-                    
                 >
                 <label class="label" for="active">Active</label>
             </div>
         </div>
-        <div class="field">
-            <div class="control">
-                <input 
-                    type="checkbox" 
-                    name="isAdmin" 
-                    @if (old('isAdmin') == 'on' && !$user->exists)
-                        checked
-                    @elseif (old('isAdmin') == null && !$user->exists && $errors->isEmpty())
-                        checked
-                    @elseif (old('isAdmin') == 'on' && $user->exists)
-                        checked
-                    @elseif ($user->exists && $user->IsAdmin() && old('isAdmin') == null && $errors->isEmpty())
-                        checked
-                    @elseif ($user->exists && old('isAdmin') == 'on' )
-                        checked
+
+        <label for="input">Roles:</label>
+        <select 
+            class="form-control select2"
+            name="roles[]"
+            id="roles"
+            style="width: 100%;"
+            multiple
+        >
+            @foreach($roles as $role)
+                <option 
+                    value="{{ $role->id }}"
+                    @if (in_array($role->id, old('roles', [])) || ($errors->isEmpty() && $user->hasRoleId($role->id)))
+                        selected
                     @endif
-                    
-                >
-                <label class="label" for="isAdmin">Admin</label>
-            </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <input 
-                    type="checkbox" 
-                    name="isUser" 
-                    @if (old('isUser') == 'on' && !$user->exists)
-                        checked
-                    @elseif (old('isUser') == null && !$user->exists && $errors->isEmpty())
-                        checked
-                    @elseif (old('isUser') == 'on' && $user->exists)
-                        checked
-                    @elseif ($user->exists && $user->IsUser() && old('isUser') == null && $errors->isEmpty())
-                        checked
-                    @elseif ($user->exists && old('isUser') == 'on' )
-                        checked
-                    @endif
-                    
-                >
-                <label class="label" for="isUser">User</label>
-            </div>
-        </div>
+                >{{ $role->name }}.@foreach(old('roles', []) as $ro) {{ $ro }} @endforeach
+                </option>
+            @endforeach
+        </select>
+
         <div class="field is-grouped">
             <div class="control">
                 <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>
             </div>
         </div>
+
     </form>
 
 @endsection

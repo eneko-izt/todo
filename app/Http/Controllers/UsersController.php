@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Role;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -38,8 +39,9 @@ class UsersController extends Controller
         $route = route('users.store');
         $routeMethod = 'POST';
         $user = new User();
+        $roles = Role::all();
 
-        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user'));
+        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user', 'roles'));
     }
 
     public function store()
@@ -50,21 +52,11 @@ class UsersController extends Controller
         $user->active = request('active') == 'on' ? 1 : 0;
         //$user->password = bcrypt(Str::random(8));
         $user->password = bcrypt('password'); // Default password, can be changed later
-
-        $isAdmin = request('isAdmin') == 'on' ? 1 : 0;
-        $isUser = request('isUser') == 'on' ? 1 : 0;
+        $roles['roles'] = request('roles', []);
 
         $user->save();
 
-        if ($isAdmin) 
-        {
-            $user->roles()->attach(DB::table('roles')->where('name', 'admin')->first()->id);
-        }
-        
-        if ($isUser) 
-        {
-            $user->roles()->attach(DB::table('roles')->where('name', 'user')->first()->id);
-        }
+        $user->roles()->attach($roles['roles']);
 
         return redirect(route("users.index"));
     }
@@ -76,8 +68,9 @@ class UsersController extends Controller
         $route = route('users.update', $id);
         $routeMethod = 'PATCH';
         $user = User::findOrFail($id);
+        $roles = Role::all();
 
-        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user'));
+        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user', 'roles'));
     }
 
     public function update($id)
@@ -90,46 +83,33 @@ class UsersController extends Controller
 
         $this->validateUserUpdate($id);
 
+        $roles['roles'] = request('roles', []);
         $isAdmin = request('isAdmin') == 'on' ? 1 : 0;
         $isUser = request('isUser') == 'on' ? 1 : 0;
 
         $user->save();
 
-        if ($isAdmin != $user->isAdmin()) 
+        foreach ($user->roles as $role) 
         {
-            if ($isAdmin)
+            // If the role is not in the new roles, we mark it as deleted
+            if (!in_array($role->id, $roles['roles'])) 
             {
-                if ($user->existsRole('admin')) 
-                {
-                    $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'admin')->first()->id, ['deleted_at' => null]);
-                } 
-                else 
-                {
-                    $user->roles()->attach(DB::table('roles')->where('name', 'admin')->first()->id);
-                }
-            }
-            else 
-            {
-                $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'admin')->first()->id, ['deleted_at' => now()]);
+                $user->roles()->updateExistingPivot($role->id, ['deleted_at' => now()]);
             }
         }
 
-        if ($isUser != $user->isUser()) 
+        foreach ($roles['roles'] as $role) 
         {
-            if ($isUser)
+            if ($user->roleswithtrashed()->where('role_user.role_id', $role)->exists()) 
             {
-                if ($user->existsRole('user')) 
-                {
-                    $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'user')->first()->id, ['deleted_at' => null]);
-                } 
-                else 
-                {
-                    $user->roles()->attach(DB::table('roles')->where('name', 'user')->first()->id);
-                }
+                // If the role already exists, we just update the deleted_at field
+                $user->roles()->updateExistingPivot($role, ['deleted_at' => null]);
+                continue;
             }
             else 
             {
-                $user->roles()->updateExistingPivot(DB::table('roles')->where('name', 'user')->first()->id, ['deleted_at' => now()]);
+                // If the role does not exist, we attach it
+                $user->roles()->attach($role);
             }
         }
 
