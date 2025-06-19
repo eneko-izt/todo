@@ -24,8 +24,7 @@
                 <th width="20%">Name</th>
                 <th width="20%">Email</th>
                 <th width="10%">Active</th>
-                <th width="10%">Admin</th>
-                <th width="10%">User</th>
+                <th width="20%">Roles</th>
                 <th width="10%"></th>
                 <th></th>
             </tr>
@@ -42,10 +41,12 @@
                         {{ $user->active ? 'Yes' : 'No' }}
                     </td>
                     <td>
-                        {{ $user->isAdmin() ? 'Yes' : 'No' }}
-                    </td>
-                    <td>
-                        {{ $user->isUser() ? 'Yes' : 'No' }}
+                        @forelse ($user->roles as $role)
+                            @if (!$loop->first) / @endif
+                            {{ $role->name }}
+                        @empty
+                            
+                        @endforelse
                     </td>
                     <td>
                         <a href="{{ route('users.edit', $user->id) }}" 

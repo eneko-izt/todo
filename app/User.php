@@ -55,16 +55,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class)->withPivot(['deleted_at']);
     }
 
-    public function isAdmin()
-    {
-        return $this->hasRoleName('admin');
-    }
-
-    public function isUser()
-    {
-        return $this->hasRoleName('user');
-    }
-
     public function hasRoleName($roleName)
     {
         $roles = $this->roles->where('name', $roleName);

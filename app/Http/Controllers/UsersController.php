@@ -84,8 +84,6 @@ class UsersController extends Controller
         $this->validateUserUpdate($id);
 
         $roles['roles'] = request('roles', []);
-        $isAdmin = request('isAdmin') == 'on' ? 1 : 0;
-        $isUser = request('isUser') == 'on' ? 1 : 0;
 
         $user->save();
 
