@@ -6,8 +6,10 @@
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
+        @can('viewIndex', App\User::class)
         <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm" title = "Create a user" alt = "Create a user">New</a>
         <a href="{{ route('users.trash') }}" class="btn btn-primary btn-sm" title = "View deleted users" alt = "View deleted users">Trash</a>
+        @endcan
     </div>
 @endsection
 

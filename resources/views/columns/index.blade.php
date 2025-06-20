@@ -6,8 +6,10 @@
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
+        @can('viewIndex', App\User::class)
         <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm" title = "Create a column" alt = "Create a column">New</a>
         <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm" title = "View deleted columns" alt = "View deleted columns">Trash</a>
+        @endcan
     </div>
 @endsection
 

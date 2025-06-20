@@ -5,11 +5,11 @@
 <h3>{{ Date('Y-m-d') }}</h3>
 <a href="{{ route('welcome') }}" class="btn btn-primary" title="Go to Welcome page">Home</a>
 <a href="{{ route('home') }}" class="btn btn-primary" title="Go to Dashboard">Go to Dashboard</a>
-@if (auth()->user()->can('viewIndex'))
+@can('viewIndex', App\User::class)
 <a href="{{ route('columns.index') }}" class="btn btn-primary" title="Go to Columns page">Columns</a>
 <a href="{{ route('tags.index') }}" class="btn btn-primary" title="Go to Tags page">Tags</a>
 <a href="{{ route('users.index') }}" class="btn btn-primary" title="Go to Users page">Users</a>
-@endif
+@endcan
     <div class="d-lg-flex justify-content-between w-100 mt-5" >    
         @forelse ($columns as $column)
 
