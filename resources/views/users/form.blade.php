@@ -52,42 +52,40 @@
         </div>
 
         <div class="field">
-            <label class="label" for="passwordChange">Password</label>
+            <label class="label" for="password">Password</label>
             <div class="control">
                 <input 
-                    class="input @error('passwordChange') is-danger @enderror"
+                    class="input @error('password') is-danger @enderror"
                     type="password" 
-                    name="passwordChange" 
-                    id="passwordChange" 
+                    name="password" 
+                    id="password" 
                     value=""
                     maxlength="255" 
-                    style="@error('passwordChange') color:#d8000c @enderror"
-                    @if ($routeMethod = 'POST') required @endif
+                    style="@error('password') color:#d8000c @enderror"
+                    @if($routeMethod == 'POST') required @endif
                 >
 
-                @error('passwordChange')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('passwordChange') }}</p>
+                @error('password')
+                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('password') }}</p>
                 @enderror
             </div>
         </div>
 
         <div class="field">
-            <label class="label" for="passwordConfirm">Password confirmation</label>
+            <label class="label" for="password_confirmation">Password confirmation</label>
             <div class="control">
                 <input 
-                    class="input @error('passwordChange') is-danger @enderror"
+                    class="input @error('password_confirmation') is-danger @enderror"
                     type="password" 
-                    name="passwordConfirm" 
-                    id="passwordConfirm" 
+                    name="password_confirmation" 
+                    id="password_confirmation" 
                     value=""
                     maxlength="255" 
-                    style="@error('passwordChange') color:#d8000c @enderror"
-                    required_with="passwordChange"
-                    same="passwordChange"
+                    style="@error('password_confirmation') color:#d8000c @enderror"
                 >
 
-                @error('passwordChange')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('passwordChange') }}</p>
+                @error('password_confirmation')
+                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('password_confirmation') }}</p>
                 @enderror
             </div>
         </div>
@@ -127,7 +125,7 @@
                     @if (in_array($role->id, old('roles', [])) || ($errors->isEmpty() && $user->hasRoleId($role->id)))
                         selected
                     @endif
-                >{{ $role->name }}.@foreach(old('roles', []) as $ro) {{ $ro }} @endforeach
+                >{{ $role->name }}
                 </option>
             @endforeach
         </select>

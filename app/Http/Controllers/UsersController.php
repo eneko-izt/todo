@@ -52,7 +52,7 @@ class UsersController extends Controller
         $this->validateUserCreate();
 
         $user = new User(request(['name', 'email']));
-        $user->password = bcrypt(request('passwordChange'));
+        $user->password = bcrypt(request('password'));
         $user->active = request('active') == 'on' ? 1 : 0;
 
         $roles['roles'] = request('roles', []);
@@ -86,7 +86,10 @@ class UsersController extends Controller
 
         $user->name = request('name');
         $user->email = request('email');
-        $user->password = bcrypt(request('passwordChange'));
+        if (request('password') <> null)
+        {
+            $user->password = bcrypt(request('password'));
+        }
         $user->active = request('active') == 'on' ? 1 : 0;
 
         $roles['roles'] = request('roles', []);
@@ -127,8 +130,7 @@ class UsersController extends Controller
         return request()->validate([
             'name' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'passwordChange' => ['required', 'max:255'],
-            'passwordConfirm' => ['required', 'same:passwordChange', 'max:255']
+            'password' => ['required', 'confirmed', 'max:255'],
         ]);
     }
 
@@ -137,8 +139,7 @@ class UsersController extends Controller
         return request()->validate([
             'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
             'email' => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
-            'passwordChange' => ['max:255'],
-            'passwordConfirm' => ['required_with:passwordChange', 'same:passwordChange', 'max:255']
+            'password' => ['confirmed', 'max:255'],
         ]);
     }
 }
