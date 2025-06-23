@@ -52,6 +52,47 @@
         </div>
 
         <div class="field">
+            <label class="label" for="passwordChange">Password</label>
+            <div class="control">
+                <input 
+                    class="input @error('passwordChange') is-danger @enderror"
+                    type="password" 
+                    name="passwordChange" 
+                    id="passwordChange" 
+                    value=""
+                    maxlength="255" 
+                    style="@error('passwordChange') color:#d8000c @enderror"
+                    @if ($routeMethod = 'POST') required @endif
+                >
+
+                @error('passwordChange')
+                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('passwordChange') }}</p>
+                @enderror
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="passwordConfirm">Password confirmation</label>
+            <div class="control">
+                <input 
+                    class="input @error('passwordChange') is-danger @enderror"
+                    type="password" 
+                    name="passwordConfirm" 
+                    id="passwordConfirm" 
+                    value=""
+                    maxlength="255" 
+                    style="@error('passwordChange') color:#d8000c @enderror"
+                    required_with="passwordChange"
+                    same="passwordChange"
+                >
+
+                @error('passwordChange')
+                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('passwordChange') }}</p>
+                @enderror
+            </div>
+        </div>
+
+        <div class="field">
             <div class="control">
                 <input 
                     type="checkbox" 

@@ -8,6 +8,9 @@ use App\Role;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 
 class UsersController extends Controller
 {
@@ -49,10 +52,12 @@ class UsersController extends Controller
         $this->validateUserCreate();
 
         $user = new User(request(['name', 'email']));
+        $user->password = bcrypt(request('passwordChange'));
         $user->active = request('active') == 'on' ? 1 : 0;
-        //$user->password = bcrypt(Str::random(8));
-        $user->password = bcrypt('password'); // Default password, can be changed later
+
         $roles['roles'] = request('roles', []);
+        $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
+        if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
 
         $user->save();
 
@@ -77,13 +82,16 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $user->name = request('name');
-        $user->email = request('email');
-        $user->active = request('active') == 'on' ? 1 : 0;
-
         $this->validateUserUpdate($id);
 
+        $user->name = request('name');
+        $user->email = request('email');
+        $user->password = bcrypt(request('passwordChange'));
+        $user->active = request('active') == 'on' ? 1 : 0;
+
         $roles['roles'] = request('roles', []);
+        $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
+        if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
 
         $user->save();
 
@@ -118,7 +126,9 @@ class UsersController extends Controller
     {
         return request()->validate([
             'name' => ['required', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users']
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'passwordChange' => ['required', 'max:255'],
+            'passwordConfirm' => ['required', 'same:passwordChange', 'max:255']
         ]);
     }
 
@@ -126,7 +136,9 @@ class UsersController extends Controller
     {
         return request()->validate([
             'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
-            'email' => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)]
+            'email' => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
+            'passwordChange' => ['max:255'],
+            'passwordConfirm' => ['required_with:passwordChange', 'same:passwordChange', 'max:255']
         ]);
     }
 }

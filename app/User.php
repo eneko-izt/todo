@@ -47,12 +47,12 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class)->whereNull('role_user.deleted_at')->withPivot(['deleted_at']);
+        return $this->belongsToMany(Role::class)->whereNull('role_user.deleted_at')->withPivot(['deleted_at'])->withTimestamps();
     }
 
     public function roleswithtrashed()
     {
-        return $this->belongsToMany(Role::class)->withPivot(['deleted_at']);
+        return $this->belongsToMany(Role::class)->withPivot(['deleted_at'])->withTimestamps();
     }
 
     public function hasRoleName($roleName)
