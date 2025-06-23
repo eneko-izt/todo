@@ -6,7 +6,7 @@
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
-        @can('viewIndex', App\User::class)
+        @can('viewMenuTag', App\Tag::class)
         <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm" title = "Create a tag" alt = "Create a tag">New</a>
         <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm" title = "View deleted tags" alt = "View deleted tags">Trash</a>
         @endcan

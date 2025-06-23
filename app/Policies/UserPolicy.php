@@ -10,13 +10,7 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function viewIndex(User $user)
+    public function viewMenuUser(User $user)
     {
         return $user->name == 'admin';
     }
