@@ -12,6 +12,6 @@ class ColumnPolicy
 
     public function viewMenuColumn(User $user)
     {
-        return $user->name == 'admin';
+        return $user->hasRoleName(('admin'));
     }
 }

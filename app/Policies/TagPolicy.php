@@ -12,6 +12,6 @@ class TagPolicy
 
     public function viewMenuTag(User $user)
     {
-        return $user->name == 'admin';
+        return $user->hasRoleName(('admin'));
     }
 }
