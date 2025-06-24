@@ -74,7 +74,6 @@ class ColumnsController extends Controller
 
     public function update($id)
     {
-
         $column = Column::findOrFail($id);
 
         $column->name = request('name');

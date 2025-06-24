@@ -24,8 +24,11 @@
         <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
             width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
             <tr>
-                <th>Name</th>
-                <th>Email</th>
+                <th width="20%">Name</th>
+                <th width="20%">Email</th>
+                <th width="10%">Active</th>
+                <th width="20%">Roles</th>
+                <th width="10%"></th>
                 <th></th>
             </tr>
 
@@ -38,24 +41,21 @@
                         {{ $user->email }}
                     </td>
                     <td>
+                        {{ $user->active ? 'Yes' : 'No' }}
+                    </td>
+                    <td>
+                        @forelse ($user->roles as $role)
+                            @if (!$loop->first) / @endif
+                            {{ $role->name }}
+                        @empty
+                            
+                        @endforelse
+                    </td>
+                    <td>
                         <a href="{{ route('users.edit', $user->id) }}" 
                             class="btn btn-primary btn-sm" 
                             title="Edit this user"
                             alt="Edit this user">Edit</a>
-                        @if ($user->tasks_count == 0)
-                            <form action="{{ route('users.delete', $user->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-sm"
-                                    title="Delete this user"
-                                    onclick="return confirm('Are you sure you want to delete this user?')">
-                                    Delete
-                                </button>
-                            </form>
-                        @endif
                     </td>
                 </tr>
 
