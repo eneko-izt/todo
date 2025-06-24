@@ -10,8 +10,8 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function viewMenuUser(User $user)
+    public function viewMenuUser()
     {
-        return $user->hasRoleName(('admin'));
+        return auth()->user()->hasRoleName(('admin'));
     }
 }
