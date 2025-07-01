@@ -56,8 +56,11 @@ class UsersController extends Controller
         $user->active = request('active') == 'on' ? 1 : 0;
 
         $roles['roles'] = request('roles', []);
-        $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
-        if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+        if (count($roles['roles']) > 0) 
+        {
+            $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
+            if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+        }   
 
         $user->save();
 
@@ -93,8 +96,11 @@ class UsersController extends Controller
         $user->active = request('active') == 'on' ? 1 : 0;
 
         $roles['roles'] = request('roles', []);
-        $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
-        if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+        if (count($roles['roles']) > 0) 
+        {
+            $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
+            if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+        }   
 
         $user->save();
 
