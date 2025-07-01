@@ -60,7 +60,8 @@ class UsersController extends Controller
         {
             $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
             if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
-        }
+        }   
+
         $user->save();
 
         if (count($roles['roles']) > 0) 
