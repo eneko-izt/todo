@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'active', 'email', 'password',
     ];
 
     /**
@@ -47,20 +47,31 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class)->whereNull('role_user.deleted_at')->withPivot(['deleted_at'])->withTimestamps();
     }
 
-    public function scopeAdmin($query)
+    public function roleswithtrashed()
     {
-        return $query->whereHas('roles', function ($q) {
-            $q->where('name', 'admin');
-        });
+        return $this->belongsToMany(Role::class)->withPivot(['deleted_at'])->withTimestamps();
     }
 
-    public function scopeUser($query)
+    public function hasRoleName($roleName)
     {
-        return $query->whereHas('roles', function ($q) {
-            $q->where('name', 'user');
-        });
+        $roles = $this->roles->where('name', $roleName);
+        if ($roles->count() > 0)
+        {
+            return $this->roles->where('name', $roleName)->first()->pivot->deleted_at === null;
+        }
+        return false;
+    }
+
+    public function hasRoleId($roleId)
+    {
+        $roles = $this->roles->where('id', $roleId);
+        if ($roles->count() > 0)
+        {
+            return $this->roles->where('id', $roleId)->first()->pivot->deleted_at === null;
+        }
+        return false;
     }
 }
