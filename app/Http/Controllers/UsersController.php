@@ -39,12 +39,13 @@ class UsersController extends Controller
     {
         $title = 'New user';
         $button = 'Create';
+        $policy = 'createUser';
         $route = route('users.store');
         $routeMethod = 'POST';
         $user = new User();
         $roles = Role::all();
 
-        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user', 'roles'));
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles'));
     }
 
     public function store()
@@ -64,8 +65,11 @@ class UsersController extends Controller
 
         $user->save();
 
-        $user->roles()->attach($roles['roles']);
-
+        if (count($roles['roles']) > 0) 
+        {
+            $user->roles()->attach($roles['roles']);
+        }
+    
         return redirect(route("users.index"));
     }
 
@@ -73,12 +77,13 @@ class UsersController extends Controller
     {
         $title = 'Edit user';
         $button = 'Save';
+        $policy = 'editUser';
         $route = route('users.update', $id);
         $routeMethod = 'PATCH';
         $user = User::findOrFail($id);
         $roles = Role::all();
 
-        return view('users.form', compact('title', 'button', 'route', 'routeMethod', 'user', 'roles'));
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles'));
     }
 
     public function update($id)

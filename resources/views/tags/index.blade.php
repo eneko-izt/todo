@@ -6,9 +6,11 @@
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
-        @can('viewMenuTag', App\Tag::class)
-        <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm" title = "Create a tag" alt = "Create a tag">New</a>
-        <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm" title = "View deleted tags" alt = "View deleted tags">Trash</a>
+        @can('createTag', App\Tag::class)
+            <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm" title = "Create a tag" alt = "Create a tag">New</a>
+        @endcan
+        @can('deleteTag', App\Tag::class)
+            <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm" title = "View deleted tags" alt = "View deleted tags">Trash</a>
         @endcan
     </div>
 @endsection
@@ -43,11 +45,13 @@
                     </td>
                     <td>{{ $tag->active }}</td>
                     <td>
-                        <a href="{{ route('tags.edit', $tag->id) }}" 
-                            class="btn btn-primary btn-sm" 
-                            title="Edit this tag"
-                            alt="Edit this tag">Edit</a>
-                        @if ($tag->tasks_count == 0)
+                        @can('editTag', App\Tag::class)
+                            <a href="{{ route('tags.edit', $tag->id) }}" 
+                                class="btn btn-primary btn-sm" 
+                                title="Edit this tag"
+                                alt="Edit this tag">Edit</a>
+                        @endcan
+                        @if ($tag->tasks_count == 0 && auth()->user()->can('deleteTag', App\Tag::class))
                             <form action="{{ route('tags.delete', $tag->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')

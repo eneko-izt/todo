@@ -28,27 +28,29 @@
                     </td>
                     <td>{{ $column->active }}</td>
                     <td>
-                        <form action="{{ route('columns.restore', $column->id) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <button
-                                type="submit"
-                                class="btn btn-primary btn-sm"
-                                title="Restore this column"
-                                onclick="return confirm('Are you sure you want to restore this column?')">
-                                Restore
-                            </button>
-                        </form>
-                        <form action="{{ route('columns.destroy', $column->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button 
-                                class="btn btn-primary btn-sm"
-                                title="Delete this column"
-                                onclick="return confirm('Are you sure you want to completely delete this column?')">
-                                Delete
-                            </button>
-                        </form>
+                        @if(auth()->user()->can('deleteColumn', App\Column::class))
+                            <form action="{{ route('columns.restore', $column->id) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-sm"
+                                    title="Restore this column"
+                                    onclick="return confirm('Are you sure you want to restore this column?')">
+                                    Restore
+                                </button>
+                            </form>
+                            <form action="{{ route('columns.destroy', $column->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button 
+                                    class="btn btn-primary btn-sm"
+                                    title="Delete this column"
+                                    onclick="return confirm('Are you sure you want to completely delete this column?')">
+                                    Delete
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
 

@@ -10,8 +10,23 @@ class TagPolicy
 {
     use HandlesAuthorization;
 
-    public function viewMenuTag(User $user)
+    public function viewTag()
     {
-        return $user->hasRoleName(('admin'));
+        return auth()->user()->hasRoleName(('admin'));
+    }
+
+    public function editTag()
+    {
+        return auth()->user()->hasRoleName(('admin'));
+    }
+
+    public function createTag()
+    {
+        return auth()->user()->hasRoleName(('admin'));
+    }
+
+    public function deleteTag()
+    {
+        return auth()->user()->hasRoleName(('admin'));
     }
 }
