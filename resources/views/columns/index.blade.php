@@ -6,9 +6,11 @@
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
-        @can('viewMenuColumn', App\Column::class)
-        <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm" title = "Create a column" alt = "Create a column">New</a>
-        <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm" title = "View deleted columns" alt = "View deleted columns">Trash</a>
+        @can('createColumn', App\Column::class)
+            <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm" title = "Create a column" alt = "Create a column">New</a>
+        @endcan
+        @can('deleteColumn', App\Column::class)
+            <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm" title = "View deleted columns" alt = "View deleted columns">Trash</a>
         @endcan
     </div>
 @endsection
@@ -41,11 +43,13 @@
                     </td>
                     <td>{{ $column->active }}</td>
                     <td>
-                        <a href="{{ route('columns.edit', $column->id) }}" 
-                            class="btn btn-primary btn-sm" 
-                            title="Edit this column"
-                            alt="Edit this column">Edit</a>
-                        @if ($column->tasks_count == 0)
+                        @can('editColumn', App\Column::class)
+                            <a href="{{ route('columns.edit', $column->id) }}" 
+                                class="btn btn-primary btn-sm" 
+                                title="Edit this column"
+                                alt="Edit this column">Edit</a>
+                        @endcan
+                        @if ($column->tasks_count == 0 && auth()->user()->can('deleteColumn', App\Column::class))
                             <form action="{{ route('columns.delete', $column->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')

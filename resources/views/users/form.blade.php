@@ -132,7 +132,9 @@
 
         <div class="field is-grouped">
             <div class="control">
-                <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>
+                @if(auth()->user()->can($policy, App\User::class)) 
+                    <button class="btn btn-primary is-link" type="submit" title={{$button}}>{{$button}}</button>
+                @endif
             </div>
         </div>
 

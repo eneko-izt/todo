@@ -10,8 +10,23 @@ class ColumnPolicy
 {
     use HandlesAuthorization;
 
-    public function viewMenuColumn(User $user)
+    public function viewColumn()
     {
-        return $user->hasRoleName(('admin'));
+        return auth()->user()->hasRoleName(('admin'));
+    }
+
+    public function editColumn()
+    {
+        return auth()->user()->hasRoleName(('admin'));
+    }
+
+    public function createColumn()
+    {
+        return auth()->user()->hasRoleName(('admin'));
+    }
+
+    public function deleteColumn()
+    {
+        return auth()->user()->hasRoleName(('admin'));
     }
 }

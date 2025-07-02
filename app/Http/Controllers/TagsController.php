@@ -42,11 +42,12 @@ class TagsController extends Controller
     {
         $title = 'New tag';
         $button = 'Create';
+        $policy = 'createTag';
         $route = route('tags.store');
         $routeMethod = 'POST';
         $tag = new Tag();
 
-        return view('tags.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
+        return view('tags.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'tag'));
     }
 
     public function store()
@@ -65,11 +66,12 @@ class TagsController extends Controller
     {
         $title = 'Edit tag';
         $button = 'Save';
-        $route = route('tag.update', $id);
+        $policy = 'editTag';
+        $route = route('tags.update', $id);
         $routeMethod = 'PATCH';
         $tag = Tag::findOrFail($id);
 
-        return view('tags.form', compact('title', 'button', 'route', 'routeMethod', 'tag'));
+        return view('tags.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'tag'));
     }
 
     public function update($id)
