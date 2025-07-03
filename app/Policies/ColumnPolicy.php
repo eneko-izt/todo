@@ -12,21 +12,21 @@ class ColumnPolicy
 
     public function viewColumn()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function editColumn()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function createColumn()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function deleteColumn()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 }
