@@ -14,7 +14,7 @@ class HelpersTest extends TestCase
         $user = factory(\App\User::class)->create(['name' => 'userAdminUser']);
         $user = factory(\App\User::class)->create(['name' => 'userAdmin']);
         $user = factory(\App\User::class)->create(['name' => 'userUser']);
-        $user = factory(\App\User::class)->create(['name' => 'userNothing']);
+        $user = factory(\App\User::class)->create(['name' => 'userNoRoles']);
 
         $roleAdmin = factory(\App\Role::class)->create([
             'name' => 'admin'
@@ -40,7 +40,7 @@ class HelpersTest extends TestCase
         $this->actingAs(\App\User::where('name', 'userUser')->first());
         $this->assertFalse(is_admin());
 
-        $this->actingAs(\App\User::where('name', 'userNothing')->first());
+        $this->actingAs(\App\User::where('name', 'userNoRoles')->first());
         $this->assertFalse(is_admin());
     }
 }
