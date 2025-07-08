@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Tag extends Model
 {
     use SoftDeletes;
+    use Traits\StringTrait;
 
     protected $fillable = ['name', 'colour', 'active'];
 
@@ -19,7 +20,7 @@ class Tag extends Model
 
     public function getUpperName()
     {
-        return Str::upper($this->name);
+        return $this->getUpper($this->name);
     }
 
     public function scopeActive($query)

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Role extends Model
 {
     use SoftDeletes;
+    use Traits\StringTrait;
 
     protected $fillable = ['name'];
 
@@ -19,6 +20,6 @@ class Role extends Model
 
     public function getUpperName()
     {
-        return Str::upper($this->name);
+        return $this->getUpper($this->name);
     }
 }
