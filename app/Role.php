@@ -17,9 +17,4 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
-
-    public function getUpperName()
-    {
-        return $this->getUpper($this->name);
-    }
 }

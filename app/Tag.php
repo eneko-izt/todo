@@ -18,11 +18,6 @@ class Tag extends Model
         return $this->belongsToMany(Task::class)->withTimestamps();
     }
 
-    public function getUpperName()
-    {
-        return $this->getUpper($this->name);
-    }
-
     public function scopeActive($query)
     {
         return $query->where('active', true);

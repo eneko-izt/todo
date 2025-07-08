@@ -6,8 +6,8 @@ use Illuminate\Support\Str;
 
 trait StringTrait 
 {
-    public function getUpper($value)
+    public function getUpperName()
     {
-        return Str::upper($value);
+        return Str::upper($this->name);
     }
 }

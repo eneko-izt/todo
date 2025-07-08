@@ -18,11 +18,6 @@ class Column extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function getUpperName()
-    {
-        return $this->getUpper($this->name);
-    }
-
     public function activeTasks()
     {
         return $this->tasks()->active()->orderBy('order');
