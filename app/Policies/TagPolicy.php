@@ -12,21 +12,21 @@ class TagPolicy
 
     public function viewTag()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function editTag()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function createTag()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function deleteTag()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 }

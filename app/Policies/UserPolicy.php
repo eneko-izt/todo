@@ -12,16 +12,16 @@ class UserPolicy
 
     public function viewUser()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function editUser()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 
     public function createUser()
     {
-        return auth()->user()->hasRoleName(('admin'));
+        return is_admin();
     }
 }
