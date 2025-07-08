@@ -9,23 +9,43 @@ class ColumnTaskTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $userAdmin;
-    private $user1;
-    private $userNoRoles;
-
-    private $column;
-
-    private $tasksUserAdmin;
-    private $tasksUser1;
-    private $tasksUserNoRoles;
-
+    /**
+     * Test each user can see their own tasks in a column
+     * 
+     * - An admin user can see their own tasks
+     * - A user can see their own tasks
+     * - An admin cannot see another user's tasks
+     * - A user cannot see another user's tasks
+     */
     public function testOnlyOwnTasks()
     {
-        $this->populateDatabase();
+        $roleAdmin = factory(\App\Role::class)->create(['name' => 'admin']);
+        $roleUser = factory(\App\Role::class)->create(['name' => 'user']);
 
-        $this->checkHasTasks($this->userAdmin, $this->column, $this->tasksUserAdmin);
-        $this->checkHasTasks($this->user1, $this->column, $this->tasksUser1);
-        // $this->checkHasTasks($this->userNoRoles, $this->column, $this->tasksUserNoRoles);
+        $column = factory(\App\Column::class)->create([
+            'active' => true,
+            'deleted_at' => null
+        ]);
+
+        // Check an admin user can see their own tasks
+        $admin = $this->createUser([$roleAdmin->id]);
+        $taskAdmin = $this->createTask($admin, $column);
+        $this->checkHasTasks($admin, $column, $taskAdmin);
+
+        // Check a user can see their own tasks
+        $user = $this->createUser([$roleUser->id]);
+        $taskUser = $this->createTask($user, $column);
+        $this->checkHasTasks($user, $column, $taskUser);
+
+        // Check a user can see their own tasks
+        $anotherUser = $this->createUser([$roleUser->id]);
+        $taskAnotherUser = $this->createTask($anotherUser, $column);
+
+        // Check an admin user cannot see another user's tasks
+        $this->checkNoOthersTasks($admin, $column, $taskUser);
+
+        // Check a user cannot see another user's tasks
+        $this->checkNoOthersTasks($user, $column, $taskAnotherUser);
     }
 
     private function checkHasTasks($user, $column, $task)
@@ -36,27 +56,18 @@ class ColumnTaskTest extends TestCase
         $this->assertTrue($tasks[0]->id ==  $task->id, "Column {$column->name} should have tasks for {$user->name}");
     }
 
-    private function populateDatabase()
+    private function checkNoOthersTasks($user, $column, $task)
     {
-        $this->userAdmin = factory(\App\User::class)->create(['name' => 'userAdmin', 'active' => 1]);
-        $this->user1 = factory(\App\User::class)->create(['name' => 'user1', 'active' => 1]);
-        $this->userNoRoles = factory(\App\User::class)->create(['name' => 'userNoRoles', 'active' => 1]);
+        $this->actingAs($user);
+        $tasks = $column->activeTasks()->get();
+        $this->assertFalse($tasks[0]->id ==  $task->id, "{$user->name} should not have task {$task->id} in column {$column->name}");
+    }
 
-        $roleAdmin = factory(\App\Role::class)->create(['name' => 'admin']);
-        $roleUser = factory(\App\Role::class)->create(['name' => 'user']);
-
-        \App\User::where('name', 'userAdmin')->first()->roles()->attach($roleAdmin->id);
-        \App\User::where('name', 'user1')->first()->roles()->attach($roleUser->id);
-
-        $this->column = factory(\App\Column::class)->create([
-            'active' => true,
-            'deleted_at' => null
-        ]);
-
-        $this->tasksUserAdmin = $this->createTask($this->userAdmin, $this->column);
-        $this->tasksUser1 = $this->createTask($this->user1, $this->column);
-        $this->userNoRoles = $this->createTask(($this->userNoRoles), $this->column);
-
+    private function createUser($roleIds = [])
+    {
+        $user = factory(\App\User::class)->create(['active' => 1]);
+        $user->roles()->attach($roleIds);
+        return $user;
     }
 
     private function createTask($user, $column)
