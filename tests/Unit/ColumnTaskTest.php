@@ -53,14 +53,14 @@ class ColumnTaskTest extends TestCase
         $this->actingAs($user);
         $tasks = $column->activeTasks()->get();
         $this->assertTrue($tasks->count() == 1, "Column {$column->name} should have one tasks for {$user->name}");
-        $this->assertTrue($tasks[0]->id ==  $task->id, "Column {$column->name} should have tasks for {$user->name}");
+        $this->assertTrue($tasks->contains($task->id), "Column {$column->name} should have tasks for {$user->name}");
     }
 
     private function checkNoOthersTasks($user, $column, $task)
     {
         $this->actingAs($user);
         $tasks = $column->activeTasks()->get();
-        $this->assertFalse($tasks[0]->id ==  $task->id, "{$user->name} should not have task {$task->id} in column {$column->name}");
+        $this->assertFalse($tasks->contains($task->id), "{$user->name} should not have task {$task->id} in column {$column->name}");
     }
 
     private function createUser($roleIds = [])
