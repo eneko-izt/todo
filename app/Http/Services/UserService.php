@@ -8,16 +8,8 @@ class UserService
 {
     public function processUser($id = null)
     {
-        if ($id) 
-        {
-            $this->validateUserUpdate($id);
-            $user = \App\User::findOrFail($id);
-        }
-        else
-        {
-            $this->validateUserCreate();
-            $user = new \App\User();
-        }
+        $this->validateUserEmailPassword($id);
+        $user = $id ? \App\User::findOrFail($id) : new \App\User();
 
         $user = $this->fillUser($user);
         $user->save();
@@ -38,20 +30,20 @@ class UserService
         return $user;
     }
 
-    private function validateUserCreate()
+    private function validateUserEmailPassword($id = null)
     {
-        return request()->validate([
-            'name' => ['required', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', 'max:255'],
-        ]);
-    }
+        // default validation rules
+        $nameValidations = ['required', 'max:255'];
+        $emailValidations = ['required', 'email', 'max:255'];
 
-    private function validateUserUpdate($id)
-    {
+        // if an ID is provided, email must be unique but for that user
+        // otherwise, unique email validation is applied
+        $extraEmailValidation = $id ? \Illuminate\Validation\Rule::unique('users')->ignore($id) : 'unique:users';
+        array_push($emailValidations, $extraEmailValidation);
+
         return request()->validate([
-            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
-            'email' => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
+            'name' => $nameValidations,
+            'email' => $emailValidations,
             'password' => ['confirmed', 'max:255'],
         ]);
     }

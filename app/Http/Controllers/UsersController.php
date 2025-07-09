@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller
 {
     /**
+     * The user service instance.
+     *
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -21,8 +28,6 @@ class UsersController extends Controller
         $this->middleware('auth');
         $this->userService = $userService;
     }
-
-    private $userService;
 
     /**
      * Show the application dashboard.
