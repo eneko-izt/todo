@@ -20,6 +20,6 @@ class Column extends Model
 
     public function activeTasks()
     {
-        return $this->tasks()->active()->orderBy('order');
+        return $this->tasks()->where('user_id', auth()->user()->id)->active()->orderBy('order');
     }
 }
