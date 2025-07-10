@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Column;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 class ColumnsController extends Controller
 {
     /**
@@ -52,7 +49,7 @@ class ColumnsController extends Controller
 
     public function store()
     {
-        $this->validateColumnCreate();
+        $this->validateColumn();
 
         $column = new Column(request(['name', 'colour']));
         $column->active = request('active') == 'on' ? 1 : 0;
@@ -82,7 +79,7 @@ class ColumnsController extends Controller
         $column->colour = request('colour');
         $column->active = request('active') == 'on' ? 1 : 0;
 
-        $this->validateColumnUpdate($id);
+        $this->validateColumn($id);
 
         $column->save();
 
@@ -119,19 +116,18 @@ class ColumnsController extends Controller
         return redirect(route("columns.trash"));
     }
 
-    protected function validateColumnCreate()
+    private function validateColumn($id = null)
     {
-        return request()->validate([
-            'name' => ['required', 'unique:columns', 'max:255',],
-            'colour' => 'required|max:10'
-        ]);
-    }
+        // default validation rules
+        $nameValidations = ['required', 'max:255'];
+        $colourValidations = ['required', 'max:10'];
 
-    protected function validateColumnUpdate($id)
-    {
+        $extraNameValidation = $id ? \Illuminate\Validation\Rule::unique('columns')->ignore($id) : 'unique:columns';
+        array_push($nameValidations, $extraNameValidation);
+
         return request()->validate([
-            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('columns')->ignore($id)],
-            'colour' => 'required|max:10'
+            'name' => $nameValidations,
+            'colour' => $colourValidations
         ]);
     }
 }
