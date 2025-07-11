@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+//TODO: erabiltzen ez direnak ezabatu
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Tag extends Model
 {
     use SoftDeletes;
+    use Traits\StringTrait;
 
     protected $fillable = ['name', 'colour', 'active'];
 
@@ -17,11 +18,7 @@ class Tag extends Model
         return $this->belongsToMany(Task::class)->withTimestamps();
     }
 
-    public function getUpperName()
-    {
-        return Str::upper($this->name);
-    }
-
+    //TODO: scope hau modelo ezberdinetan erabiltzen da, beraz, Trait-ean jarri dezakezu
     public function scopeActive($query)
     {
         return $query->where('active', true);
