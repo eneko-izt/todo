@@ -51,6 +51,7 @@ class TagsController extends Controller
     {
         $this->validateTag();
 
+        //TODO: errepikatuta
         $tag = new Tag(request(['name', 'colour']));
         $tag->active = request('active') == 'on' ? 1 : 0;
 
@@ -75,6 +76,7 @@ class TagsController extends Controller
     {
         $tag = Tag::findOrFail($id);
 
+        //TODO: errepikatuta
         $tag->name = request('name');
         $tag->colour = request('colour');
         $tag->active = request('active') == 'on' ? 1 : 0;

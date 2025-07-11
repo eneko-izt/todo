@@ -26,6 +26,7 @@ class Task extends Model
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
+    //TODO: scope hau modelo ezberdinetan erabiltzen da, beraz, Trait-ean jarri dezakezu
     public function scopeActive($query)
     {
         return $query->where('active', true);

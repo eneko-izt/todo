@@ -51,6 +51,7 @@ class ColumnsController extends Controller
     {
         $this->validateColumn();
 
+        //TODO: errepikatuta
         $column = new Column(request(['name', 'colour']));
         $column->active = request('active') == 'on' ? 1 : 0;
 
@@ -75,6 +76,7 @@ class ColumnsController extends Controller
     {
         $column = Column::findOrFail($id);
 
+        //TODO: errepikatuta
         $column->name = request('name');
         $column->colour = request('colour');
         $column->active = request('active') == 'on' ? 1 : 0;
