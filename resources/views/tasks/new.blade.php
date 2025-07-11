@@ -49,8 +49,8 @@
 
             <input 
                 type="hidden" 
-                name="column_id" 
-                id="column_id" 
+                name={{ 'column_id'.$column->id }} 
+                id={{ 'column_id'.$column->id }} 
                 value="{{ $column->id ?? '' }}"
             >
 
