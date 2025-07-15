@@ -30,7 +30,6 @@ class TasksController extends Controller
 
     public function store()
     {
-
         $attributes = $this->validateTask(request('column_id'));
 
         $data = ['user_id' => auth()->id()];
@@ -81,19 +80,21 @@ class TasksController extends Controller
 
     protected function validateTask($id)
     {
+        //dd(request()->all());
         return request()->validate(
         [
-            'text'.$id => ['required', 'max:255',],
+            'text'.$id => ['required', 'max:2',],
             'order'.$id => 'required|numeric|min:0|max:100',
-            'column_id'.$id => 'required|exists:columns,id'
-        ],
-        [
-            'text'.$id.'.required' => 'The task text is required.',
-            'text'.$id.'.max' => 'The task text may not be greater than 255 characters.',
-            'order'.$id.'.required' => 'The order is required.',
-            'order'.$id.'.numeric' => 'The order must be a number.',
-            'order'.$id.'.min' => 'The order must be at least 0.',
-            'order'.$id.'.max' => 'The order may not be greater than 100.'
-        ]);
+            'column_id' => 'required|exists:columns,id'
+        ]//,
+        // [
+        //     'text.*.required' => 'The task text is required.',
+        //     'text.*.max' => 'The task text may not be greater than 255 characters.',
+        //     'order.*.required' => 'The order is required.',
+        //     'order.*.numeric' => 'The order must be a number.',
+        //     'order.*.min' => 'The order must be at least 0.',
+        //     'order.*.max' => 'The order may not be greater than 100.'
+        // ]
+        );
     }
 }

@@ -3,16 +3,16 @@
         @csrf
         <div>
 
-            <label for="text">Text:</label>
+            <label for="text{{ $column->id }}">Text:</label>
             <textarea 
                 class="form-control mb-2 @error('text'.$column->id) help is-danger @enderror" 
-                name={{ 'text'.$column->id }}
-                id={{ 'text'.$column->id }}
+                name="text{{ $column->id }}"
+                id='text{{ $column->id }}'
                 rows="3"
                 maxlength="255"
                 style="@error('text'.$column->id) color:#d8000c @enderror"
                 required
-            >{{ old('text'.$column->id) }}</textarea>
+            >{{ old("text{$column->id}") }}</textarea>
 
             @error('text'.$column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
@@ -21,15 +21,16 @@
             <label for="order">Order:</label>
             <input 
                 type="number" 
-                class="form-control mb-2 @error('order'.$column->id) help is-danger @enderror" 
-                name={{ 'order'.$column->id }}
-                id={{ 'order'.$column->id }}
+                class="form-control mb-2 @error('order{{ $column->id }}') help is-danger @enderror" 
+                name='order{{ $column->id }}'
+                id='order{{ $column->id }}'
                 value="{{ old('order'.$column->id) }}"
                 min="0"
                 max="100"
                 style="@error('order'.$column->id) color:#d8000c @enderror"
                 required
             >
+
             @error('order'.$column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
@@ -49,8 +50,8 @@
 
             <input 
                 type="hidden" 
-                name={{ 'column_id'.$column->id }} 
-                id={{ 'column_id'.$column->id }} 
+                name="column_id"
+                id="column_id"
                 value="{{ $column->id ?? '' }}"
             >
 

@@ -1,15 +1,18 @@
     <div class="field">
             <div class="control">
-            <label for="text-{{ $task->id }}">Text:</label>
+            <label for="text{{ $task->id }}">Text:</label>
                 <textarea 
-                    class="form-control mb-2 @error('text') help is-danger @enderror" 
-                    name='text-{{ $task->id }}'
-                    id="text-{{ $task->id }}"
+                    class="form-control mb-2 @error('text'.$task->id) help is-danger @enderror" 
+                    name="text{{ $task->id }}"
+                    id="text{{ $task->id }}"
                     rows="3"
                     maxlength="255"
-                    style="@error('text') color:#d8000c @enderror"
+                    style="@error('text'.$task->id) color:#d8000c @enderror"
                     required
-                >{{ old('text', $task->text ?? '') }}</textarea>
+                >{{ old("text{$task->id}", $task->text ?? '') }}</textarea>
+                @error('text'.$task->id)
+                    <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
@@ -17,31 +20,30 @@
             <div class="control">
                 <input 
                     type="checkbox" 
-                    name="active-{{ $task->id }}" 
+                    name="active{{ $task->id }}"
                     @if ($task->active)
                         checked
                     @endif
-                    
                 >
-                <label class="label" for="active">Active</label>
+                <label class="label" for="active{{ $task->id }}">Active</label>
             </div>
         </div>
 
         <div class="field">
-            <label for="order">Order:</label>
+            <label for="order{{ $task->id }}">Order:</label>
             <div class="control">
                 <input 
                     type="number" 
-                    class="form-control mb-2 @error('order') help is-danger @enderror" 
-                    name='order-{{ $task->id }}'
-                    id="order-{{ $task->id }}"
-                    value="{{ $task->order ?? '' }}"
+                    class="form-control mb-2 @error('order'.$task->id) help is-danger @enderror" 
+                    name='order{{ $task->id }}'
+                    id='order{{ $task->id }}'
+                    value={{ old("order".$task->id, $task->order ?? '') }}
                     min="0"
                     max="100"
-                    style="@error('order') color:#d8000c @enderror"
+                    style="@error('order'.$task->id) color:#d8000c @enderror"
                     required
                 >
-                @error('order')
+                @error('order'.$task->id)
                     <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                 @enderror
             </div>
@@ -52,8 +54,8 @@
             <div class="control">
                 <select 
                     class="form-control select2"
-                    name="column-{{ $task->id }}"
-                    id="column-{{ $task->id }}"
+                    name="column{{ $task->id }}"
+                    id="column{{ $task->id }}"
                     style="width: 100%;"
                 >
                     @foreach($columns as $column)
