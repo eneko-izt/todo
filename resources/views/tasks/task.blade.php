@@ -1,5 +1,5 @@
 <div border="1" class="p-2 mb-2 bg-light text-dark rounded">
-    <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
+   <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
         @csrf
         @method('DELETE')
         <button 
@@ -53,3 +53,11 @@
 
     </form>
 </div>
+
+    @if ($errors->any() && session('modal_id') === 'staticBackdrop-' . $task->id)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                $('#staticBackdrop-{{ $task->id }}').modal('show');
+            });
+        </script>
+    @endif

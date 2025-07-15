@@ -50,12 +50,12 @@
         </div>
 
         <div class="field">
-            <label for="input">Tags:</label>
+            <label for="column_id{{ $task->id }}">Column:</label>
             <div class="control">
                 <select 
                     class="form-control select2"
-                    name="column{{ $task->id }}"
-                    id="column{{ $task->id }}"
+                    name="column_id{{ $task->id }}"
+                    id="column_id{{ $task->id }}"
                     style="width: 100%;"
                 >
                     @foreach($columns as $column)
@@ -71,12 +71,12 @@
         </div>
 
         <div class="field">
-            <label for="input">Tags:</label>
+            <label for="tags{{ $task->id }}[]">Tags:</label>
             <div class="control">
                 <select 
                     class="form-control select2"
-                    name="tags[]-{{ $task->id }}"
-                    id="tags-{{ $task->id }}"
+                    name="tags{{ $task->id }}[]"
+                    id="tags{{ $task->id }}[]"
                     style="width: 100%;"
                     multiple
                 >

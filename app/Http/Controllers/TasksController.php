@@ -37,7 +37,7 @@ class TasksController extends Controller
         if ($validator->fails()) { return redirect()->back()->withErrors($validator)->withInput();}
 
         $tags['tags'] = request('tags', []);
-        $validator = Validator::make($tags, ['tags' => 'required|exists:tags,id']);
+        $validator = Validator::make($tags, ['tags' => 'exists:tags,id']);
         if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
 
         $attributes['active'] = 1;
@@ -65,15 +65,42 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        $this->validateTask($id);
+        $rules = [
+            'text'.$id => ['required', 'max:255',],
+            'order'.$id => 'required|numeric|min:0|max:100',
+            'column_id'.$id => 'required|exists:columns,id'
+        ];
 
-        // $tag->name = request('name');
-        // $tag->colour = request('colour');
-        // $tag->active = request('active') == 'on' ? 1 : 0;
+        $validator = Validator::make(request()->all(), $rules);
+        if ($validator->fails()) 
+        {
+            // dd($validator->errors());
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_id', 'staticBackdrop-' . $task->id);
+        }
 
-        // $this->validateTagUpdate($id);
+        $tags['tags'] = request('tags'.$id, []);
+        $validator = Validator::make($tags, ['tags'.$id => 'exists:tags,id']);
+        if ($validator->fails()) 
+        {
+            // dd($validator->errors());
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_id', 'staticBackdrop-' . $task->id);
+        }
 
-        // $tag->save();
+
+        $task->text = request('text'.$id);
+        $task->active = request('active'.$id) == 'on' ? 1 : 0;
+        $task->order = request('order'.$id);
+        $task->column_id = request('column_id'.$id);
+        $task->save();
+
+        // update tags
+        $task->tags()->sync($tags['tags']);
 
         return redirect(route("home"));
     }
