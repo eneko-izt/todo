@@ -81,6 +81,10 @@ class TasksController extends Controller
                 ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
 
+        //TODO: check if user is the owner of the task
+        //TODO: ask Amaia what to do with user_id, updated it or not?
+        //TODO: ask Amaia if tags are required
+        
         $tags['tags'] = request('tags'.$id, []);
         $validator = Validator::make($tags, ['tags'.$id => 'exists:tags,id']);
         if ($validator->fails()) 
