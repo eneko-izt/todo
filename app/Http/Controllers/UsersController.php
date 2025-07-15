@@ -2,26 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\UserService;
 use App\User;
 use App\Role;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 
 class UsersController extends Controller
 {
     /**
+     * The user service instance.
+     *
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserService $userService)
     {
         $this->middleware('auth');
+        $this->userService = $userService;
     }
 
     /**
@@ -50,20 +55,8 @@ class UsersController extends Controller
 
     public function store()
     {
-        $this->validateUserCreate();
-
-        $user = new User(request(['name', 'email']));
-        $user->password = bcrypt(request('password'));
-        $user->active = request('active') == 'on' ? 1 : 0;
-
-        $roles['roles'] = request('roles', []);
-        if (count($roles['roles']) > 0) 
-        {
-            $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
-            if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
-        }   
-
-        $user->save();
+        $user = $this->userService->processUser();
+        $roles = $this->userService->validateRoles();
 
         if (count($roles['roles']) > 0) 
         {
@@ -88,26 +81,8 @@ class UsersController extends Controller
 
     public function update($id)
     {
-        $user = User::findOrFail($id);
-
-        $this->validateUserUpdate($id);
-
-        $user->name = request('name');
-        $user->email = request('email');
-        if (request('password') <> null)
-        {
-            $user->password = bcrypt(request('password'));
-        }
-        $user->active = request('active') == 'on' ? 1 : 0;
-
-        $roles['roles'] = request('roles', []);
-        if (count($roles['roles']) > 0) 
-        {
-            $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
-            if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
-        }   
-
-        $user->save();
+        $user = $this->userService->processUser($id);
+        $roles = $this->userService->validateRoles();
 
         foreach ($user->roles as $role) 
         {
@@ -134,23 +109,5 @@ class UsersController extends Controller
         }
 
         return redirect(route("users.index"));
-    }
-
-    protected function validateUserCreate()
-    {
-        return request()->validate([
-            'name' => ['required', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', 'max:255'],
-        ]);
-    }
-
-    protected function validateUserUpdate($id)
-    {
-        return request()->validate([
-            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
-            'email' => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($id)],
-            'password' => ['confirmed', 'max:255'],
-        ]);
     }
 }

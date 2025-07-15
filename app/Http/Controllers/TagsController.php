@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Tag;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 class TagsController extends Controller
 {
     /**
@@ -52,8 +49,9 @@ class TagsController extends Controller
 
     public function store()
     {
-        $this->validateTagCreate();
+        $this->validateTag();
 
+        //TODO: errepikatuta
         $tag = new Tag(request(['name', 'colour']));
         $tag->active = request('active') == 'on' ? 1 : 0;
 
@@ -78,11 +76,12 @@ class TagsController extends Controller
     {
         $tag = Tag::findOrFail($id);
 
+        //TODO: errepikatuta
         $tag->name = request('name');
         $tag->colour = request('colour');
         $tag->active = request('active') == 'on' ? 1 : 0;
 
-        $this->validateTagUpdate($id);
+        $this->validateTag($id);
 
         $tag->save();
 
@@ -119,19 +118,18 @@ class TagsController extends Controller
         return redirect(route("tags.trash"));
     }
 
-    protected function validateTagCreate()
+    protected function validateTag($id = null)
     {
-        return request()->validate([
-            'name' => ['required', 'unique:tags', 'max:255',],
-            'colour' => 'required|max:10'
-        ]);
-    }
+        // default validation rules
+        $nameValidations = ['required', 'max:255'];
+        $colourValidations = ['required', 'max:10'];
 
-    protected function validateTagUpdate($id)
-    {
+        $extraNameValidation = $id ? \Illuminate\Validation\Rule::unique('tags')->ignore($id) : 'unique:tags';
+        array_push($nameValidations, $extraNameValidation);
+
         return request()->validate([
-            'name' => ['required', 'max:255', \Illuminate\Validation\Rule::unique('tags')->ignore($id)],
-            'colour' => 'required|max:10'
+            'name' => $nameValidations,
+            'colour' => $colourValidations
         ]);
     }
 }

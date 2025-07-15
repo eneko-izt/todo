@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Task;
-
+//TODO: erabiltzen ez direnak ezabatu
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class TasksController extends Controller
 {
@@ -33,18 +33,22 @@ class TasksController extends Controller
         $attributes = $this->validateTask(request('column_id'));
 
         $data = ['user_id' => auth()->id()];
-        $validator =Validator::make($data, ['user_id' => 'required|exists:users,id']);
-        if ($validator->fails()) { return redirect()->back()->withErrors($validator)->withInput();}
+        $validator = Validator::make($data, ['user_id' => 'required|exists:users,id']);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $tags['tags'] = request('tags', []);
         $validator = Validator::make($tags, ['tags' => 'exists:tags,id']);
-        if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $attributes['active'] = 1;
         $attributes['user_id'] = auth()->id();
         $attributes['column_id'] = request('column_id');
-        $attributes['order'] = request('order'.$attributes['column_id'], 0);
-        $attributes['text'] = request('text'.$attributes['column_id']);
+        $attributes['order'] = request('order' . $attributes['column_id'], 0);
+        $attributes['text'] = request('text' . $attributes['column_id']);
 
         $task = Task::create($attributes);
         $task->tags()->attach($tags['tags']);
