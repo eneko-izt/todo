@@ -83,7 +83,7 @@ class TasksController extends Controller
         //dd(request()->all());
         return request()->validate(
         [
-            'text'.$id => ['required', 'max:2',],
+            'text'.$id => ['required', 'max:255',],
             'order'.$id => 'required|numeric|min:0|max:100',
             'column_id' => 'required|exists:columns,id'
         ]//,
