@@ -81,9 +81,22 @@ class TasksController extends Controller
                 ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
 
-        //TODO: check if user is the owner of the task
-        //TODO: ask Amaia what to do with user_id, updated it or not?
-        //TODO: ask Amaia if tags are required
+        // user validation
+        $data = ['user_id' => auth()->id()];
+        $rules = ['user_id' => ['required', 'exists:users,id', function ($attribute, $value, $fail) use ($task)
+            {
+                if ($task->user_id != $value) 
+                {
+                    $fail($attribute.'You do not have permission to update this task.');
+                }
+            }
+            ]
+        ];
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails())
+        { 
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         
         $tags['tags'] = request('tags'.$id, []);
         $validator = Validator::make($tags, ['tags'.$id => 'exists:tags,id']);
