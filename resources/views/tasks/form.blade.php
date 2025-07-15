@@ -1,4 +1,9 @@
     <div class="field">
+
+            @error('user_id')
+                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
+            @enderror
+
             <div class="control">
             <label for="text{{ $task->id }}">Text:</label>
                 <textarea 
@@ -10,9 +15,11 @@
                     style="@error('text'.$task->id) color:#d8000c @enderror"
                     required
                 >{{ old("text{$task->id}", $task->text ?? '') }}</textarea>
+
                 @error('text'.$task->id)
                     <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                 @enderror
+
             </div>
         </div>
 
@@ -43,9 +50,11 @@
                     style="@error('order'.$task->id) color:#d8000c @enderror"
                     required
                 >
+
                 @error('order'.$task->id)
                     <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                 @enderror
+
             </div>
         </div>
 

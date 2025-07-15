@@ -87,7 +87,7 @@ class TasksController extends Controller
             {
                 if ($task->user_id != $value) 
                 {
-                    $fail($attribute.'You do not have permission to update this task.');
+                    $fail('You do not have permission to update this task.');
                 }
             }
             ]
@@ -95,7 +95,10 @@ class TasksController extends Controller
         $validator = Validator::make($data, $rules);
         if ($validator->fails())
         { 
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
         
         $tags['tags'] = request('tags'.$id, []);
