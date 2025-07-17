@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
-//TODO: erabiltzen ez direnak ezabatu
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Validator;
 
 class TasksController extends Controller
@@ -30,20 +27,9 @@ class TasksController extends Controller
 
     public function store()
     {
-        $attributes = $this->validateTask(request('column_id'));
+        $this->validateTaskCreate(request('column_id'));
 
-        $data = ['user_id' => auth()->id()];
-        $validator = Validator::make($data, ['user_id' => 'required|exists:users,id']);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $tags['tags'] = request('tags', []);
-        $validator = Validator::make($tags, ['tags' => 'exists:tags,id']);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
+        $attributes = [];
         $attributes['active'] = 1;
         $attributes['user_id'] = auth()->id();
         $attributes['column_id'] = request('column_id');
@@ -51,7 +37,9 @@ class TasksController extends Controller
         $attributes['text'] = request('text' . $attributes['column_id']);
 
         $task = Task::create($attributes);
-        $task->tags()->attach($tags['tags']);
+        
+        $tags = request('tags' . $attributes['column_id'], []);
+        $task->tags()->attach($tags);
 
         return redirect(route("home"));
     }
@@ -69,53 +57,10 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        $rules = [
-            'text'.$id => ['required', 'max:255',],
-            'order'.$id => 'required|numeric|min:0|max:100',
-            'column_id'.$id => 'required|exists:columns,id'
-        ];
-
-        $validator = Validator::make(request()->all(), $rules);
-        if ($validator->fails()) 
-        {
-            // dd($validator->errors());
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
+        $validationResult = $this->validateTaskUpdate($task);
+        if ($validationResult) {
+            return $validationResult;
         }
-
-        // user validation
-        $data = ['user_id' => auth()->id()];
-        $rules = ['user_id' => ['required', 'exists:users,id', function ($attribute, $value, $fail) use ($task)
-            {
-                if ($task->user_id != $value) 
-                {
-                    $fail('You do not have permission to update this task.');
-                }
-            }
-            ]
-        ];
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails())
-        { 
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
-        }
-        
-        $tags['tags'] = request('tags'.$id, []);
-        $validator = Validator::make($tags, ['tags'.$id => 'exists:tags,id']);
-        if ($validator->fails()) 
-        {
-            // dd($validator->errors());
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
-        }
-
 
         $task->text = request('text'.$id);
         $task->active = request('active'.$id) == 'on' ? 1 : 0;
@@ -124,20 +69,69 @@ class TasksController extends Controller
         $task->save();
 
         // update tags
-        $task->tags()->sync($tags['tags']);
+        $tags = request('tags'.$id, []);
+        $task->tags()->sync($tags);
 
         return redirect(route("home"));
     }
 
-    protected function validateTask($id)
+    public function validateTaskCreate($columnId)
     {
-        //dd(request()->all());
-        return request()->validate(
-        [
-            'text'.$id => ['required', 'max:255',],
-            'order'.$id => 'required|numeric|min:0|max:100',
-            'column_id' => 'required|exists:columns,id'
-        ]//,
+        $rules = $this->getValidationRules($columnId);
+
+        $data = request()->all();
+        $data += [("user_id"  . $columnId)=> auth()->id()];
+
+        Validator::make($data, $rules)->validate();
+    }
+
+    public function validateTaskUpdate($task)
+    {
+        $rules = $this->getValidationRules($task->id, $task);
+
+        $data = request()->all();
+        $data += [("user_id"  . $task->id)=> auth()->id()];
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails())
+        {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_id', 'staticBackdrop-' . $task->id);
+        }
+    }
+
+    private function getValidationRules($id, $task = null)
+    {
+        $columnEntry = 'column_id';
+        $userValidation = ['required', 'exists:users,id'];
+
+        if ($task != null)
+        {
+            $columnEntry = 'column_id' . $task->id;
+
+            $extraUserValidation = function ($attribute, $value, $fail) use ($task)
+                {
+                    if ($task->user_id != $value) 
+                    {
+                        $fail('You do not have permission to update this task.');
+                    }
+                };
+
+            array_push($userValidation, $extraUserValidation);
+        }
+
+        $rules = [
+            'text'.$id => ['required', 'max:255'],
+            'order'.$id => ['required', 'numeric', 'min:0', 'max:100'],
+            $columnEntry => ['required', 'exists:columns,id'],
+            'user_id'.$id => $userValidation,
+            'tags'.$id => ['exists:tags,id']
+        ];
+
+        return $rules;
+
         // [
         //     'text.*.required' => 'The task text is required.',
         //     'text.*.max' => 'The task text may not be greater than 255 characters.',
@@ -146,6 +140,6 @@ class TasksController extends Controller
         //     'order.*.min' => 'The order must be at least 0.',
         //     'order.*.max' => 'The order may not be greater than 100.'
         // ]
-        );
+        // );
     }
 }

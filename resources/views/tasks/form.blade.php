@@ -1,22 +1,22 @@
     <div class="field">
 
-            @error('user_id')
+            @error('user_id' . $task->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
             <div class="control">
             <label for="text{{ $task->id }}">Text:</label>
                 <textarea 
-                    class="form-control mb-2 @error('text'.$task->id) help is-danger @enderror" 
+                    class="form-control mb-2 @error('text' . $task->id) help is-danger @enderror" 
                     name="text{{ $task->id }}"
                     id="text{{ $task->id }}"
                     rows="3"
                     maxlength="255"
-                    style="@error('text'.$task->id) color:#d8000c @enderror"
+                    style="@error('text' . $task->id) color:#d8000c @enderror"
                     required
                 >{{ old("text{$task->id}", $task->text ?? '') }}</textarea>
 
-                @error('text'.$task->id)
+                @error('text' . $task->id)
                     <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                 @enderror
 
@@ -41,17 +41,17 @@
             <div class="control">
                 <input 
                     type="number" 
-                    class="form-control mb-2 @error('order'.$task->id) help is-danger @enderror" 
+                    class="form-control mb-2 @error('order' . $task->id) help is-danger @enderror" 
                     name='order{{ $task->id }}'
                     id='order{{ $task->id }}'
-                    value={{ old("order".$task->id, $task->order ?? '') }}
+                    value={{ old("order" . $task->id, $task->order ?? '') }}
                     min="0"
                     max="100"
-                    style="@error('order'.$task->id) color:#d8000c @enderror"
+                    style="@error('order' . $task->id) color:#d8000c @enderror"
                     required
                 >
 
-                @error('order'.$task->id)
+                @error('order' . $task->id)
                     <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                 @enderror
 
@@ -70,7 +70,7 @@
                     @foreach($columns as $column)
                         <option 
                             value="{{ $column->id }}"
-                            @if($column->id == $task->column_id) selected @endif
+                            @if ($column->id == $task->column_id) selected @endif
                             >
                             {{ $column->name }}
                         </option>

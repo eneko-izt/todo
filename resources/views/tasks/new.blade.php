@@ -3,18 +3,22 @@
         @csrf
         <div>
 
+            @error('user_id' . $column->id)
+                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
+            @enderror
+
             <label for="text{{ $column->id }}">Text:</label>
             <textarea 
-                class="form-control mb-2 @error('text'.$column->id) help is-danger @enderror" 
+                class="form-control mb-2 @error('text' . $column->id) help is-danger @enderror" 
                 name="text{{ $column->id }}"
                 id='text{{ $column->id }}'
                 rows="3"
                 maxlength="255"
-                style="@error('text'.$column->id) color:#d8000c @enderror"
+                style="@error('text' . $column->id) color:#d8000c @enderror"
                 required
             >{{ old("text{$column->id}") }}</textarea>
 
-            @error('text'.$column->id)
+            @error('text' . $column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
@@ -24,27 +28,32 @@
                 class="form-control mb-2 @error('order{{ $column->id }}') help is-danger @enderror" 
                 name='order{{ $column->id }}'
                 id='order{{ $column->id }}'
-                value="{{ old('order'.$column->id) }}"
+                value="{{ old('order' . $column->id) }}"
                 min="0"
                 max="100"
-                style="@error('order'.$column->id) color:#d8000c @enderror"
+                style="@error('order' . $column->id) color:#d8000c @enderror"
                 required
             >
 
-            @error('order'.$column->id)
+            @error('order' . $column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
             <label for="input">Tags:</label>
             <select 
                 class="form-control select2"
-                name="tags[]"
-                id="tags"
+                name="tags{{ $column->id }}[]"
+                id="tags{{ $column->id }}"
                 style="width: 100%;"
                 multiple
             >
                 @foreach($tags as $tag)
-                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    <option 
+                        value="{{ $tag->id }}"
+                        @if (in_array($tag->id, old('tags' . $column->id, []))) selected @endif
+                        >
+                        {{ $tag->name }}
+                    </option>
                 @endforeach
             </select>
 
