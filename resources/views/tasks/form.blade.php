@@ -92,7 +92,7 @@
                     @foreach($tags as $tag)
                         <option 
                             value="{{ $tag->id }}"
-                            @if(in_array($tag->id, $task->tags->pluck('id')->toArray())) selected @endif
+                            @if (in_array($tag->id, old('tags' . $task->id, $task->tags->pluck('id')->toArray()))) selected @endif
                             >
                             {{ $tag->name }}
                         </option>

@@ -27,7 +27,7 @@ class TasksController extends Controller
 
     public function store()
     {
-        $this->validateTaskCreate(request('column_id'));
+        $this->createValidator(request()->all())->validate();
 
         $attributes = [];
         $attributes['active'] = 1;
@@ -57,9 +57,13 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        $validationResult = $this->validateTaskUpdate($task);
-        if ($validationResult) {
-            return $validationResult;
+        $validator = $this->updateValidator(request()->all(), $task);
+        if ($validator->fails())
+        {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
 
         $task->text = request('text'.$id);
@@ -75,31 +79,19 @@ class TasksController extends Controller
         return redirect(route("home"));
     }
 
-    public function validateTaskCreate($columnId)
+    private function createValidator($requestData)
     {
+        $columnId = $requestData['column_id'];
         $rules = $this->getValidationRules($columnId);
-
-        $data = request()->all();
-        $data += [("user_id"  . $columnId)=> auth()->id()];
-
-        Validator::make($data, $rules)->validate();
+        $requestData += [("user_id"  . $columnId)=> auth()->id()];
+        return Validator::make($requestData, $rules);
     }
 
-    public function validateTaskUpdate($task)
+    private function updateValidator($requestData, $task)
     {
         $rules = $this->getValidationRules($task->id, $task);
-
-        $data = request()->all();
-        $data += [("user_id"  . $task->id)=> auth()->id()];
-
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails())
-        {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
-        }
+        $requestData += [("user_id"  . $task->id)=> auth()->id()];
+        return Validator::make($requestData, $rules);
     }
 
     private function getValidationRules($id, $task = null)
