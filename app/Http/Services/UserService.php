@@ -13,7 +13,7 @@ class UserService
 
         $user = $this->fillUser($user);
         $user->save();
-        
+
         return $user;
     }
 
@@ -51,10 +51,11 @@ class UserService
     public function validateRoles()
     {
         $roles['roles'] = request('roles', []);
-        if (count($roles['roles']) > 0) 
-        {
+        if (count($roles['roles']) > 0) {
             $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
-            if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
         }
 
         return $roles;

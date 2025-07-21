@@ -13,14 +13,16 @@ class CreateColumnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('columns', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name')->unique();
-            $table->string('colour');
-            $table->boolean('active')->default(false);
-            $table->timestamps();
-            $table->softDeletes();
-        }
+        Schema::create(
+            'columns',
+            function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('name')->unique();
+                $table->string('colour');
+                $table->boolean('active')->default(false);
+                $table->timestamps();
+                $table->softDeletes();
+            }
         );
     }
 

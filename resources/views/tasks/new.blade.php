@@ -8,64 +8,41 @@
             @enderror
 
             <label for="text{{ $column->id }}">Text:</label>
-            <textarea 
-                class="form-control mb-2 @error('text' . $column->id) help is-danger @enderror" 
-                name="text{{ $column->id }}"
-                id='text{{ $column->id }}'
-                rows="3"
-                maxlength="255"
-                style="@error('text' . $column->id) color:#d8000c @enderror"
-                required
-            >{{ old("text{$column->id}") }}</textarea>
+            <textarea class="form-control mb-2 @error('text' . $column->id) help is-danger @enderror"
+                name="text{{ $column->id }}" id='text{{ $column->id }}' rows="3" maxlength="255"
+                style="@error('text' . $column->id) color:#d8000c @enderror" required>{{ old("text{$column->id}") }}</textarea>
 
             @error('text' . $column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
             <label for="order">Order:</label>
-            <input 
-                type="number" 
-                class="form-control mb-2 @error('order{{ $column->id }}') help is-danger @enderror" 
-                name='order{{ $column->id }}'
-                id='order{{ $column->id }}'
-                value="{{ old('order' . $column->id) }}"
-                min="0"
-                max="100"
-                style="@error('order' . $column->id) color:#d8000c @enderror"
-                required
-            >
+            <input type="number"
+                class="form-control mb-2 @error('order{{ $column->id }}') help is-danger @enderror"
+                name='order{{ $column->id }}' id='order{{ $column->id }}'
+                value="{{ old('order' . $column->id) }}" min="0" max="100"
+                style="@error('order' . $column->id) color:#d8000c @enderror" required>
 
             @error('order' . $column->id)
                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
             @enderror
 
             <label for="input">Tags:</label>
-            <select 
-                class="form-control select2"
-                name="tags{{ $column->id }}[]"
-                id="tags{{ $column->id }}"
-                style="width: 100%;"
-                multiple
-            >
-                @foreach($tags as $tag)
-                    <option 
-                        value="{{ $tag->id }}"
-                        @if (in_array($tag->id, old('tags' . $column->id, []))) selected @endif
-                        >
+            <select class="form-control select2" name="tags{{ $column->id }}[]"
+                id="tags{{ $column->id }}" style="width: 100%;" multiple>
+                @foreach ($tags as $tag)
+                    <option value="{{ $tag->id }}"
+                        @if (in_array($tag->id, old('tags' . $column->id, []))) selected @endif>
                         {{ $tag->name }}
                     </option>
                 @endforeach
             </select>
 
-            <input 
-                type="hidden" 
-                name="column_id"
-                id="column_id"
-                value="{{ $column->id ?? '' }}"
-            >
+            <input type="hidden" name="column_id" id="column_id" value="{{ $column->id ?? '' }}">
 
             <div class="control">
-                <button class="btn btn-primary bottom" type="submit" Title="Create a new task">New</button>
+                <button class="btn btn-primary bottom" type="submit"
+                    Title="Create a new task">New</button>
             </div>
 
         </div>

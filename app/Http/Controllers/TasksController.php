@@ -37,7 +37,7 @@ class TasksController extends Controller
         $attributes['text'] = request('text' . $attributes['column_id']);
 
         $task = Task::create($attributes);
-        
+
         $tags = request('tags' . $attributes['column_id'], []);
         $task->tags()->attach($tags);
 
@@ -58,22 +58,21 @@ class TasksController extends Controller
         $task = Task::findOrFail($id);
 
         $validator = $this->updateValidator(request()->all(), $task);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
                 ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
 
-        $task->text = request('text'.$id);
-        $task->active = request('active'.$id) == 'on' ? 1 : 0;
-        $task->order = request('order'.$id);
-        $task->column_id = request('column_id'.$id);
+        $task->text = request('text' . $id);
+        $task->active = request('active' . $id) == 'on' ? 1 : 0;
+        $task->order = request('order' . $id);
+        $task->column_id = request('column_id' . $id);
         $task->save();
 
         // update tags
-        $tags = request('tags'.$id, []);
+        $tags = request('tags' . $id, []);
         $task->tags()->sync($tags);
 
         return redirect(route("home"));
@@ -83,14 +82,14 @@ class TasksController extends Controller
     {
         $columnId = $requestData['column_id'];
         $rules = $this->getValidationRules($columnId);
-        $requestData += [("user_id"  . $columnId)=> auth()->id()];
+        $requestData += [("user_id"  . $columnId) => auth()->id()];
         return Validator::make($requestData, $rules);
     }
 
     private function updateValidator($requestData, $task)
     {
         $rules = $this->getValidationRules($task->id, $task);
-        $requestData += [("user_id"  . $task->id)=> auth()->id()];
+        $requestData += [("user_id"  . $task->id) => auth()->id()];
         return Validator::make($requestData, $rules);
     }
 
@@ -99,27 +98,24 @@ class TasksController extends Controller
         $columnEntry = 'column_id';
         $userValidation = ['required', 'exists:users,id'];
 
-        if ($task != null)
-        {
+        if ($task != null) {
             $columnEntry = 'column_id' . $task->id;
 
-            $extraUserValidation = function ($attribute, $value, $fail) use ($task)
-                {
-                    if ($task->user_id != $value) 
-                    {
-                        $fail('You do not have permission to update this task.');
-                    }
-                };
+            $extraUserValidation = function ($attribute, $value, $fail) use ($task) {
+                if ($task->user_id != $value) {
+                    $fail('You do not have permission to update this task.');
+                }
+            };
 
             array_push($userValidation, $extraUserValidation);
         }
 
         $rules = [
-            'text'.$id => ['required', 'max:255'],
-            'order'.$id => ['required', 'numeric', 'min:0', 'max:100'],
+            'text' . $id => ['required', 'max:255'],
+            'order' . $id => ['required', 'numeric', 'min:0', 'max:100'],
             $columnEntry => ['required', 'exists:columns,id'],
-            'user_id'.$id => $userValidation,
-            'tags'.$id => ['exists:tags,id']
+            'user_id' . $id => $userValidation,
+            'tags' . $id => ['exists:tags,id']
         ];
 
         return $rules;

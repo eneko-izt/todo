@@ -2,12 +2,13 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+//TODO: erabiltzen ez direnak ezabatu
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -19,7 +20,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'active', 'email', 'password',
+        'name',
+        'active',
+        'email',
+        'password',
     ];
 
     /**
@@ -28,7 +32,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -58,20 +63,20 @@ class User extends Authenticatable
     public function hasRoleName($roleName)
     {
         $roles = $this->roles->where('name', $roleName);
-        if ($roles->count() > 0)
-        {
+        if ($roles->count() > 0) {
             return $this->roles->where('name', $roleName)->first()->pivot->deleted_at === null;
         }
+
         return false;
     }
 
     public function hasRoleId($roleId)
     {
         $roles = $this->roles->where('id', $roleId);
-        if ($roles->count() > 0)
-        {
+        if ($roles->count() > 0) {
             return $this->roles->where('id', $roleId)->first()->pivot->deleted_at === null;
         }
+
         return false;
     }
 }

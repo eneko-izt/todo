@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Support\Str;
 
-trait StringTrait 
+trait StringTrait
 {
     public function getUpperName()
     {

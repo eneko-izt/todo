@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page" alt="Users">Users ({{ $users->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page" alt="Users">Users ({{ $users->total() }})
+    </li>
 @endsection
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
         @can('createUser', App\User::class)
-        <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm" title = "Create a user" alt = "Create a user">New</a>
+            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm" title = "Create a user"
+                alt = "Create a user">New</a>
         @endcan
     </div>
 @endsection
@@ -44,18 +46,17 @@
                     </td>
                     <td>
                         @forelse ($user->roles as $role)
-                            @if (!$loop->first) / @endif
+                            @if (!$loop->first)
+                                /
+                            @endif
                             {{ $role->name }}
                         @empty
-                            
                         @endforelse
                     </td>
                     <td>
                         @can('editUser', App\User::class)
-                            <a href="{{ route('users.edit', $user->id) }}" 
-                                class="btn btn-primary btn-sm" 
-                                title="Edit this user"
-                                alt="Edit this user">Edit</a>
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm"
+                                title="Edit this user" alt="Edit this user">Edit</a>
                         @endcan
                     </td>
                 </tr>

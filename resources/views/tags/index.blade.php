@@ -7,26 +7,26 @@
 @section('create_trash')
     <div class="d-flex justify-content-between">
         @can('createTag', App\Tag::class)
-            <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm" title = "Create a tag" alt = "Create a tag">New</a>
+            <a href="{{ route('tags.create') }}" class="btn btn-primary btn-sm" title = "Create a tag"
+                alt = "Create a tag">New</a>
         @endcan
         @can('deleteTag', App\Tag::class)
-            <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm" title = "View deleted tags" alt = "View deleted tags">Trash</a>
+            <a href="{{ route('tags.trash') }}" class="btn btn-primary btn-sm" title = "View deleted tags"
+                alt = "View deleted tags">Trash</a>
         @endcan
     </div>
 @endsection
 
 @section('content')
-    <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
+    <div class="dataTables_scrollHeadInner"
+        style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
 
         @if (session('error'))
             <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
         @endif
 
-        <table 
-            class="table table-striped table-bordered table-hover dataTables-taula dataTable"
-            width="100%" 
-            role="grid" 
-            style="margin-left: 0px; width: 1650px;">
+        <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
+            width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
             <tr>
                 <th>Tag</th>
                 <th>Colour</th>
@@ -46,19 +46,15 @@
                     <td>{{ $tag->active }}</td>
                     <td>
                         @can('editTag', App\Tag::class)
-                            <a href="{{ route('tags.edit', $tag->id) }}" 
-                                class="btn btn-primary btn-sm" 
-                                title="Edit this tag"
-                                alt="Edit this tag">Edit</a>
+                            <a href="{{ route('tags.edit', $tag->id) }}" class="btn btn-primary btn-sm"
+                                title="Edit this tag" alt="Edit this tag">Edit</a>
                         @endcan
                         @if ($tag->tasks_count == 0 && auth()->user()->can('deleteTag', App\Tag::class))
                             <form action="{{ route('tags.delete', $tag->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
 
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-sm"
+                                <button type="submit" class="btn btn-primary btn-sm"
                                     title="Delete this tag"
                                     onclick="return confirm('Are you sure you want to delete this tag?')">
                                     Delete
