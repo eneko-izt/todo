@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use ReflectionClass;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TaskTest extends TestCase
 {
@@ -35,6 +35,11 @@ class TaskTest extends TestCase
      *      -> Only user who created the task can update it
      * 
      */
+
+    //TODO: test bat konprobaketa bat 
+    //7 gauza ezberdin testatzen ari gara hemen, kodearen mantentze-lanak zailtzen du
+    //Hobe da test bakoitza gauza bakar bat egiaztatzea, eta horrela mantentze-lanak errazagoak dira
+    //php vendor/bin/phpunit  --testdox oso zaila da jarkitea zer ari garen testeatzen
     public function testExample()
     {
         $role = factory(\App\Role::class)->create(['name' => 'user']);
@@ -71,6 +76,10 @@ class TaskTest extends TestCase
         $this->checkUser();
     }
 
+    //Aldagaiak goian
+    //TODO: zergatik _transformer eta ez $transformer?
+    //PSR-12 begiratu
+
     private $_transformer;
     private $_getItemList;
     private $_user;
@@ -81,6 +90,7 @@ class TaskTest extends TestCase
 
     private function setupControllerValidation($method)
     {
+        //TODO: hau ez dut oso ondo ulertzen, zertarako da?
         $this->_transformer = new \App\Http\Controllers\TasksController();
         $reflection = new ReflectionClass(get_class($this->_transformer));
         $this->_getItemList = $reflection->getMethod($method);
@@ -94,17 +104,19 @@ class TaskTest extends TestCase
         // When creating Column id is used to suffix fields with a unique identifier
         // Therefore itself cannot be suffixed
         $id = 111; // Not existing column so it should fail validation
+        //TODO: harkodeatutako id-ak ez dira oso adierazgarriak, zergatik ez da erabiltzen $nonExistingColumnId? (Bilatu azken id, eta hurrengoa erabili, adibidez)
         $data = array(
-            'text'.$id => null, 
-            'order'.$id => null, 
-            'column_id' => $id, 
-            'tags'.$id => [], 
-            'user_id'.$id => null, 
-            'active' => 1);
+            'text' . $id => null,
+            'order' . $id => null,
+            'column_id' => $id,
+            'tags' . $id => [],
+            'user_id' . $id => null,
+            'active' => 1
+        );
 
         $err = $this->invokeValidate([$data]);
 
-        $res = count($err) == 4 
+        $res = count($err) == 4
             && in_array("text" . $id, $err) && in_array("order" . $id, $err)
             && in_array('column_id', $err) && in_array('user_id' . $id, $err);
 
@@ -119,16 +131,17 @@ class TaskTest extends TestCase
         // When updating a task column id cannot has also to be suffixed with task_id
         $id = $this->_task->id;
         $data = array(
-            'text'.$id => null, 
-            'order'.$id => null, 
-            'column_id'.$id => null, 
-            'tags'.$id => [], 
-            'user_id'.$id => null, 
-            'active' => 1);
+            'text' . $id => null,
+            'order' . $id => null,
+            'column_id' . $id => null,
+            'tags' . $id => [],
+            'user_id' . $id => null,
+            'active' => 1
+        );
 
         $err = $this->invokeValidate([$data, $this->_task]);
 
-        $res = count($err) == 4 
+        $res = count($err) == 4
             && in_array("text" . $id, $err) && in_array("order" . $id, $err)
             && in_array("column_id" . $id, $err) && in_array('user_id' . $id, $err);
 
@@ -145,7 +158,7 @@ class TaskTest extends TestCase
         $id = $this->_column->id;
 
         // Check empty string is invalid
-        $data['text'.$id] = "";
+        $data['text' . $id] = "";
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("text" . $id, $err);
         $this->assertTrue($res);
@@ -153,13 +166,13 @@ class TaskTest extends TestCase
         // Check length > 255 is invalid
         $invalidString = "1234567890";
         $invalidString = str_repeat($invalidString, 26);
-        $data['text'.$id] = $invalidString;
+        $data['text' . $id] = $invalidString;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("text" . $id, $err);
         $this->assertTrue($res);
 
         // Check a valid string
-        $data['text'.$id] = "abcd";
+        $data['text' . $id] = "abcd";
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
@@ -175,25 +188,26 @@ class TaskTest extends TestCase
         $id = $this->_column->id;
 
         // Check order must be numeric
-        $data['order'.$id] = "abcd";
+        $data['order' . $id] = "abcd";
         $err = $this->invokeValidate([$data]);
+        //TODO: aldagaien izenak ez dira oso adierazgarriak, zer da $res? $response jarrita errazagoa da kodea ultertzea.
         $res = count($err) == 1 && in_array("order" . $id, $err);
         $this->assertTrue($res);
 
         // Check order cannot be negative
-        $data['order'.$id] = -1;
+        $data['order' . $id] = -1;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("order" . $id, $err);
         $this->assertTrue($res);
 
         // Check order cannot be greater than 100
-        $data['order'.$id] = 101;
+        $data['order' . $id] = 101;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("order" . $id, $err);
         $this->assertTrue($res);
 
         // Check valid order
-        $data['order'.$id] = 1;
+        $data['order' . $id] = 1;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
@@ -237,19 +251,19 @@ class TaskTest extends TestCase
         $id = $this->_column->id;
 
         // Check tags validation succeeds when tags not provided
-        $data['tags'.$id] = [];
+        $data['tags' . $id] = [];
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
 
         // Check tags validation succeeds with an existing tag
-        $data['tags'.$id] = [$this->_tag->id];
+        $data['tags' . $id] = [$this->_tag->id];
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
 
         // Check tags validation fails with a not existing tag id
-        $data['tags'.$id] = [5335];
+        $data['tags' . $id] = [5335];
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("tags" . $id, $err);
         $this->assertTrue($res);
@@ -265,7 +279,7 @@ class TaskTest extends TestCase
         $id = $this->_column->id;
 
         // Check validation succeeds for existing user
-        $data['user_id'.$id] = $this->_user->id;
+        $data['user_id' . $id] = $this->_user->id;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
@@ -273,7 +287,7 @@ class TaskTest extends TestCase
         // create a new user model instance BUT do not save it in the database!
         $user = factory(\App\User::class)->make(['active' => 1]);
         $this->actingAs($user);
-        $data['user_id'.$id] = $user->id;
+        $data['user_id' . $id] = $user->id;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("user_id" . $id, $err);
         $this->assertTrue($res);
@@ -283,8 +297,7 @@ class TaskTest extends TestCase
     {
         $err = [];
         $validator = $this->_getItemList->invokeArgs($this->_transformer, $params);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             $err = $validator->errors()->keys();
         }
         return $err;
@@ -294,12 +307,13 @@ class TaskTest extends TestCase
     {
         $id = $this->_column->id;
         $data = array(
-            'text'.$id => 'abcdef', 
-            'order'.$id => 1, 
-            'column_id' => $id, 
-            'tags'.$id => [$this->_tag->id], 
-            'user_id'.$id => $this->_user->id, 
-            'active' => 1);
+            'text' . $id => 'abcdef',
+            'order' . $id => 1,
+            'column_id' => $id,
+            'tags' . $id => [$this->_tag->id],
+            'user_id' . $id => $this->_user->id,
+            'active' => 1
+        );
 
         return $data;
     }
