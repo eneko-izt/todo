@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Task extends Model
 {
     use SoftDeletes;
+    use Traits\BasicTrait;
 
     protected $fillable = ['text', 'order', 'user_id', 'column_id', 'active'];
 
@@ -24,11 +25,5 @@ class Task extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
-    }
-
-    //TODO: scope hau modelo ezberdinetan erabiltzen da, beraz, Trait-ean jarri dezakezu
-    public function scopeActive($query)
-    {
-        return $query->where('active', true);
     }
 }
