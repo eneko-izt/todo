@@ -50,13 +50,8 @@ class TagsController extends Controller
     public function store()
     {
         $this->validateTag();
-
-        //TODO: errepikatuta
-        $tag = new Tag(request(['name', 'colour']));
-        $tag->active = request('active') == 'on' ? 1 : 0;
-
+        $tag = $this->fillRequestData();
         $tag->save();
-
         return redirect(route("tags.index"));
     }
 
@@ -75,16 +70,9 @@ class TagsController extends Controller
     public function update($id)
     {
         $tag = Tag::findOrFail($id);
-
-        //TODO: errepikatuta
-        $tag->name = request('name');
-        $tag->colour = request('colour');
-        $tag->active = request('active') == 'on' ? 1 : 0;
-
+        $this->fillRequestData($tag);
         $this->validateTag($id);
-
         $tag->save();
-
         return redirect(route("tags.index"));
     }
 
@@ -131,5 +119,18 @@ class TagsController extends Controller
             'name' => $nameValidations,
             'colour' => $colourValidations
         ]);
+    }
+
+    private function fillRequestData($tag = null)
+    {
+        if (!$tag) {
+            $tag = new Tag();
+        }
+
+        $tag->name = request('name');
+        $tag->colour = request('colour');
+        $tag->active = request('active') == 'on' ? 1 : 0;
+
+        return $tag;
     }
 }
