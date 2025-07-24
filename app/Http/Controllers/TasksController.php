@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\Http\Services\TaskService;
 
 use Illuminate\Support\Facades\Validator;
 
 class TasksController extends Controller
 {
     /**
+     * The task service instance.
+     *
+     * @var TaskService
+     */
+    private $taskService;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TaskService $taskService)
     {
         $this->middleware('auth');
+        $this->taskService = $taskService;
     }
 
     /**
@@ -27,7 +36,7 @@ class TasksController extends Controller
 
     public function store()
     {
-        $this->createValidator(request()->all())->validate();
+        $this->taskService->createValidator(request()->all())->validate();
 
         $attributes = [];
         $attributes['active'] = 1;
@@ -57,7 +66,7 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        $validator = $this->updateValidator(request()->all(), $task);
+        $validator = $this->taskService->updateValidator(request()->all(), $task);
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -76,58 +85,5 @@ class TasksController extends Controller
         $task->tags()->sync($tags);
 
         return redirect(route("home"));
-    }
-
-    private function createValidator($requestData)
-    {
-        $columnId = $requestData['column_id'];
-        $rules = $this->getValidationRules($columnId);
-        $requestData += [("user_id"  . $columnId) => auth()->id()];
-        return Validator::make($requestData, $rules);
-    }
-
-    private function updateValidator($requestData, $task)
-    {
-        $rules = $this->getValidationRules($task->id, $task);
-        $requestData += [("user_id"  . $task->id) => auth()->id()];
-        return Validator::make($requestData, $rules);
-    }
-
-    private function getValidationRules($id, $task = null)
-    {
-        $columnEntry = 'column_id';
-        $userValidation = ['required', 'exists:users,id'];
-
-        if ($task != null) {
-            $columnEntry = 'column_id' . $task->id;
-
-            $extraUserValidation = function ($attribute, $value, $fail) use ($task) {
-                if ($task->user_id != $value) {
-                    $fail('You do not have permission to update this task.');
-                }
-            };
-
-            array_push($userValidation, $extraUserValidation);
-        }
-
-        $rules = [
-            'text' . $id => ['required', 'max:255'],
-            'order' . $id => ['required', 'numeric', 'min:0', 'max:100'],
-            $columnEntry => ['required', 'exists:columns,id'],
-            'user_id' . $id => $userValidation,
-            'tags' . $id => ['exists:tags,id']
-        ];
-
-        return $rules;
-
-        // [
-        //     'text.*.required' => 'The task text is required.',
-        //     'text.*.max' => 'The task text may not be greater than 255 characters.',
-        //     'order.*.required' => 'The order is required.',
-        //     'order.*.numeric' => 'The order must be a number.',
-        //     'order.*.min' => 'The order must be at least 0.',
-        //     'order.*.max' => 'The order may not be greater than 100.'
-        // ]
-        // );
     }
 }
