@@ -11,6 +11,14 @@ class TaskTest extends TestCase
 {
     use RefreshDatabase;
 
+
+    private $transformer;
+    private $getItemList;
+    private $user;
+    private $column;
+    private $tag;
+    private $task;
+
     /**
      * Test Task validation: Run the test with vendor/bin/phpunit in attached shell
      * 
@@ -43,15 +51,15 @@ class TaskTest extends TestCase
     public function testExample()
     {
         $role = factory(\App\Role::class)->create(['name' => 'user']);
-        $this->_user = factory(\App\User::class)->create(['active' => 1]);
-        $this->_user->roles()->attach($role);
-        $this->_column = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $this->user = factory(\App\User::class)->create(['active' => 1]);
+        $this->user->roles()->attach($role);
+        $this->column = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
 
-        $this->_tag = factory(\App\Tag::class)->create();
+        $this->tag = factory(\App\Tag::class)->create();
 
-        $this->_task = factory(\App\Task::class)->create([
-            'user_id' => $this->_user->id,
-            'column_id' => $this->_column->id,
+        $this->task = factory(\App\Task::class)->create([
+            'user_id' => $this->user->id,
+            'column_id' => $this->column->id,
             'active' => true,
             'deleted_at' => null
         ]);
@@ -76,25 +84,14 @@ class TaskTest extends TestCase
         $this->checkUser();
     }
 
-    //Aldagaiak goian
-    //TODO: zergatik _transformer eta ez $transformer?
-    //PSR-12 begiratu
-
-    private $_transformer;
-    private $_getItemList;
-    private $_user;
-    private $_column;
-    private $_tag;
-    private $_task;
-
 
     private function setupControllerValidation($method)
     {
         //TODO: hau ez dut oso ondo ulertzen, zertarako da?
-        $this->_transformer = new \App\Http\Controllers\TasksController();
-        $reflection = new ReflectionClass(get_class($this->_transformer));
-        $this->_getItemList = $reflection->getMethod($method);
-        $this->_getItemList->setAccessible(true);
+        $this->transformer = new \App\Http\Controllers\TasksController();
+        $reflection = new ReflectionClass(get_class($this->transformer));
+        $this->getItemList = $reflection->getMethod($method);
+        $this->getItemList->setAccessible(true);
     }
 
     private function checkEmptyTaskCreate()
@@ -129,7 +126,7 @@ class TaskTest extends TestCase
 
         // When updating Task id is used to suffix fields with a unique identifier
         // When updating a task column id cannot has also to be suffixed with task_id
-        $id = $this->_task->id;
+        $id = $this->task->id;
         $data = array(
             'text' . $id => null,
             'order' . $id => null,
@@ -139,7 +136,7 @@ class TaskTest extends TestCase
             'active' => 1
         );
 
-        $err = $this->invokeValidate([$data, $this->_task]);
+        $err = $this->invokeValidate([$data, $this->task]);
 
         $res = count($err) == 4
             && in_array("text" . $id, $err) && in_array("order" . $id, $err)
@@ -155,7 +152,7 @@ class TaskTest extends TestCase
         // When creating Column id is used to suffix fields with a unique identifier
         // Therefore itself cannot be suffixed
         $data = $this->fillCreateRequestData();
-        $id = $this->_column->id;
+        $id = $this->column->id;
 
         // Check empty string is invalid
         $data['text' . $id] = "";
@@ -185,7 +182,7 @@ class TaskTest extends TestCase
         // When creating Column id is used to suffix fields with a unique identifier
         // Therefore itself cannot be suffixed
         $data = $this->fillCreateRequestData();
-        $id = $this->_column->id;
+        $id = $this->column->id;
 
         // Check order must be numeric
         $data['order' . $id] = "abcd";
@@ -219,26 +216,26 @@ class TaskTest extends TestCase
 
         // When creating Column id is used to suffix fields with a unique identifier
         // Therefore itself cannot be suffixed
-        $columnId = $this->_column->id;
+        $columnId = $this->column->id;
 
         $data = $this->fillCreateRequestData();
-        $id = $this->_column->id;
+        $id = $this->column->id;
 
         // Check column cannot be null
-        $this->_column->id = null;
+        $this->column->id = null;
         $data = $this->fillCreateRequestData();
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1;
         $this->assertTrue($res);
 
         // Check column must exist in table
-        $this->_column->id = 3662;
+        $this->column->id = 3662;
         $data = $this->fillCreateRequestData();
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 1 && in_array("column_id", $err);
         $this->assertTrue($res);
 
-        $this->_column->id = $columnId;
+        $this->column->id = $columnId;
     }
 
     private function checkTags()
@@ -248,7 +245,7 @@ class TaskTest extends TestCase
         // When creating Column id is used to suffix fields with a unique identifier
         // Therefore itself cannot be suffixed
         $data = $this->fillCreateRequestData();
-        $id = $this->_column->id;
+        $id = $this->column->id;
 
         // Check tags validation succeeds when tags not provided
         $data['tags' . $id] = [];
@@ -257,7 +254,7 @@ class TaskTest extends TestCase
         $this->assertTrue($res);
 
         // Check tags validation succeeds with an existing tag
-        $data['tags' . $id] = [$this->_tag->id];
+        $data['tags' . $id] = [$this->tag->id];
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
@@ -276,10 +273,10 @@ class TaskTest extends TestCase
         // When creating Column id is used to suffix fields with a unique identifier
         // Therefore itself cannot be suffixed
         $data = $this->fillCreateRequestData();
-        $id = $this->_column->id;
+        $id = $this->column->id;
 
         // Check validation succeeds for existing user
-        $data['user_id' . $id] = $this->_user->id;
+        $data['user_id' . $id] = $this->user->id;
         $err = $this->invokeValidate([$data]);
         $res = count($err) == 0;
         $this->assertTrue($res);
@@ -296,7 +293,7 @@ class TaskTest extends TestCase
     private function invokeValidate($params)
     {
         $err = [];
-        $validator = $this->_getItemList->invokeArgs($this->_transformer, $params);
+        $validator = $this->getItemList->invokeArgs($this->transformer, $params);
         if ($validator->fails()) {
             $err = $validator->errors()->keys();
         }
@@ -305,13 +302,13 @@ class TaskTest extends TestCase
 
     private function fillCreateRequestData()
     {
-        $id = $this->_column->id;
+        $id = $this->column->id;
         $data = array(
             'text' . $id => 'abcdef',
             'order' . $id => 1,
             'column_id' => $id,
-            'tags' . $id => [$this->_tag->id],
-            'user_id' . $id => $this->_user->id,
+            'tags' . $id => [$this->tag->id],
+            'user_id' . $id => $this->user->id,
             'active' => 1
         );
 
