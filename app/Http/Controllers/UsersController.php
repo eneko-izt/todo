@@ -55,11 +55,16 @@ class UsersController extends Controller
 
     public function store()
     {
-        $user = $this->userService->processUser();
-        $roles = $this->userService->validateRoles();
+        $this->userService->validateUser();
 
-        if (count($roles['roles']) > 0) {
-            $user->roles()->attach($roles['roles']);
+        $user = new \App\User();
+        $user = $this->userService->fillUser($user);
+        $user->save();
+
+        $roles = request('roles', []);
+
+        if (count($roles) > 0) {
+            $user->roles()->attach($roles);
         }
 
         return redirect(route("users.index"));
@@ -80,17 +85,22 @@ class UsersController extends Controller
 
     public function update($id)
     {
-        $user = $this->userService->processUser($id);
-        $roles = $this->userService->validateRoles();
+        $this->userService->validateUser($id);
+
+        $user = \App\User::findOrFail($id);
+        $user = $this->userService->fillUser($user);
+        $user->save();
+
+        $roles = request('roles', []);
 
         foreach ($user->roles as $role) {
             // If the role is not in the new roles, we mark it as deleted
-            if (!in_array($role->id, $roles['roles'])) {
+            if (!in_array($role->id, $roles)) {
                 $user->roles()->updateExistingPivot($role->id, ['deleted_at' => now()]);
             }
         }
 
-        foreach ($roles['roles'] as $role) {
+        foreach ($roles as $role) {
             if ($user->roleswithtrashed()->where('role_user.role_id', $role)->exists()) {
                 // If the role already exists, we just update the deleted_at field
                 $user->roles()->updateExistingPivot($role, ['deleted_at' => null]);
