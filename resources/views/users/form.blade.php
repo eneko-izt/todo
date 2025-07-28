@@ -82,15 +82,23 @@
             </div>
         </div>
 
-        <label for="input">Roles:</label>
-        <select class="form-control select2" name="roles[]" id="roles" style="width: 100%;"
-            multiple>
-            @foreach ($roles as $role)
-                <option value="{{ $role->id }}" @if (in_array($role->id, old('roles', [])) || ($errors->isEmpty() && $user->hasRoleId($role->id))) selected @endif>
-                    {{ $role->name }}
-                </option>
-            @endforeach
-        </select>
+        <div class="field">
+            <label for="input">Roles:</label>
+            <div class="control">
+                <select class="form-control select2" name="roles[]" id="roles[]" style="width: 100%;"
+                    multiple>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}" @if (in_array($role->id, old('roles', [])) || ($errors->isEmpty() && $user->hasRoleId($role->id))) selected @endif>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('roles')
+                    <p class="help is-danger" style="color:#d8000c">
+                        {{ $errors->first('roles') }}</p>
+                @enderror
+            </div>
+        </div>
 
         <div class="field is-grouped">
             <div class="control">
