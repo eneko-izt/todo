@@ -50,13 +50,8 @@ class ColumnsController extends Controller
     public function store()
     {
         $this->validateColumn();
-
-        //TODO: errepikatuta
-        $column = new Column(request(['name', 'colour']));
-        $column->active = request('active') == 'on' ? 1 : 0;
-
+        $column = $this->fillRequestData();
         $column->save();
-
         return redirect(route("columns.index"));
     }
 
@@ -75,16 +70,9 @@ class ColumnsController extends Controller
     public function update($id)
     {
         $column = Column::findOrFail($id);
-
-        //TODO: errepikatuta
-        $column->name = request('name');
-        $column->colour = request('colour');
-        $column->active = request('active') == 'on' ? 1 : 0;
-
+        $this->fillRequestData($column);
         $this->validateColumn($id);
-
         $column->save();
-
         return redirect(route("columns.index"));
     }
 
@@ -131,5 +119,18 @@ class ColumnsController extends Controller
             'name' => $nameValidations,
             'colour' => $colourValidations
         ]);
+    }
+
+    private function fillRequestData($column = null)
+    {
+        if (!$column) {
+            $column = new Column();
+        }
+
+        $column->name = request('name');
+        $column->colour = request('colour');
+        $column->active = request('active') == 'on' ? 1 : 0;
+
+        return $column;
     }
 }

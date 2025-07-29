@@ -2,14 +2,13 @@
 
 namespace App;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Column extends Model
 {
     use SoftDeletes;
-    use Traits\StringTrait;
+    use Traits\BasicTrait;
 
     protected $fillable = ['name', 'colour', 'active'];
 

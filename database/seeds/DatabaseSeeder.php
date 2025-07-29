@@ -59,7 +59,6 @@ class DatabaseSeeder extends Seeder
 
         App\User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) use ($roleAdmin) {
             $user->roles()->attach($roleAdmin->id);
-
         });
     }
 }

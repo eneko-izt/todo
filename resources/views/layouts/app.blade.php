@@ -40,8 +40,10 @@
                     <ul class="navbar-nav mr-auto">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('welcome') }}" alt="Welcome">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('home') }}" alt="Dashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('welcome') }}"
+                                        alt="Welcome">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('home') }}"
+                                        alt="Dashboard">Dashboard</a></li>
                                 @yield('breadcrumb')
                             </ol>
                         </nav>
@@ -54,7 +56,8 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link"
+                                    href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">

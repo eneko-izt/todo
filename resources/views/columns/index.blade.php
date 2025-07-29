@@ -1,16 +1,19 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page" alt="Columns">Columns ({{ $columns->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page" alt="Columns">Columns ({{ $columns->total() }})
+    </li>
 @endsection
 
 @section('create_trash')
     <div class="d-flex justify-content-between">
         @can('createColumn', App\Column::class)
-            <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm" title = "Create a column" alt = "Create a column">New</a>
+            <a href="{{ route('columns.create') }}" class="btn btn-primary btn-sm" title = "Create a column"
+                alt = "Create a column">New</a>
         @endcan
         @can('deleteColumn', App\Column::class)
-            <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm" title = "View deleted columns" alt = "View deleted columns">Trash</a>
+            <a href="{{ route('columns.trash') }}" class="btn btn-primary btn-sm"
+                title = "View deleted columns" alt = "View deleted columns">Trash</a>
         @endcan
     </div>
 @endsection
@@ -44,9 +47,8 @@
                     <td>{{ $column->active }}</td>
                     <td>
                         @can('editColumn', App\Column::class)
-                            <a href="{{ route('columns.edit', $column->id) }}" 
-                                class="btn btn-primary btn-sm" 
-                                title="Edit this column"
+                            <a href="{{ route('columns.edit', $column->id) }}"
+                                class="btn btn-primary btn-sm" title="Edit this column"
                                 alt="Edit this column">Edit</a>
                         @endcan
                         @if ($column->tasks_count == 0 && auth()->user()->can('deleteColumn', App\Column::class))
@@ -54,9 +56,7 @@
                                 @csrf
                                 @method('DELETE')
 
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-sm"
+                                <button type="submit" class="btn btn-primary btn-sm"
                                     title="Delete this column"
                                     onclick="return confirm('Are you sure you want to delete this column?')">
                                     Delete

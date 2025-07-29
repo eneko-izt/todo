@@ -6,31 +6,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserService
 {
-    public function processUser($id = null)
-    {
-        $this->validateUserEmailPassword($id);
-        $user = $id ? \App\User::findOrFail($id) : new \App\User();
-
-        $user = $this->fillUser($user);
-        $user->save();
-        
-        return $user;
-    }
-
-    private function fillUser($user)
-    {
-        $user->name = request('name');
-        $user->email = request('email');
-        $user->active = request('active') == 'on' ? 1 : 0;
-
-        if (request()->has('password')) {
-            $user->password = bcrypt(request('password'));
-        }
-
-        return $user;
-    }
-
-    private function validateUserEmailPassword($id = null)
+    public function validateUser($id = null)
     {
         // default validation rules
         $nameValidations = ['required', 'max:255'];
@@ -41,22 +17,27 @@ class UserService
         $extraEmailValidation = $id ? \Illuminate\Validation\Rule::unique('users')->ignore($id) : 'unique:users';
         array_push($emailValidations, $extraEmailValidation);
 
+        // request()->merge([
+        //     'roles' => ['3']
+        // ]);
         return request()->validate([
             'name' => $nameValidations,
             'email' => $emailValidations,
             'password' => ['confirmed', 'max:255'],
+            'roles' => ['exists:roles,id']
         ]);
     }
 
-    public function validateRoles()
+    public function fillUser($user)
     {
-        $roles['roles'] = request('roles', []);
-        if (count($roles['roles']) > 0) 
-        {
-            $validator = Validator::make($roles, ['roles' => 'required|exists:roles,id']);
-            if ($validator->fails()) {return redirect()->back()->withErrors($validator)->withInput();}
+        $user->name = request('name');
+        $user->email = request('email');
+        $user->active = request('active') == 'on' ? 1 : 0;
+
+        if (request()->has('password')) {
+            $user->password = bcrypt(request('password'));
         }
 
-        return $roles;
+        return $user;
     }
 }

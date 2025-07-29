@@ -28,13 +28,11 @@
                     </td>
                     <td>{{ $tag->active }}</td>
                     <td>
-                        @if(auth()->user()->can('deleteTag', App\Tag::class))
+                        @if (auth()->user()->can('deleteTag', App\Tag::class))
                             <form action="{{ route('tags.restore', $tag->id) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-sm"
+                                <button type="submit" class="btn btn-primary btn-sm"
                                     title="Restore this tag"
                                     onclick="return confirm('Are you sure you want to restore this tag?')">
                                     Restore
@@ -43,9 +41,7 @@
                             <form action="{{ route('tags.destroy', $tag->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-sm"
+                                <button type="submit" class="btn btn-primary btn-sm"
                                     title="Delete this tag"
                                     onclick="return confirm('Are you sure you want to completely delete this tag?')">
                                     Delete
