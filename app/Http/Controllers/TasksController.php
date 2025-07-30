@@ -57,6 +57,8 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        $this->authorize('deleteTask', $task);
+
         $task->delete();
 
         return redirect(route("home"));
