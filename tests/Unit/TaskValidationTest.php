@@ -3,11 +3,9 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use ReflectionClass;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class TaskTest extends TestCase
+class TaskValidationTest extends TestCase
 {
     use RefreshDatabase;
 
