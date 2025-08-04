@@ -13,6 +13,7 @@ class ColumnModelTest extends TestCase
      * Test Column model: Run the test with vendor/bin/phpunit in attached shell
      * 
      * - Test active scope trait
+     * - Test hasMany relationship
      * 
      */
 
