@@ -32,10 +32,10 @@ class ColumnModelTest extends TestCase
         $this->defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
         $this->defaultColumn = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
 
-        $this->user1 = factory(\App\User::class)->create(['active' => 1]);
+        $this->user1 = factory(\App\User::class)->state('active')->create();
         $this->user1->roles()->attach($this->defaultRole);
 
-        $this->user2 = factory(\App\User::class)->create(['active' => 1]);
+        $this->user2 = factory(\App\User::class)->state('active')->create();
         $this->user2->roles()->attach($this->defaultRole);
     }
 

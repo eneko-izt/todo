@@ -33,9 +33,3 @@ $factory->state(User::class, 'active', function (Faker $faker) {
         'active' => 1, // Set to active
     ];
 });
-
-$factory->state(User::class, 'inactive', function (Faker $faker) {
-    return [
-        'active' => 0, // Set to inactive
-    ];
-});
