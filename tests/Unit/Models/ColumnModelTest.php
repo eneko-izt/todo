@@ -41,29 +41,36 @@ class ColumnModelTest extends TestCase
 
     public function testActiveScope()
     {
+        // Create active and inactive tasks for user 1
         $activeTasks = $this->createTask(self::numberOfActiveTasks, true, $this->user1, $this->defaultColumn);
         $inactiveTasks = $this->createTask(self::numberOfInactiveTasks, false, $this->user1, $this->defaultColumn);
 
+        // Create active and inactive tasks for user 2
         $user2ActiveTasks = $this->createTask(self::numberOfActiveTasks * 2, true, $this->user2, $this->defaultColumn);
         $user2InactiveTasks = $this->createTask(self::numberOfInactiveTasks * 2, false, $this->user2, $this->defaultColumn);
 
+        // Set user 1 as the authenticated user
         $this->actingAs($this->user1);
+
+        // Assert that the column active tasks are correctly filtered
         $this->assertCount(self::numberOfActiveTasks, $this->defaultColumn->activeTasks()->get());
         $this->assertEqualsCanonicalizing($activeTasks->pluck('id')->toArray(), $this->defaultColumn->activeTasks()->pluck('id')->toArray());
     }
 
     public function testHasMany()
     {
+        // Create active and inactive tasks for user 1
         $activeTasks = $this->createTask(self::numberOfActiveTasks, true, $this->user1, $this->defaultColumn);
         $inactiveTasks = $this->createTask(self::numberOfInactiveTasks, false, $this->user1, $this->defaultColumn);
 
+        // Create active and inactive tasks for user 2
         $user2ActiveTasks = $this->createTask(self::numberOfActiveTasks * 2, true, $this->user2, $this->defaultColumn);
         $user2InactiveTasks = $this->createTask(self::numberOfInactiveTasks * 2, false, $this->user2, $this->defaultColumn);
 
+        // Set user 1 as the authenticated user
         $this->actingAs($this->user1);
-        $totalTasks = self::numberOfActiveTasks + self::numberOfInactiveTasks + (self::numberOfActiveTasks * 2) + (self::numberOfInactiveTasks * 2);
-        $this->assertCount($totalTasks, $this->defaultColumn->tasks()->get());
-
+      
+        // Assert that column tasks in collection and database are the same
         $allTasks = collect(array_merge($activeTasks->all(), $inactiveTasks->all(), $user2ActiveTasks->all(), $user2InactiveTasks->all()));
         $this->assertEqualsCanonicalizing($allTasks->pluck('id')->toArray(), $this->defaultColumn->tasks()->pluck('id')->toArray());
     }
