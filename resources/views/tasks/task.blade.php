@@ -1,4 +1,6 @@
 <div border="1" class="p-2 mb-2 bg-light text-dark rounded">
+    @if (auth()->check() && auth()->user()->can('deleteTask', $task))
+
     <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
         @csrf
         @method('DELETE')
@@ -6,6 +8,9 @@
             onclick="return confirm('Are you sure you want to remove this task?')">X
         </button>
     </form>
+
+    @endif
+
     <p>
         {{ $task->id }}: {{ $task->text }}
     </p>
