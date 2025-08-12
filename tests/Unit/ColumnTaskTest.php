@@ -17,7 +17,7 @@ class ColumnTaskTest extends TestCase
      * - An admin cannot see another user's tasks
      * - A user cannot see another user's tasks
      */
-    public function testOnlyOwnTasks()
+    public function test_user_can_only_see_own_tasks()
     {
         $roleAdmin = factory(\App\Role::class)->create(['name' => 'admin']);
         $roleUser = factory(\App\Role::class)->create(['name' => 'user']);

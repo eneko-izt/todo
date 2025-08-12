@@ -35,7 +35,7 @@ class TaskValidationTest extends TestCase
      */
 
 
-    public function testCreateEmptyTask()
+    public function test_Create_Empty_Task()
     {
         $taskService = new \App\Http\Services\TaskService();
 
@@ -61,7 +61,7 @@ class TaskValidationTest extends TestCase
         $this->assertTrue($response);
     }
 
-    public function testUpdateEmptyTask()
+    public function test_Cannot_Update_Empty_Task()
     {
         $taskService = new \App\Http\Services\TaskService();
         $this->fillDatabase();
@@ -87,7 +87,7 @@ class TaskValidationTest extends TestCase
         $this->assertTrue($response);
     }
 
-    public function testText()
+    public function test_Text()
     {
         $taskService = new \App\Http\Services\TaskService();
         $this->fillDatabase();
@@ -122,7 +122,7 @@ class TaskValidationTest extends TestCase
         $this->assertTrue($response);
     }
 
-    public function testOrder()
+    public function test_Order()
     {
         $taskService = new \App\Http\Services\TaskService();
         $this->fillDatabase();
@@ -160,7 +160,7 @@ class TaskValidationTest extends TestCase
         $this->assertTrue($response);
     }
 
-    public function testColumn()
+    public function test_Column()
     {
         $taskService = new \App\Http\Services\TaskService();
         $this->fillDatabase();
@@ -186,7 +186,7 @@ class TaskValidationTest extends TestCase
         $this->assertTrue($response);
     }
 
-    public function testTags()
+    public function test_Tags()
     {
         $taskService = new \App\Http\Services\TaskService();
         $this->fillDatabase();
@@ -216,7 +216,7 @@ class TaskValidationTest extends TestCase
         $this->assertTrue($response);
     }
 
-    public function testUser()
+    public function test_User()
     {
         $taskService = new \App\Http\Services\TaskService();
         $this->fillDatabase();

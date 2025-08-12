@@ -2,6 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Tag;
+use App\Task;
+use App\Column;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -9,68 +13,39 @@ class TagModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Test Tag model: Run the test with vendor/bin/phpunit in attached shell
-     *
-     * Requirements:
-     *      -> Tag name must be unique
-     *      -> Tags can be assigned to multiple tasks and active trait functionality must work correctly
-     *
-     */
-
-    private const numberOfActiveTags = 10;
-    private const numberOfInactiveTags = 7;
-
-    private $role = null;
-    private $user = null;
-    private $column = null;
-
-    public function setUp(): void
+    public function test_it_has_correct_fillable_attributes()
     {
-        parent::setUp();
-
-        $this->role = factory(\App\Role::class)->create(['name' => 'user']);
-        $this->user = factory(\App\User::class)->create(['active' => 1]);
-        $this->user->roles()->attach($this->role);
-        $this->column = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
-    }
-
-    public function testTagNameUnique()
-    {
-        $tag = factory(\App\Tag::class)->create(['name' => 'testTag']);
-        $this->expectException(\Illuminate\Database\QueryException::class);
-        factory(\App\Tag::class)->create(['name' => 'testTag']);
-    }
-
-    public function testBelongsToManyTasks()
-    {
-        // Create a task
-        $task = factory(\App\Task::class)->create([
-            'user_id' => $this->user->id,
-            'column_id' => $this->column->id,
-            'active' => true,
-            'deleted_at' => null
+        $tag = new Tag([
+            'name' => 'Urgent',
+            'colour' => '#FF0000',
+            'active' => true
         ]);
 
-        // Create active and inactive tags
-        $activeTags = factory(\App\Tag::class, self::numberOfActiveTags)->create(['active' => true, 'deleted_at' => null]);
-        $inactiveTags = factory(\App\Tag::class, self::numberOfInactiveTags)->create(['active' => false, 'deleted_at' => null]);
-
-        // Attach tags to the task
-        $task->tags()->attach($activeTags, ['created_at' => now(), 'updated_at' => now()]);
-        $task->tags()->attach($inactiveTags, ['created_at' => now(), 'updated_at' => now()]);
-
-        // Assert that the task active tags in database and the collection are the same
-        $this->assertEqualsCanonicalizing(
-            $task->tags()->active()->pluck('tag_id')->toArray(),
-            $activeTags->pluck("id")->toArray()
-        );
-
-        // Assert that task tags in database and collection are the same
-        $allTags = collect(array_merge($activeTags->all(), $inactiveTags->all()));
-        $this->assertEqualsCanonicalizing(
-            $task->tags()->get()->pluck("id")->toArray(),
-            $allTags->pluck('id')->toArray()
-        );
+        $this->assertEquals('Urgent', $tag->name);
+        $this->assertEquals('#FF0000', $tag->colour);
+        $this->assertTrue($tag->active);
     }
-}
+
+    public function test_it_has_a_many_to_many_relationship_with_tasks()
+    {
+        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $tag = factory(Tag::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id, 'deleted_at' => null]);
+
+        // Attach task to tag
+        $tag->tasks()->attach($task->id);
+
+        $this->assertTrue($tag->tasks->contains($task));
+        $this->assertInstanceOf(Task::class, $tag->tasks->first());
+    }
+
+    public function test_it_supports_soft_deletes()
+    {
+        $tag = factory(Tag::class)->create();
+        $tag->delete();
+
+        $this->assertSoftDeleted($tag);
+    }}

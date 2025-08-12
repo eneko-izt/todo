@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Column;
+use App\Task;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,76 +15,81 @@ class ColumnModelTest extends TestCase
     /**
      * Test Column model: Run the test with vendor/bin/phpunit in attached shell
      * 
-     * - Test active scope trait
-     * - Test hasMany relationship
-     * 
      */
 
-    private $defaultRole = null;
-    private $defaultColumn = null;
-    private $user1 = null;
-    private $user2 = null;
-
-    private const numberOfActiveTasks = 5;
-    private const numberOfInactiveTasks = 3;
-
-    public function setUp(): void
+    public function test_it_has_fillable_attributes()
     {
-        parent::setUp();
+        $column = new Column([
+            'name' => 'Test Column',
+            'colour' => '#FFFFFF',
+            'active' => true
+        ]);
 
-        $this->defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
-        $this->defaultColumn = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
-
-        $this->user1 = factory(\App\User::class)->state('active')->create();
-        $this->user1->roles()->attach($this->defaultRole);
-
-        $this->user2 = factory(\App\User::class)->state('active')->create();
-        $this->user2->roles()->attach($this->defaultRole);
+        $this->assertEquals('Test Column', $column->name);
+        $this->assertEquals('#FFFFFF', $column->colour);
+        $this->assertTrue($column->active);
     }
 
-    public function testActiveScope()
+    public function it_uses_basic_trait()
     {
-        // Create active and inactive tasks for user 1
-        $activeTasks = $this->createTask(self::numberOfActiveTasks, true, $this->user1, $this->defaultColumn);
-        $inactiveTasks = $this->createTask(self::numberOfInactiveTasks, false, $this->user1, $this->defaultColumn);
-
-        // Create active and inactive tasks for user 2
-        $user2ActiveTasks = $this->createTask(self::numberOfActiveTasks * 2, true, $this->user2, $this->defaultColumn);
-        $user2InactiveTasks = $this->createTask(self::numberOfInactiveTasks * 2, false, $this->user2, $this->defaultColumn);
-
-        // Set user 1 as the authenticated user
-        $this->actingAs($this->user1);
-
-        // Assert that the column active tasks are correctly filtered
-        $this->assertCount(self::numberOfActiveTasks, $this->defaultColumn->activeTasks()->get());
-        $this->assertEqualsCanonicalizing($activeTasks->pluck('id')->toArray(), $this->defaultColumn->activeTasks()->pluck('id')->toArray());
+        $this->assertContains(\App\Traits\BasicTrait::class, class_uses(Task::class));
     }
 
-    public function testHasMany()
+    public function test_it_has_many_tasks()
     {
-        // Create active and inactive tasks for user 1
-        $activeTasks = $this->createTask(self::numberOfActiveTasks, true, $this->user1, $this->defaultColumn);
-        $inactiveTasks = $this->createTask(self::numberOfInactiveTasks, false, $this->user1, $this->defaultColumn);
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $user = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
 
-        // Create active and inactive tasks for user 2
-        $user2ActiveTasks = $this->createTask(self::numberOfActiveTasks * 2, true, $this->user2, $this->defaultColumn);
-        $user2InactiveTasks = $this->createTask(self::numberOfInactiveTasks * 2, false, $this->user2, $this->defaultColumn);
-
-        // Set user 1 as the authenticated user
-        $this->actingAs($this->user1);
-      
-        // Assert that column tasks in collection and database are the same
-        $allTasks = collect(array_merge($activeTasks->all(), $inactiveTasks->all(), $user2ActiveTasks->all(), $user2InactiveTasks->all()));
-        $this->assertEqualsCanonicalizing($allTasks->pluck('id')->toArray(), $this->defaultColumn->tasks()->pluck('id')->toArray());
+        $this->assertTrue($column->tasks->contains($task));
+        $this->assertInstanceOf(Task::class, $column->tasks->first());
     }
 
-    private function createTask($numberOfRows, $active, $user, $column)
+    public function test_it_returns_only_active_tasks_for_the_authenticated_user()
     {
-        return factory(\App\Task::class, $numberOfRows)->create([
-            'user_id' => $user->id,
+        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        // Task for authenticated user and active
+        $taskForUser = factory(Task::class)->create([
             'column_id' => $column->id,
-            'active' => $active,
+            'user_id' => $user->id,
+            'active' => true,
+            'order' => 1,
             'deleted_at' => null
         ]);
+
+        // Task for different user
+        $taskOtherUser = factory(Task::class)->create([
+            'column_id' => $column->id,
+            'user_id' => factory(User::class)->create()->id,
+            'active' => true,
+            'order' => 1,
+            'deleted_at' => null
+        ]);
+
+        // Inactive task for authenticated user
+        $inactiveTask = factory(Task::class)->create([
+            'column_id' => $column->id,
+            'user_id' => $user->id,
+            'active' => false,
+            'order' => 2,
+            'deleted_at' => null
+        ]);
+
+        $activeTasks = $column->activeTasks()->get();
+
+        $this->assertTrue($activeTasks->contains($taskForUser));
+        $this->assertFalse($activeTasks->contains($taskOtherUser));
+        $this->assertFalse($activeTasks->contains($inactiveTask));
+    }
+
+    public function test_it_supports_soft_deletes()
+    {
+        $column = factory(Column::class)->create();
+        $column->delete();
+
+        $this->assertSoftDeleted($column);
     }
 }

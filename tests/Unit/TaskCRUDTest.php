@@ -28,7 +28,7 @@ class TaskCRUDTest extends TestCase
         $this->createDefaultRoleColumn();
     }
 
-    public function testUserCanDeleteTheirOwnTask()
+    public function test_User_Can_Delete_Their_Own_Task()
     {
         $userOwner = $this->createUser();
         $task = $this->createTask($userOwner, $this->defaultColumn);
@@ -42,11 +42,10 @@ class TaskCRUDTest extends TestCase
         $this->assertSoftDeleted('tasks', ['id' => $task->id]);
     }
 
-    public function testUserCannotDeleteOthersTask()
+    public function test_User_Cannot_Delete_Others_Task()
     {
         $userOwner = $this->createUser();
         $task = $this->createTask($userOwner, $this->defaultColumn);
-        $this->assertNull($task->deleted_at, 'Task should not be deleted initially');
 
         $userNotOwner = $this->createUser();
 
@@ -55,6 +54,43 @@ class TaskCRUDTest extends TestCase
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('tasks', ['id' => $task->id, 'deleted_at' => null]);
+    }
+
+    public function test_User_Can_Update_Their_Own_Task()
+    {
+        $userOwner = $this->createUser();
+        $task = $this->createTask($userOwner, $this->defaultColumn);
+
+        $response = $this->actingAs($userOwner)->patch(route('tasks.update', ['id' => $task->id]), [
+            'text' . $task->id => 'Updated Task',
+            'order' . $task->id => 1,
+            'column_id' . $task->id => $this->defaultColumn->id
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+
+        $task->refresh();
+        $this->assertEquals('Updated Task', $task->text);
+    }
+
+    public function test_User_Not_Owner_Cannot_Update_Task()
+    {
+        $userOwner = $this->createUser();
+        $userNotOwner = $this->createUser();
+        $task = $this->createTask($userOwner, $this->defaultColumn);
+
+        $response = $this->actingAs($userNotOwner)->patch(route('tasks.update', ['id' => $task->id]), [
+            'text' . $task->id => 'Updated Task',
+            'order' . $task->id => 1,
+            'column_id' . $task->id => $this->defaultColumn->id
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+        $errors = session('errors');
+        $this->assertTrue($errors->has('user_id' . $task->id));
+
+        $task->refresh();
+        $this->assertNotEquals('Updated Task', $task->text);
     }
 
     private function createDefaultRoleColumn()

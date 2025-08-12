@@ -19,7 +19,7 @@ class HelpersTest extends TestCase
      * - A user that is only a user is not recognized as admin
      * - A user with no roles is not recognized as admin
      */
-    public function testIsAdmin()
+    public function test_Is_Admin()
     {
         $roleAdmin = factory(\App\Role::class)->create(['name' => 'admin']);
         $roleUser = factory(\App\Role::class)->create(['name' => 'user']);
