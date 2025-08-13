@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
+use App\User;
 use App\Column;
 
 class HomeController extends Controller
@@ -26,7 +27,8 @@ class HomeController extends Controller
     {
         $columns = Column::where('active', true)->get();
         $tags = Tag::active()->get();
+        $users = User::active()->where('id', '!=', auth()->id())->get();
 
-        return view('home', compact('columns', 'tags'));
+        return view('home', compact('columns', 'tags', 'users'));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\User;
 use App\Http\Services\TaskService;
 
 use Illuminate\Support\Facades\Validator;
@@ -85,6 +86,25 @@ class TasksController extends Controller
         // update tags
         $tags = request('tags' . $id, []);
         $task->tags()->sync($tags);
+
+        return redirect(route("home"));
+    }
+
+    public function share($taskId)
+    {
+        $task = Task::findOrFail($taskId);
+        $userId = request('userid');
+
+        $this->authorize('shareTask', $task);
+
+        if ($task->sharingUsersWithTrashed()->where('task_user.user_id', $userId)->exists()) {
+            // If the user is already sharing the task, we just update the deleted_at field
+            $task->sharingUsersWithTrashed()->updateExistingPivot($userId, ['deleted_at' => null]);
+        }
+        else {
+            // If the user does not exist, we attach it
+            $task->sharingUsers()->attach($userId);
+        }
 
         return redirect(route("home"));
     }
