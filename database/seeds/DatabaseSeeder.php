@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         factory(Tag::class, 20)->create();
 
-        factory(Task::class, 20)->create()->each(function ($task) {
+        factory(Task::class, 40)->create()->each(function ($task) {
             // Attach a random user to the task
             $task->user_id = User::inRandomOrder()->first()->id;
             $task->save();
@@ -64,6 +64,17 @@ class DatabaseSeeder extends Seeder
 
         User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) use ($roleAdmin) {
             $user->roles()->attach($roleAdmin->id);
+        });
+
+        $users = User::where('active', 1)->get()->random(5);
+
+        Task::where('active', 1)
+            ->where('deleted_at', null)
+            ->inRandomOrder()->limit(20)
+            ->get()
+            ->each(function ($task) use ($users) {
+                // Attach random users to the task
+                $task->sharingUsers()->attach($users->random(rand(1, 3))->pluck('id')->toArray());
         });
     }
 }

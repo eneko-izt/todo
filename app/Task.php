@@ -26,4 +26,9 @@ class Task extends Model
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
+
+    public function sharingUsers()
+    {
+        return $this->belongsToMany(User::class, 'task_user')->whereNull('task_user.deleted_at')->withPivot(['deleted_at'])->withTimestamps();
+    }
 }
