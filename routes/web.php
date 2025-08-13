@@ -28,6 +28,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::delete('/tasks/delete/{id}', 'TasksController@delete')->name('tasks.delete');
 Route::post('/tasks', 'TasksController@store')->name('tasks.store');
 Route::patch('/tasks/{id}', 'TasksController@update')->name('tasks.update');
+Route::patch('/tasks/share/{id}', 'TasksController@share')->name('tasks.share');
 
 /*
 |--------------------------------------------------------------------------

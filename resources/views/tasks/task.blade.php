@@ -11,23 +11,53 @@
 
     @endif
 
-    <p>
-        {{ $task->id }}: {{ $task->text }}
-    </p>
-    <hr>
-    <p>
-        @foreach ($task->tags()->where('active', true)->get() as $tag)
-            @if (!$loop->first)
-                ,
-            @endif {{ $tag->getUpperName() }}
-        @endforeach
-    </p>
+    <div>
 
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal"
-        data-target="#staticBackdrop-{{ $task->id }}">
-        Edit
-    </button>
+        <p>
+            {{ $task->id }}: {{ $task->text }}
+        </p>
+        <hr>
+        <p>
+            @foreach ($task->tags()->where('active', true)->get() as $tag)
+                @if (!$loop->first)
+                    ,
+                @endif {{ $tag->getUpperName() }}
+            @endforeach
+        </p>
+
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#staticBackdrop-{{ $task->id }}">
+            Edit
+        </button>
+
+        <!-- Share tasks with other users -->
+        <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
+            Share
+        </button>
+    </div>
+
+    <div id="share-content-{{ $task->id }}" style="display: none;">
+
+        <form action="{{ route('tasks.share', $task->id) }}" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <label for="user">Choose a user:</label>
+            <select name="userid" id="user-{{ $task->id }}">
+                @foreach ($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
+
+            <button type="submit" class="btn btn-primary" title="Share task with user">Save
+            </button>
+        </form>
+
+    </div>
 
     <!-- Modal -->
     <form action="{{ route('tasks.update', $task->id) }}" method="POST">
@@ -66,5 +96,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             $('#staticBackdrop-{{ $task->id }}').modal('show');
         });
-    </script>
+</script>
 @endif
+
+<script>
+    document.getElementById('share-btn-{{ $task->id }}').addEventListener('click', function() {
+        console.log('Share button clicked');
+        const content = document.getElementById('share-content-{{ $task->id }}');
+        content.style.display = (content.style.display === 'none' || content.style.display === '') 
+            ? 'block' 
+            : 'none';
+    });
+</script>

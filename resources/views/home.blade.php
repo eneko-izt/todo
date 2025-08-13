@@ -21,7 +21,7 @@
                 {{ $column->name }}
 
                 @foreach ($column->activeTasks as $task)
-                    @include('tasks.task', ['task' => $task])
+                    @include('tasks.task', ['task' => $task, 'users' => $users])
                 @endforeach
 
                 @include('tasks.new', ['column' => $column])
