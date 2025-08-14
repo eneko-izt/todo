@@ -24,6 +24,24 @@
                 @endif {{ $tag->getUpperName() }}
             @endforeach
         </p>
+        <div>
+            @if (auth()->check() && auth()->user()->can('shareTask', $task))
+
+                @foreach ($task->sharingUsers()->where('active', true)->get() as $user)
+                    <span class="badge badge-secondary">
+                        {{ $user->name }}
+                        <form action="{{ route('tasks.unshare', [$task->id, $user->id]) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-secondary" title="Remove this task"
+                                onclick="return confirm('Are you sure you want to unshare this task?')">X
+                            </button>
+                        </form>
+                    </span>
+                @endforeach
+
+            @endif
+        </div>
 
     </div>
 
@@ -34,10 +52,14 @@
             Edit
         </button>
 
-        <!-- Share tasks with other users -->
-        <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
-            Share
-        </button>
+        @if (auth()->check() && auth()->user()->can('shareTask', $task))
+
+            <!-- Share tasks with other users -->
+            <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
+                Share
+            </button>
+
+        @endif
     </div>
 
     <div id="share-content-{{ $task->id }}" style="display: none;">

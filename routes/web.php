@@ -29,6 +29,7 @@ Route::delete('/tasks/delete/{id}', 'TasksController@delete')->name('tasks.delet
 Route::post('/tasks', 'TasksController@store')->name('tasks.store');
 Route::patch('/tasks/{id}', 'TasksController@update')->name('tasks.update');
 Route::patch('/tasks/share/{id}', 'TasksController@share')->name('tasks.share');
+Route::patch('/tasks/unshare/{id}/user/{userId}', 'TasksController@unshare')->name('tasks.unshare');
 
 /*
 |--------------------------------------------------------------------------

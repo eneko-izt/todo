@@ -21,4 +21,15 @@ class Column extends Model
     {
         return $this->tasks()->where('user_id', auth()->user()->id)->active()->orderBy('order');
     }
+
+    public function viewableTasks()
+    {
+        $tasks = $this->activeTasks();
+
+        // $user = auth()->user();
+        // $sharedTasks = $user->sharedTasks()->all();
+
+        return $tasks;
+        // return $tasks->merge($sharedTasks)->orderBy('order');
+    }
 }

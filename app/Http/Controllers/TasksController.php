@@ -108,4 +108,16 @@ class TasksController extends Controller
 
         return redirect(route("home"));
     }
+
+    public function unshare($taskId, $userId)
+    {
+        $task = Task::findOrFail($taskId);
+        $user = User::findOrFail($userId);
+
+        $this->authorize('shareTask', $task);
+
+        $task->sharingUsers()->updateExistingPivot($user->id, ['deleted_at' => now()]);
+
+        return redirect(route("home"));
+    }
 }
