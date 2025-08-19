@@ -46,11 +46,16 @@
     </div>
 
     <div class="d-flex justify-content-between">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal"
-            data-target="#staticBackdrop-{{ $task->id }}">
-            Edit
-        </button>
+
+        @if (auth()->check() && auth()->user()->can('editTask', $task))
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#staticBackdrop-{{ $task->id }}">
+                Edit
+            </button>
+        
+        @endif
 
         @if (auth()->check() && auth()->user()->can('shareTask', $task))
 
@@ -60,6 +65,7 @@
             </button>
 
         @endif
+        
     </div>
 
     <div id="share-content-{{ $task->id }}" style="display: none;">

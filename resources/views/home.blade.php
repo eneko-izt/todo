@@ -20,7 +20,7 @@
                 style="min-width: {{ 100 / $columns->count() }}%; min-height: 150px; background-color: {{ $column->colour }};">
                 {{ $column->name }}
 
-                @foreach ($column->viewableTasks as $task)
+                @foreach ($column->viewableTasks() as $task)
                     @include('tasks.task', ['task' => $task, 'users' => $users])
                 @endforeach
 

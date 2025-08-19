@@ -24,12 +24,14 @@ class Column extends Model
 
     public function viewableTasks()
     {
-        $tasks = $this->activeTasks();
+        $user = auth()->user();
+        $sharedTasks = $user->sharedTasks()
+            ->where('tasks.column_id', $this->id)
+            ->where('tasks.user_id', '!=', $user->id)
+            ->active()
+            ->select('tasks.*')
+            ->orderBy('order');
 
-        // $user = auth()->user();
-        // $sharedTasks = $user->sharedTasks()->all();
-
-        return $tasks;
-        // return $tasks->merge($sharedTasks)->orderBy('order');
+        return $this->activeTasks()->union($sharedTasks)->distinct('tasks.id')->orderBy('order')->get();
     }
 }
