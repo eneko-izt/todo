@@ -69,6 +69,8 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        $this->authorize('editTask', $task);
+
         $validator = $this->taskService->updateValidator(request()->all(), $task);
         if ($validator->fails()) {
             return redirect()->back()
