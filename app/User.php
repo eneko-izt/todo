@@ -50,7 +50,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class)->whereNull('role_user.deleted_at')->withPivot(['deleted_at'])->withTimestamps();
     }
 
-    public function roleswithtrashed()
+    public function rolesWithTrashed()
     {
         return $this->belongsToMany(Role::class)->withPivot(['deleted_at'])->withTimestamps();
     }

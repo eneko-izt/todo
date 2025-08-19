@@ -1,5 +1,10 @@
 <?php
 
+use App\Tag;
+use App\Role;
+use App\Task;
+use App\User;
+use App\Column;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Create a default user easy to remember
-        factory(App\User::class)->create([
+        factory(User::class)->create([
             'name' => 'admin',
             'email' => 'admin@izt.eus',
             'email_verified_at' => now(),
@@ -20,44 +25,44 @@ class DatabaseSeeder extends Seeder
             'remember_token' => ''
         ]);
 
-        factory(App\User::class, 10)->create();
+        factory(User::class, 10)->create();
 
-        factory(App\Column::class, 10)->create();
+        factory(Column::class, 10)->create();
 
-        factory(App\Tag::class, 20)->create();
+        factory(Tag::class, 20)->create();
 
-        factory(App\Task::class, 20)->create()->each(function ($task) {
+        factory(Task::class, 20)->create()->each(function ($task) {
             // Attach a random user to the task
-            $task->user_id = App\User::inRandomOrder()->first()->id;
+            $task->user_id = User::inRandomOrder()->first()->id;
             $task->save();
 
             // Attach a random column to the task
-            $task->column_id = App\Column::inRandomOrder()->first()->id;
+            $task->column_id = Column::inRandomOrder()->first()->id;
             $task->save();
         });
 
-        $tags = App\Tag::all();
+        $tags = Tag::all();
 
-        App\Task::all()->each(function ($task) use ($tags) {
+        Task::all()->each(function ($task) use ($tags) {
             // Attach random tags to the task
             $task->tags()->attach($tags->random(rand(0, 2))->pluck('id')->toArray());
         });
 
-        $roleAdmin = factory(App\Role::class)->create([
+        $roleAdmin = factory(Role::class)->create([
             'name' => 'admin'
         ]);
 
-        $roleUser = factory(App\Role::class)->create([
+        $roleUser = factory(Role::class)->create([
             'name' => 'user'
         ]);
 
-        App\User::where('name', 'admin')->first()->roles()->attach($roleAdmin->id);
+        User::where('name', 'admin')->first()->roles()->attach($roleAdmin->id);
 
-        App\User::where('name', '<>', 'admin')->get()->random(6)->each(function ($user) use ($roleUser) {
+        User::where('name', '<>', 'admin')->get()->random(6)->each(function ($user) use ($roleUser) {
             $user->roles()->attach($roleUser->id);
         });
 
-        App\User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) use ($roleAdmin) {
+        User::where('name', '<>', 'admin')->get()->random(1)->each(function ($user) use ($roleAdmin) {
             $user->roles()->attach($roleAdmin->id);
         });
     }
