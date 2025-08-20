@@ -101,7 +101,7 @@ class UsersController extends Controller
         }
 
         foreach ($roles as $role) {
-            if ($user->rolesWithtrashed()->where('role_user.role_id', $role)->exists()) {
+            if ($user->rolesWithTrashed()->where('role_user.role_id', $role)->exists()) {
                 // If the role already exists, we just update the deleted_at field
                 $user->roles()->updateExistingPivot($role, ['deleted_at' => null]);
                 continue;
