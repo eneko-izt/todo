@@ -18,28 +18,36 @@
         </p>
         <hr>
         <p>
-            @foreach ($task->tags()->where('active', true)->get() as $tag)
+            @foreach ($task->tags()->active()->get() as $tag)
                 @if (!$loop->first)
                     ,
                 @endif {{ $tag->getUpperName() }}
             @endforeach
         </p>
         <div>
+
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
 
-                @foreach ($task->sharingUsers()->where('active', true)->get() as $user)
+                @foreach ($task->sharingUsers()->active()->get() as $user)
+                    @if ($loop->first)
+                        <span class="badge badge-primary">Shared with:</span>
+                    @endif
                     <span class="badge badge-secondary">
                         {{ $user->name }}
-                        <form action="{{ route('tasks.unshare', [$task->id, $user->id]) }}" method="POST">
+                        <form action="{{ route('tasks.unshare', [$task->id, $user->id]) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="btn btn-secondary" title="Remove this task"
-                                onclick="return confirm('Are you sure you want to unshare this task?')">X
+                            <button type="submit" class="btn-close bigger-close" title="Remove this user"
+                                onclick="return confirm('Are you sure you want to unshare this task?')">
                             </button>
                         </form>
                     </span>
                 @endforeach
-
+            @else
+                @if ($task->user->id != auth()->user()->id)
+                    <span class="badge badge-primary">Owner:</span>
+                    <span class="badge badge-secondary">{{ $task->user->name }}</span>
+                @endif
             @endif
         </div>
 
