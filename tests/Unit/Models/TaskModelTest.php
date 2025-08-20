@@ -159,4 +159,56 @@ class TaskModelTest extends TestCase
             && empty(array_diff($task->tags->pluck('id')->toArray(), $tags->pluck('id')->toArray()));
         $this->assertTrue($arraysAreEqual);
     }
+
+    public function test_it_has_zero_sharing_users()
+    {
+        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $userOwner->id, 'deleted_at' => null]);
+
+        $this->assertCount(0, $task->sharingUsers);
+    }
+
+    public function test_it_has_one_sharing_users()
+    {
+        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $userOwner->id, 'deleted_at' => null]);
+
+        $userActive = factory(User::class)->create(['active' => 1]);
+        $userDeleted = factory(User::class)->create(['active' => 0]);
+
+        $task->sharingUsers()->attach($userActive->id);
+        $task->sharingUsers()->attach($userDeleted->id);
+
+        $notUsedUser = factory(User::class)->create(['active' => 1]);
+        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id, 'deleted_at' => null]);
+
+        // Attach unused task to unused user
+        $notUsedTask->sharingUsers()->attach($notUsedUser->id);
+
+        $this->assertCount(1, $task->sharingUsers()->active()->get());
+        $this->assertTrue($task->sharingUsers()->active()->get()->contains($userActive));
+    }
+
+    public function test_it_has_many_sharing_users()
+    {
+        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $userOwner->id, 'deleted_at' => null]);
+
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+
+        // Attach task to user
+        $task->sharingUsers()->attach($user1->id);
+        $task->sharingUsers()->attach($user2->id);
+        $task->sharingUsers()->attach($user3->id);
+
+        $this->assertCount(3, $task->sharingUsers);
+        $this->assertTrue($task->sharingUsers->contains($user1));
+        $this->assertTrue($task->sharingUsers->contains($user2));
+        $this->assertTrue($task->sharingUsers->contains($user3));
+    }
 }

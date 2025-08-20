@@ -261,4 +261,115 @@ class UserModelTest extends TestCase
         $this->assertTrue($user->hasRoleId($roleNotDeleted->id));
         $this->assertFalse($user->hasRoleId($roleDeleted->id));
     }
+
+    public function test_it_returns_zero_not_deleted_tasks()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+
+        $user->sharedTasks()->attach($taskDeleted->id, ['deleted_at' => null]);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(0, $tasks);
+    }
+
+    public function test_it_returns_one_not_deleted_tasks()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $taskActive = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+
+        $user->sharedTasks()->attach($taskActive->id, ['deleted_at' => null]);
+        $user->sharedTasks()->attach($taskDeleted->id, ['deleted_at' => null]);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(1, $tasks);
+        $this->assertTrue($tasks->first()->is($taskActive));
+    }
+
+    public function test_it_returns_many_not_deleted_tasks()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $taskActive1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $taskActive2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+
+        $user->sharedTasks()->attach($taskActive1->id, ['deleted_at' => null]);
+        $user->sharedTasks()->attach($taskActive2->id, ['deleted_at' => null]);
+        $user->sharedTasks()->attach($taskDeleted->id, ['deleted_at' => null]);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(2, $tasks);
+        $this->assertTrue($tasks->first()->is($taskActive1));
+        $this->assertTrue($tasks->last()->is($taskActive2));
+    }
+
+    public function test_it_returns_zero_tasks_without_deleted_at_in_pivot()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+
+        $user->sharedTasks()->attach($taskDeleted->id, ['deleted_at' => now()]);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(0, $tasks);
+    }
+
+    public function test_it_returns_one_tasks_without_deleted_at_in_pivot()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $taskActive = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+
+        $user->sharedTasks()->attach($taskActive->id, ['deleted_at' => null]);
+        $user->sharedTasks()->attach($taskDeleted->id, ['deleted_at' => now()]);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(1, $tasks);
+        $this->assertTrue($tasks->first()->is($taskActive));
+    }
+
+    public function test_it_returns_many_tasks_without_deleted_at_in_pivot()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $taskActive1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $taskActive2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+
+        $user->sharedTasks()->attach($taskActive1->id, ['deleted_at' => null]);
+        $user->sharedTasks()->attach($taskActive2->id, ['deleted_at' => null]);
+        $user->sharedTasks()->attach($taskDeleted->id, ['deleted_at' => now()]);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(2, $tasks);
+        $this->assertTrue($tasks->first()->is($taskActive1));
+        $this->assertTrue($tasks->last()->is($taskActive2));
+    }
+
+    public function test_it_includes_pivot_fields_and_timestamps()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+
+        $user->sharedTasks()->attach($task->id, ['deleted_at' => null]);
+
+        $pivot = $user->sharedTasks()->first()->pivot;
+
+        $this->assertNull($pivot->deleted_at);
+        $this->assertNotNull($pivot->created_at);
+        $this->assertNotNull($pivot->updated_at);
+    }
 }
