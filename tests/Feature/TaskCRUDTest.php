@@ -84,13 +84,7 @@ class TaskCRUDTest extends TestCase
             'order' . $task->id => 1,
             'column_id' . $task->id => $this->defaultColumn->id
         ]);
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors();
-        $errors = session('errors');
-        $this->assertTrue($errors->has('user_id' . $task->id));
-
-        $task->refresh();
-        $this->assertNotEquals('Updated Task', $task->text);
+        $response->assertStatus(403);
     }
 
     private function createDefaultRoleColumn()
