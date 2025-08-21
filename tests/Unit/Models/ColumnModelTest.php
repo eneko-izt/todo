@@ -107,7 +107,6 @@ class ColumnModelTest extends TestCase
     {
         $column = factory(Column::class)->create();
         $user = factory(User::class)->create();
-        $this->actingAs($user);
 
         // Task for authenticated user and active
         $taskForUser = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
@@ -118,6 +117,7 @@ class ColumnModelTest extends TestCase
         // Inactive task for authenticated user
         $inactiveTask = factory(Task::class)->state('inactive')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
+        $this->actingAs($user);
         $activeTasks = $column->activeTasks()->get();
 
         $this->assertTrue($activeTasks->contains($taskForUser));
