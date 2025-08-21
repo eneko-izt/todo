@@ -13,3 +13,9 @@ $factory->define(Role::class, function (Faker $faker) {
         'deleted_at' => null
     ];
 });
+
+$factory->state(Role::class, 'deleted', function (Faker $faker) {
+    return [
+        'deleted_at' => now(),
+    ];
+});

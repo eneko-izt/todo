@@ -10,10 +10,22 @@ $factory->define(Task::class, function (Faker $faker) {
         'user_id' => App\User::inRandomOrder()->first()->id,
         'column_id' => App\Column::inRandomOrder()->first()->id,
         'text' => $faker->sentence,
-        'active' => $faker->boolean,
-        'order' => $faker->randomNumber(),
+        'active' => 1,
+        'order' => $faker->numberBetween(0, 100),
         'created_at' => now(),
         'updated_at' => now(),
-        'deleted_at' => rand(0, 3) == 0 ? now() : null // Randomly set deleted_at to null or now()
+        'deleted_at' => null
+    ];
+});
+
+$factory->state(Task::class, 'inactive', function (Faker $faker) {
+    return [
+        'active' => 0,
+    ];
+});
+
+$factory->state(Task::class, 'deleted', function (Faker $faker) {
+    return [
+        'deleted_at' => now(),
     ];
 });

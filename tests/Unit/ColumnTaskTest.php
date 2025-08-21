@@ -11,19 +11,9 @@ class ColumnTaskTest extends TestCase
 
     public function test_can_see_own_tasks()
     {
-        $user = factory(\App\User::class)->create(['active' => 1]);
-
-        $column = factory(\App\Column::class)->create([
-            'active' => true,
-            'deleted_at' => null
-        ]);
-
-        $task = factory(\App\Task::class)->create([
-            'user_id' => $user->id,
-            'column_id' => $column->id,
-            'active' => true,
-            'deleted_at' => null
-        ]);
+        $user = factory(\App\User::class)->create();
+        $column = factory(\App\Column::class)->create();
+        $task = factory(\App\Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id]);
 
         $this->actingAs($user);
         $tasks = $column->activeTasks()->get();
@@ -33,21 +23,11 @@ class ColumnTaskTest extends TestCase
 
     public function test_cannot_see_other_users_tasks()
     {
-        $user = factory(\App\User::class)->create(['active' => 1]);
+        $user = factory(\App\User::class)->create();
+        $column = factory(\App\Column::class)->create();
+        $task = factory(\App\Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id]);
 
-        $column = factory(\App\Column::class)->create([
-            'active' => true,
-            'deleted_at' => null
-        ]);
-
-        $task = factory(\App\Task::class)->create([
-            'user_id' => $user->id,
-            'column_id' => $column->id,
-            'active' => true,
-            'deleted_at' => null
-        ]);
-
-        $userNotOwner = factory(\App\User::class)->create(['active' => 1]);
+        $userNotOwner = factory(\App\User::class)->create();
         $this->actingAs($userNotOwner);
 
         $tasks = $column->activeTasks()->get();

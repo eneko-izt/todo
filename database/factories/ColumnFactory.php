@@ -9,9 +9,21 @@ $factory->define(Column::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
         'colour' => $faker->hexColor,
-        'active' => $faker->boolean,
+        'active' => 1,
         'created_at' => now(),
         'updated_at' => now(),
-        'deleted_at' => rand(0, 3) == 0 ? now() : null // Randomly set deleted_at to null or now()
+        'deleted_at' => null
+    ];
+});
+
+$factory->state(Column::class, 'inactive', function (Faker $faker) {
+    return [
+        'active' => 0,
+    ];
+});
+
+$factory->state(Column::class, 'deleted', function (Faker $faker) {
+    return [
+        'deleted_at' => now(),
     ];
 });

@@ -19,19 +19,14 @@ class TaskCRUDTest extends TestCase
      * 
      */
 
-    private $defaultRole = null;
-    private $defaultColumn = null;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->createDefaultRoleColumn();
-    }
 
     public function test_User_Can_Delete_Their_Own_Task()
     {
-        $userOwner = $this->createUser();
-        $task = $this->createTask($userOwner, $this->defaultColumn);
+        $defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
+        $defaultColumn = factory(\App\Column::class)->create();
+        $userOwner = factory(\App\User::class)->create();
+        $userOwner->roles()->attach($defaultRole);
+        $task = factory(\App\Task::class)->create(['user_id' => $userOwner->id, 'column_id' => $defaultColumn->id]);
 
         $this->assertNull($task->deleted_at, 'Task should not be deleted initially');
 
@@ -44,10 +39,14 @@ class TaskCRUDTest extends TestCase
 
     public function test_User_Cannot_Delete_Others_Task()
     {
-        $userOwner = $this->createUser();
-        $task = $this->createTask($userOwner, $this->defaultColumn);
+        $defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
+        $defaultColumn = factory(\App\Column::class)->create();
+        $userOwner = factory(\App\User::class)->create();
+        $userOwner->roles()->attach($defaultRole);
+        $task = factory(\App\Task::class)->create(['user_id' => $userOwner->id, 'column_id' => $defaultColumn->id]);
 
-        $userNotOwner = $this->createUser();
+        $userNotOwner = factory(\App\User::class)->create();
+        $userNotOwner->roles()->attach($defaultRole);
 
         $response = $this->actingAs($userNotOwner)->delete(route('tasks.delete', ['id' => $task->id]));
         $response->assertStatus(403);
@@ -58,13 +57,16 @@ class TaskCRUDTest extends TestCase
 
     public function test_User_Can_Update_Their_Own_Task()
     {
-        $userOwner = $this->createUser();
-        $task = $this->createTask($userOwner, $this->defaultColumn);
+        $defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
+        $defaultColumn = factory(\App\Column::class)->create();
+        $userOwner = factory(\App\User::class)->create();
+        $userOwner->roles()->attach($defaultRole);
+        $task = factory(\App\Task::class)->create(['user_id' => $userOwner->id, 'column_id' => $defaultColumn->id]);
 
         $response = $this->actingAs($userOwner)->patch(route('tasks.update', ['id' => $task->id]), [
             'text' . $task->id => 'Updated Task',
             'order' . $task->id => 1,
-            'column_id' . $task->id => $this->defaultColumn->id
+            'column_id' . $task->id => $defaultColumn->id
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
@@ -75,38 +77,19 @@ class TaskCRUDTest extends TestCase
 
     public function test_User_Not_Owner_Cannot_Update_Task()
     {
-        $userOwner = $this->createUser();
-        $userNotOwner = $this->createUser();
-        $task = $this->createTask($userOwner, $this->defaultColumn);
+        $defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
+        $defaultColumn = factory(\App\Column::class)->create();
+        $userOwner = factory(\App\User::class)->create();
+        $userOwner->roles()->attach($defaultRole);
+        $userNotOwner = factory(\App\User::class)->create();
+        $userNotOwner->roles()->attach($defaultRole);
+        $task = factory(\App\Task::class)->create(['user_id' => $userOwner->id, 'column_id' => $defaultColumn->id]);
 
         $response = $this->actingAs($userNotOwner)->patch(route('tasks.update', ['id' => $task->id]), [
             'text' . $task->id => 'Updated Task',
             'order' . $task->id => 1,
-            'column_id' . $task->id => $this->defaultColumn->id
+            'column_id' . $task->id => $defaultColumn->id
         ]);
         $response->assertStatus(403);
-    }
-
-    private function createDefaultRoleColumn()
-    {
-        $this->defaultRole = factory(\App\Role::class)->create(['name' => 'user']);
-        $this->defaultColumn = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
-    }
-
-    private function createUser()
-    {
-        $user = factory(\App\User::class)->create(['active' => 1]);
-        $user->roles()->attach($this->defaultRole);
-        return $user;
-    }
-
-    private function createTask($user, $column)
-    {
-        return factory(\App\Task::class)->create([
-            'user_id' => $user->id,
-            'column_id' => $column->id,
-            'active' => true,
-            'deleted_at' => null
-        ]);
     }
 }
