@@ -77,7 +77,7 @@ class TaskCRUDTest extends TestCase
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
 
         // Sharing the task again
         $response = $this->actingAs($this->userOwner)->patch(route('tasks.share', ['id' => $this->task->id]), [
@@ -98,7 +98,7 @@ class TaskCRUDTest extends TestCase
         $response->assertSessionHasNoErrors();
 
         // Assert the user is unshared with a softdelete
-        $this->assertSoftDeleted('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
+        $this->assertDatabaseMissing('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
 
         // Sharing the task again
         $response = $this->actingAs($this->userOwner)->patch(route('tasks.share', ['id' => $this->task->id]), [
@@ -131,11 +131,11 @@ class TaskCRUDTest extends TestCase
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
 
         $response = $this->actingAs($this->userNotOwner)->patch(route('tasks.unshare', ['id' => $this->task->id, 'userId' => $this->userNotOwner->id]));
         $response->assertStatus(403);
-        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
     }
 
     public function test_User_Can_View_Their_Own_Task()
@@ -151,7 +151,7 @@ class TaskCRUDTest extends TestCase
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
 
         $this->actingAs($this->userNotOwner);
         $this->assertTrue($this->column->viewableTasks()->contains($this->task), 'User should be able to view their own task');
@@ -164,7 +164,7 @@ class TaskCRUDTest extends TestCase
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
 
         $anotherUser = factory(\App\User::class)->create();
 

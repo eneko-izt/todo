@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Create a default user easy to remember
-        factory(User::class)->create([
+        $userAdmin = factory(User::class)->create([
             'name' => 'admin',
             'email' => 'admin@izt.eus',
             'email_verified_at' => now(),
@@ -27,11 +27,11 @@ class DatabaseSeeder extends Seeder
 
         factory(User::class, 10)->create();
 
-        factory(Column::class, 10)->create();
+        factory(Column::class, 5)->create();
 
-        factory(Tag::class, 20)->create();
+        factory(Tag::class, 10)->create();
 
-        factory(Task::class, 40)->create()->each(function ($task) {
+        factory(Task::class, 20)->create()->each(function ($task) {
             // Attach a random user to the task
             $task->user_id = User::inRandomOrder()->first()->id;
             $task->save();
@@ -66,7 +66,8 @@ class DatabaseSeeder extends Seeder
             $user->roles()->attach($roleAdmin->id);
         });
 
-        $users = User::where('active', 1)->get()->random(5);
+        $users = User::where('name', '<>', 'admin')->get()->random(5);
+        $users->push($userAdmin);
 
         Task::where('active', 1)
             ->where('deleted_at', null)

@@ -78,6 +78,6 @@ class User extends Authenticatable
 
     public function sharedTasks()
     {
-        return $this->belongsToMany(Task::class, 'task_user')->whereNull('task_user.deleted_at')->withPivot(['deleted_at'])->withTimestamps();
+        return $this->belongsToMany(Task::class)->withTimestamps();
     }
 }

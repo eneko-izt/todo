@@ -99,12 +99,8 @@ class TasksController extends Controller
 
         $this->authorize('shareTask', $task);
 
-        if ($task->sharingUsersWithTrashed()->where('task_user.user_id', $userId)->exists()) {
-            // If the user is already sharing the task, we just update the deleted_at field
-            $task->sharingUsersWithTrashed()->updateExistingPivot($userId, ['deleted_at' => null]);
-        }
-        else {
-            // If the user does not exist, we attach it
+        if (! $task->sharingUsers()->where('user_id', $userId)->exists())
+        {
             $task->sharingUsers()->attach($userId);
         }
 
@@ -118,7 +114,7 @@ class TasksController extends Controller
 
         $this->authorize('shareTask', $task);
 
-        $task->sharingUsers()->updateExistingPivot($user->id, ['deleted_at' => now()]);
+        $task->sharingUsers()->detach($userId);
 
         return redirect(route("home"));
     }

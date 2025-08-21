@@ -83,7 +83,7 @@
             @method('PATCH')
 
             <label for="user">Choose a user:</label>
-            <select name="userid" id="user-{{ $task->id }}">
+            <select name="userid" id="user-{{ $task->id }}" style="max-width: 200px;">
                 @foreach ($users as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach

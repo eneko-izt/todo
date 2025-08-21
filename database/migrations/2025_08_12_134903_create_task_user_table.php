@@ -25,7 +25,6 @@ class CreateTaskUserTable extends Migration
             $table->unique(['task_id', 'user_id']);
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

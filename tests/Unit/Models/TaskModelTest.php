@@ -175,11 +175,9 @@ class TaskModelTest extends TestCase
 
         $userActive = factory(User::class)->create();
         $userInactive = factory(User::class)->state('inactive')->create();
-        $userSharingDeleted = factory(User::class)->create();
 
         $task->sharingUsers()->attach($userActive->id);
         $task->sharingUsers()->attach($userInactive->id);
-        $task->sharingUsers()->attach($userSharingDeleted->id, ['deleted_at' => now()]);
 
         $this->assertCount(1, $task->sharingUsers()->active()->get());
         $this->assertTrue($task->sharingUsers()->active()->get()->contains($userActive));
@@ -195,72 +193,16 @@ class TaskModelTest extends TestCase
         $user2 = factory(User::class)->create();
         $user3 = factory(User::class)->create();
         $userInactive = factory(User::class)->state('inactive')->create();
-        $userSharingDeleted = factory(User::class)->create();
 
         // Attach task to user
         $task->sharingUsers()->attach($user1->id);
         $task->sharingUsers()->attach($user2->id);
         $task->sharingUsers()->attach($user3->id);
         $task->sharingUsers()->attach($userInactive->id);
-        $task->sharingUsers()->attach($userSharingDeleted->id, ['deleted_at' => now()]);
 
         $this->assertCount(3, $task->sharingUsers()->active()->get());
         $this->assertTrue($task->sharingUsers()->active()->get()->contains($user1));
         $this->assertTrue($task->sharingUsers()->active()->get()->contains($user2));
         $this->assertTrue($task->sharingUsers()->active()->get()->contains($user3));
-    }
-
-    public function test_it_has_zero_sharing_users_with_trashed()
-    {
-        $column = factory(Column::class)->create();
-        $userOwner = factory(User::class)->create();
-        $task = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
-
-        $this->assertCount(0, $task->sharingUsersWithTrashed);
-    }
-
-    public function test_it_has_one_sharing_users_with_trashed()
-    {
-        $column = factory(Column::class)->create();
-        $userOwner = factory(User::class)->create();
-        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
-
-        $userActive = factory(User::class)->create();
-        $userDeleted = factory(User::class)->state('inactive')->create();
-        $userSharingDeleted = factory(User::class)->create();
-
-        $task->sharingUsers()->attach($userActive->id);
-        $task->sharingUsers()->attach($userDeleted->id);
-        $task->sharingUsers()->attach($userSharingDeleted->id, ['deleted_at' => now()]);
-
-        $this->assertCount(2, $task->sharingUsersWithTrashed()->active()->get());
-        $this->assertTrue($task->sharingUsersWithTrashed()->active()->get()->contains($userActive));
-        $this->assertTrue($task->sharingUsersWithTrashed()->active()->get()->contains($userSharingDeleted));
-    }
-
-    public function test_it_has_many_sharing_users_with_trashed()
-    {
-        $column = factory(Column::class)->create();
-        $userOwner = factory(User::class)->create();
-        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
-
-        $user = factory(User::class)->create();
-        $userInactive = factory(User::class)->state('inactive')->create();
-        $userSharingDeleted1 = factory(User::class)->create();
-        $userSharingDeleted2 = factory(User::class)->create();
-        $userSharingDeleted3 = factory(User::class)->create();
-
-        // Attach task to user
-        $task->sharingUsers()->attach($user->id);
-        $task->sharingUsers()->attach($userInactive->id);
-        $task->sharingUsers()->attach($userSharingDeleted1->id, ['deleted_at' => now()]);
-        $task->sharingUsers()->attach($userSharingDeleted2->id, ['deleted_at' => now()]);
-        $task->sharingUsers()->attach($userSharingDeleted3->id, ['deleted_at' => now()]);
-
-        $this->assertCount(4, $task->sharingUsersWithTrashed()->active()->get());
-        $this->assertTrue($task->sharingUsersWithTrashed()->active()->get()->contains($user));
-        $this->assertTrue($task->sharingUsersWithTrashed()->active()->get()->contains($userSharingDeleted1));
-        $this->assertTrue($task->sharingUsersWithTrashed()->active()->get()->contains($userSharingDeleted2));
-        $this->assertTrue($task->sharingUsersWithTrashed()->active()->get()->contains($userSharingDeleted3));
     }
 }
