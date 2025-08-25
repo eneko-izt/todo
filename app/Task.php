@@ -34,9 +34,9 @@ class Task extends Model
 
     public function shareableUsers()
     {
-        $users = User::active()->where('id', '!=', auth()->id())->get();
-
-        $diff = $users->diff($this->sharingUsers);
-        return $diff;
+        return User::active()
+                ->where('id', '!=', auth()->id())
+                ->whereNotIn('id', $this->sharingUsers()->pluck('users.id'))
+                ->get();    
     }
 }

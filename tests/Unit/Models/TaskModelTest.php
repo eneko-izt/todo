@@ -205,4 +205,27 @@ class TaskModelTest extends TestCase
         $this->assertTrue($task->sharingUsers()->active()->get()->contains($user2));
         $this->assertTrue($task->sharingUsers()->active()->get()->contains($user3));
     }
+
+    public function test_shareable_users()
+    {
+        $column = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+
+        $this->actingAs($userOwner);
+        $this->assertCount(0, $task->shareableUsers());
+
+        $userNotOwner1 = factory(User::class)->create();
+        $userNotOwner2 = factory(User::class)->create();
+        $this->assertCount(2, $task->shareableUsers());
+        $this->assertTrue($task->shareableUsers()->pluck('id')->contains($userNotOwner1->id));
+        $this->assertTrue($task->shareableUsers()->pluck('id')->contains($userNotOwner2->id));
+
+        $task->sharingUsers()->attach($userNotOwner1->id);
+        $this->assertCount(1, $task->shareableUsers());
+        $this->assertTrue($task->shareableUsers()->pluck('id')->contains($userNotOwner2->id));
+
+        $task->sharingUsers()->attach($userNotOwner2->id);
+        $this->assertCount(0, $task->shareableUsers());
+    }   
 }
