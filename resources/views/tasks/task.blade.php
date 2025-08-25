@@ -78,20 +78,24 @@
 
     <div id="share-content-{{ $task->id }}" style="display: none;">
 
-        <form action="{{ route('tasks.share', $task->id) }}" method="POST">
-            @csrf
-            @method('PATCH')
+        @if (auth()->check() && auth()->user()->can('shareTask', $task))
 
-            <label for="user">Choose a user:</label>
-            <select name="userid" id="user-{{ $task->id }}" style="max-width: 200px;">
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
+            <form action="{{ route('tasks.share', $task->id) }}" method="POST">
+                @csrf
+                @method('PATCH')
 
-            <button type="submit" class="btn btn-primary" title="Share task with user">Save
-            </button>
-        </form>
+                <label for="user">Choose a user:</label>
+                <select name="userid" id="user-{{ $task->id }}" style="max-width: 200px;">
+                    @foreach ($task->shareableUsers() as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+
+                <button type="submit" class="btn btn-primary" title="Share task with user">Save
+                </button>
+            </form>
+
+        @endif
 
     </div>
 

@@ -27,8 +27,7 @@ class HomeController extends Controller
     {
         $columns = Column::where('active', true)->get();
         $tags = Tag::active()->get();
-        $users = User::active()->where('id', '!=', auth()->id())->get();
 
-        return view('home', compact('columns', 'tags', 'users'));
+        return view('home', compact('columns', 'tags'));
     }
 }
