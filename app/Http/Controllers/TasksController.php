@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\User;
-use App\Http\Services\TaskService;
+use App\Mail\TaskSharedMail;
 
-use Illuminate\Support\Facades\Validator;
+use App\Http\Services\TaskService;
+use Illuminate\Support\Facades\Mail;
 
 class TasksController extends Controller
 {
@@ -95,13 +96,15 @@ class TasksController extends Controller
     public function share($taskId)
     {
         $task = Task::findOrFail($taskId);
-        $userId = request('userid');
+        $user = User::findOrFail(request('userid'));
 
         $this->authorize('shareTask', $task);
 
-        if (! $task->sharingUsers()->where('user_id', $userId)->exists())
+        if (! $task->sharingUsers()->where('user_id', $user->id)->exists())
         {
-            $task->sharingUsers()->attach($userId);
+            $task->sharingUsers()->attach($user->id);
+
+            Mail::to($user->email)->queue(new TaskSharedMail($user, $task));
         }
 
         return redirect(route("home"));
