@@ -24,18 +24,16 @@
                     @include('tasks.task', ['task' => $task])
                 @endforeach
 
+                <button class="btn btn-primary" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#new-content-{{ $column->id }}"
+                        aria-expanded="false"
+                        id="new-btn-{{ $column->id }}">
+                    New Task
+                </button>
 
-                <div class="d-flex justify-content-between">
-
-
-                        <!-- Share tasks with other users -->
-                        <button type="button" id="new-btn-{{ $column->id }}" class="btn btn-primary">
-                            New Task
-                        </button>
-
-                </div>
-
-                <div id="new-content-{{ $column->id }}" style="display: none;">
+                <div id="new-content-{{ $column->id }}" class="collapse">
                     @include('tasks.new', ['column' => $column])
                 </div>
 
@@ -46,37 +44,22 @@
         @endforelse
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const buttons  = document.querySelectorAll('[id^="new-btn-"]');
-  const contents = document.querySelectorAll('[id^="new-content-"]');
+    document.querySelectorAll('[id^="new-btn-"]').forEach(button => {
+        const targetId = button.getAttribute("data-bs-target").replace("#", "");
+        const target = document.getElementById(targetId);
 
-  buttons.forEach(button => {
-    button.addEventListener('click', function () {
-      const columnId  = this.id.replace('new-btn-', '');
-      const contentId = `new-content-${columnId}`;
-      const contentDiv = document.getElementById(contentId);
-
-      // Check current computed visibility BEFORE we hide everything
-      const isVisible = window.getComputedStyle(contentDiv).display !== 'none';
-
-      // Hide all contents & reset all buttons
-      contents.forEach(div => div.style.display = 'none');
-      buttons.forEach(btn => {
-        btn.textContent = 'New Task';
-        btn.setAttribute('aria-expanded', 'false');
-      });
-
-      // If the clicked one was NOT visible, show it and update its button
-      if (!isVisible) {
-        contentDiv.style.display = 'block';
-        this.textContent = 'Cancel';
-        this.setAttribute('aria-expanded', 'true');
-      }
-      // if it WAS visible, we left it hidden (and button reset) — i.e. Cancel hides
+        target.addEventListener("shown.bs.collapse", () => {
+            button.textContent = "Cancel";
+        });
+        target.addEventListener("hidden.bs.collapse", () => {
+            button.textContent = "New Task";
+        });
     });
-  });
 });
 </script>
+
 
 @endsection
