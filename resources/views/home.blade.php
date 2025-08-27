@@ -24,7 +24,20 @@
                     @include('tasks.task', ['task' => $task])
                 @endforeach
 
-                @include('tasks.new', ['column' => $column])
+
+                <div class="d-flex justify-content-between">
+
+
+                        <!-- Share tasks with other users -->
+                        <button type="button" id="new-btn-{{ $column->id }}" class="btn btn-primary">
+                            New Task
+                        </button>
+
+                </div>
+
+                <div id="new-content-{{ $column->id }}" style="display: none;">
+                    @include('tasks.new', ['column' => $column])
+                </div>
 
             </div>
 
@@ -32,5 +45,28 @@
             <p>No columns found.</p>
         @endforelse
     </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select all buttons that start with "new-btn-"
+        document.querySelectorAll('[id^="new-btn-"]').forEach(button => {
+            button.addEventListener("click", function () {
+                const columnId = this.id.replace("new-btn-", ""); // extract the ID
+                const contentDiv = document.getElementById(`new-content-${columnId}`);
+                
+                if (contentDiv.style.display === "none" || contentDiv.style.display === "")
+                {
+                    contentDiv.style.display = "block";
+                    this.textContent = "Cancel";
+                } 
+                else
+                {
+                    contentDiv.style.display = "none";
+                    this.textContent = "New Task";
+                }
+            });
+        });
+    });
+</script>
 
 @endsection
