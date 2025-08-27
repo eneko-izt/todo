@@ -47,26 +47,36 @@
     </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Select all buttons that start with "new-btn-"
-        document.querySelectorAll('[id^="new-btn-"]').forEach(button => {
-            button.addEventListener("click", function () {
-                const columnId = this.id.replace("new-btn-", ""); // extract the ID
-                const contentDiv = document.getElementById(`new-content-${columnId}`);
-                
-                if (contentDiv.style.display === "none" || contentDiv.style.display === "")
-                {
-                    contentDiv.style.display = "block";
-                    this.textContent = "Cancel";
-                } 
-                else
-                {
-                    contentDiv.style.display = "none";
-                    this.textContent = "New Task";
-                }
-            });
-        });
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons  = document.querySelectorAll('[id^="new-btn-"]');
+  const contents = document.querySelectorAll('[id^="new-content-"]');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function () {
+      const columnId  = this.id.replace('new-btn-', '');
+      const contentId = `new-content-${columnId}`;
+      const contentDiv = document.getElementById(contentId);
+
+      // Check current computed visibility BEFORE we hide everything
+      const isVisible = window.getComputedStyle(contentDiv).display !== 'none';
+
+      // Hide all contents & reset all buttons
+      contents.forEach(div => div.style.display = 'none');
+      buttons.forEach(btn => {
+        btn.textContent = 'New Task';
+        btn.setAttribute('aria-expanded', 'false');
+      });
+
+      // If the clicked one was NOT visible, show it and update its button
+      if (!isVisible) {
+        contentDiv.style.display = 'block';
+        this.textContent = 'Cancel';
+        this.setAttribute('aria-expanded', 'true');
+      }
+      // if it WAS visible, we left it hidden (and button reset) — i.e. Cancel hides
     });
+  });
+});
 </script>
 
 @endsection
