@@ -24,7 +24,18 @@
                     @include('tasks.task', ['task' => $task])
                 @endforeach
 
-                @include('tasks.new', ['column' => $column])
+                <button class="btn btn-primary" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#new-content-{{ $column->id }}"
+                        aria-expanded="false"
+                        id="new-btn-{{ $column->id }}">
+                    New Task
+                </button>
+
+                <div id="new-content-{{ $column->id }}" class="collapse">
+                    @include('tasks.new', ['column' => $column])
+                </div>
 
             </div>
 
@@ -32,5 +43,23 @@
             <p>No columns found.</p>
         @endforelse
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('[id^="new-btn-"]').forEach(button => {
+        const targetId = button.getAttribute("data-bs-target").replace("#", "");
+        const target = document.getElementById(targetId);
+
+        target.addEventListener("shown.bs.collapse", () => {
+            button.textContent = "Cancel";
+        });
+        target.addEventListener("hidden.bs.collapse", () => {
+            button.textContent = "New Task";
+        });
+    });
+});
+</script>
+
 
 @endsection
