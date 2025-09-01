@@ -21,4 +21,17 @@ class Column extends Model
     {
         return $this->tasks()->where('user_id', auth()->user()->id)->active()->orderBy('order');
     }
+
+    public function viewableTasks()
+    {
+        $user = auth()->user();
+        $sharedTasks = $user->sharedTasks()
+            ->where('tasks.column_id', $this->id)
+            ->where('tasks.user_id', '!=', $user->id)
+            ->active()
+            ->select('tasks.*')
+            ->orderBy('order');
+
+        return $this->activeTasks()->union($sharedTasks)->distinct('tasks.id')->orderBy('order')->get();
+    }
 }

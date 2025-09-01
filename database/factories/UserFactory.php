@@ -28,8 +28,8 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(User::class, 'active', function (Faker $faker) {
+$factory->state(User::class, 'inactive', function (Faker $faker) {
     return [
-        'active' => 1, // Set to active
+        'active' => 0,
     ];
 });

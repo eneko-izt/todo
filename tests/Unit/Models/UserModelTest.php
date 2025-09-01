@@ -33,6 +33,11 @@ class UserModelTest extends TestCase
         $this->assertContains(Notifiable::class, class_uses(User::class));
     }
 
+    public function test_it_uses_basic_trait()
+    {
+        $this->assertContains(\App\Traits\BasicTrait::class, class_uses(User::class));
+    }
+
     public function test_tasks_relationship_is_has_many()
     {
         $user = new User();
@@ -54,7 +59,7 @@ class UserModelTest extends TestCase
 
     public function test_has_role_name_returns_true_when_role_exists_and_not_deleted()
     {
-        $role = new Role(['name' => 'admin', 'deleted_at' => null]);
+        $role = new Role(['name' => 'admin']);
         $role->pivot = (object)['deleted_at' => null];
 
         $user = new User();
@@ -80,12 +85,12 @@ class UserModelTest extends TestCase
     public function test_it_has_one_task()
     {
         $user = factory(User::class)->create();
-        $column = factory(Column::class)->create(['deleted_at' => null]);
-        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $deletedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+        $column = factory(Column::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $deletedTask = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $notUsedUser = factory(User::class)->create();
-        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $notUsedUser->id, 'deleted_at' => null]);
+        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $notUsedUser->id]);
 
         $this->assertTrue($user->tasks->contains($task));
         $this->assertCount(1, $user->tasks);
@@ -95,14 +100,14 @@ class UserModelTest extends TestCase
     public function test_it_has_many_tasks()
     {
         $user = factory(User::class)->create();
-        $column = factory(Column::class)->create(['deleted_at' => null]);
-        $task1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $task2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $task3 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $deletedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+        $column = factory(Column::class)->create();
+        $task1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $task2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $task3 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $deletedTask = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $notUsedUser = factory(User::class)->create();
-        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $notUsedUser->id, 'deleted_at' => null]);
+        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $notUsedUser->id]);
 
         $tasks = collect([$task1, $task2, $task3]);
         $arraysAreEqual = empty(array_diff($tasks->pluck('id')->toArray(), $user->tasks->pluck('id')->toArray()))
@@ -119,15 +124,15 @@ class UserModelTest extends TestCase
     public function test_it_has_one_role()
     {
         $user = factory(User::class)->create();
-        $role = factory(Role::class)->create(['deleted_at' => null]);
-        $deletedRole = factory(Role::class)->create(['deleted_at' => now()]);
+        $role = factory(Role::class)->create();
+        $deletedRole = factory(Role::class)->state('deleted')->create();
 
         // Attach role to user
         $user->roles()->attach($role->id);
         $user->roles()->attach($deletedRole->id);
 
         $notUsedUser = factory(User::class)->create();
-        $notUsedRole = factory(Role::class)->create(['deleted_at' => null]);
+        $notUsedRole = factory(Role::class)->create();
 
         // Attach unused role to unused user
         $notUsedUser->roles()->attach($notUsedRole->id);
@@ -139,9 +144,9 @@ class UserModelTest extends TestCase
     public function test_it_has_many_roles()
     {
         $user = factory(User::class)->create();
-        $role1 = factory(Role::class)->create(['deleted_at' => null]);
-        $role2 = factory(Role::class)->create(['deleted_at' => null]);
-        $role3 = factory(Role::class)->create(['deleted_at' => null]);
+        $role1 = factory(Role::class)->create();
+        $role2 = factory(Role::class)->create();
+        $role3 = factory(Role::class)->create();
 
         // Attach role to user
         $user->roles()->attach($role1->id);
@@ -157,8 +162,8 @@ class UserModelTest extends TestCase
     public function test_rolesWithTrashed_none_deleted()
     {
         $user = factory(User::class)->create();
-        $roleNotDeleted1 = factory(Role::class)->create(['deleted_at' => null]);
-        $roleNotDeleted2 = factory(Role::class)->create(['deleted_at' => null]);
+        $roleNotDeleted1 = factory(Role::class)->create();
+        $roleNotDeleted2 = factory(Role::class)->create();
 
         $user->roles()->attach($roleNotDeleted1->id);
         $user->roles()->attach($roleNotDeleted2->id);
@@ -171,8 +176,8 @@ class UserModelTest extends TestCase
     public function test_rolesWithTrashed_one_not_deleted_one_deleted()
     {
         $user = factory(User::class)->create();
-        $roleNotDeleted = factory(Role::class)->create(['deleted_at' => null]);
-        $roleDeleted = factory(Role::class)->create(['deleted_at' => null]);
+        $roleNotDeleted = factory(Role::class)->create();
+        $roleDeleted = factory(Role::class)->create();
 
         $user->roles()->attach($roleNotDeleted->id);
         $user->roles()->attach($roleDeleted->id);
@@ -189,10 +194,10 @@ class UserModelTest extends TestCase
     public function test_rolesWithTrashed_one_not_deleted_many_deleted()
     {
         $user = factory(User::class)->create();
-        $roleNotDeleted = factory(Role::class)->create(['deleted_at' => null]);
-        $roleDeleted1 = factory(Role::class)->create(['deleted_at' => null]);
-        $roleDeleted2 = factory(Role::class)->create(['deleted_at' => null]);
-        $roleDeleted3 = factory(Role::class)->create(['deleted_at' => null]);
+        $roleNotDeleted = factory(Role::class)->create();
+        $roleDeleted1 = factory(Role::class)->create();
+        $roleDeleted2 = factory(Role::class)->create();
+        $roleDeleted3 = factory(Role::class)->create();
 
         $user->roles()->attach($roleNotDeleted->id);
         $user->roles()->attach($roleDeleted1->id);
@@ -217,7 +222,7 @@ class UserModelTest extends TestCase
     public function test_role_id_has_none()
     {
         $user = factory(User::class)->create();
-        $role = factory(Role::class)->create(['deleted_at' => null]);
+        $role = factory(Role::class)->create();
 
         $this->assertFalse($user->hasRoleId($role->id));
     }
@@ -225,7 +230,7 @@ class UserModelTest extends TestCase
     public function test_role_id_has_one()
     {
         $user = factory(User::class)->create();
-        $role = factory(Role::class)->create(['deleted_at' => null]);
+        $role = factory(Role::class)->create();
 
         $user->roles()->attach($role->id);
 
@@ -235,9 +240,9 @@ class UserModelTest extends TestCase
     public function test_role_id_has_many()
     {
         $user = factory(User::class)->create();
-        $role1 = factory(Role::class)->create(['deleted_at' => null]);
-        $role2 = factory(Role::class)->create(['deleted_at' => null]);
-        $role3 = factory(Role::class)->create(['deleted_at' => null]);
+        $role1 = factory(Role::class)->create();
+        $role2 = factory(Role::class)->create();
+        $role3 = factory(Role::class)->create();
 
         $user->roles()->attach($role1->id);
         $user->roles()->attach($role2->id);
@@ -251,8 +256,8 @@ class UserModelTest extends TestCase
     public function test_role_id_has_not_any_deleted()
     {
         $user = factory(User::class)->create();
-        $roleNotDeleted = factory(Role::class)->create(['deleted_at' => null]);
-        $roleDeleted = factory(Role::class)->create(['deleted_at' => null]);
+        $roleNotDeleted = factory(Role::class)->create();
+        $roleDeleted = factory(Role::class)->create();
 
         $user->roles()->attach($roleNotDeleted->id);
         $user->roles()->attach($roleDeleted->id);
@@ -260,5 +265,53 @@ class UserModelTest extends TestCase
 
         $this->assertTrue($user->hasRoleId($roleNotDeleted->id));
         $this->assertFalse($user->hasRoleId($roleDeleted->id));
+    }
+
+    public function test_it_returns_zero_not_deleted_tasks()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create();
+        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+
+        $user->sharedTasks()->attach($taskDeleted->id);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(0, $tasks);
+    }
+
+    public function test_it_returns_one_not_deleted_tasks()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create();
+        $taskActive = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+
+        $user->sharedTasks()->attach($taskActive->id);
+        $user->sharedTasks()->attach($taskDeleted->id);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(1, $tasks);
+        $this->assertTrue($tasks->first()->is($taskActive));
+    }
+
+    public function test_it_returns_many_not_deleted_tasks()
+    {
+        $user = factory(User::class)->create();
+        $column = factory(Column::class)->create();
+        $taskActive1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskActive2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+
+        $user->sharedTasks()->attach($taskActive1->id);
+        $user->sharedTasks()->attach($taskActive2->id);
+        $user->sharedTasks()->attach($taskDeleted->id);
+
+        $tasks = $user->sharedTasks()->get();
+
+        $this->assertCount(2, $tasks);
+        $this->assertTrue($tasks->first()->is($taskActive1));
+        $this->assertTrue($tasks->last()->is($taskActive2));
     }
 }

@@ -66,19 +66,19 @@ class ColumnModelTest extends TestCase
 
     public function test_it_has_zero_task()
     {
-        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $column = factory(Column::class)->create();
         $this->assertCount(0, $column->tasks);
     }
 
     public function test_it_has_one_task()
     {
-        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $column = factory(Column::class)->create();
         $user = factory(User::class)->create();
-        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $deletedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $deletedTask = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
-        $notUsedColumn = factory(Column::class)->create(['deleted_at' => null]);
-        $notUsedTask = factory(Task::class)->create(['column_id' => $notUsedColumn->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $notUsedColumn = factory(Column::class)->create();
+        $notUsedTask = factory(Task::class)->create(['column_id' => $notUsedColumn->id, 'user_id' => $user->id]);
 
         $this->assertTrue($column->tasks->contains($task));
         $this->assertCount(1, $column->tasks);
@@ -87,15 +87,15 @@ class ColumnModelTest extends TestCase
 
     public function test_it_has_many_tasks()
     {
-        $column = factory(Column::class)->create(['deleted_at' => null]);
+        $column = factory(Column::class)->create();
         $user = factory(User::class)->create();
-        $task1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $task2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $task3 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
-        $deletedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+        $task1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $task2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $task3 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $deletedTask = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
-        $notUsedColumn = factory(Column::class)->create(['deleted_at' => null]);
-        $notUsedTask = factory(Task::class)->create(['column_id' => $notUsedColumn->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $notUsedColumn = factory(Column::class)->create();
+        $notUsedTask = factory(Task::class)->create(['column_id' => $notUsedColumn->id, 'user_id' => $user->id]);
 
         $tasks = collect([$task1, $task2, $task3]);
         $arraysAreEqual = empty(array_diff($tasks->pluck('id')->toArray(), $column->tasks->pluck('id')->toArray()))
@@ -105,37 +105,19 @@ class ColumnModelTest extends TestCase
 
     public function test_it_returns_only_active_tasks_for_the_authenticated_user()
     {
-        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $column = factory(Column::class)->create();
         $user = factory(User::class)->create();
-        $this->actingAs($user);
 
         // Task for authenticated user and active
-        $taskForUser = factory(Task::class)->create([
-            'column_id' => $column->id,
-            'user_id' => $user->id,
-            'active' => true,
-            'order' => 1,
-            'deleted_at' => null
-        ]);
+        $taskForUser = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         // Task for different user
-        $taskOtherUser = factory(Task::class)->create([
-            'column_id' => $column->id,
-            'user_id' => factory(User::class)->create()->id,
-            'active' => true,
-            'order' => 1,
-            'deleted_at' => null
-        ]);
+        $taskOtherUser = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => factory(User::class)->create()->id]);
 
         // Inactive task for authenticated user
-        $inactiveTask = factory(Task::class)->create([
-            'column_id' => $column->id,
-            'user_id' => $user->id,
-            'active' => false,
-            'order' => 2,
-            'deleted_at' => null
-        ]);
+        $inactiveTask = factory(Task::class)->state('inactive')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
+        $this->actingAs($user);
         $activeTasks = $column->activeTasks()->get();
 
         $this->assertTrue($activeTasks->contains($taskForUser));

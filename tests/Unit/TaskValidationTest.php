@@ -245,18 +245,11 @@ class TaskValidationTest extends TestCase
     private function fillDatabase()
     {
         $role = factory(\App\Role::class)->create(['name' => 'user']);
-        $user = factory(\App\User::class)->create(['active' => 1]);
+        $user = factory(\App\User::class)->create();
         $user->roles()->attach($role);
-        $column = factory(\App\Column::class)->create(['active' => true, 'deleted_at' => null]);
-
-        $tag = factory(\App\Tag::class)->create(['active' => true, 'deleted_at' => null]);
-
-        $task = factory(\App\Task::class)->create([
-            'user_id' => $user->id,
-            'column_id' => $column->id,
-            'active' => true,
-            'deleted_at' => null
-        ]);
+        $column = factory(\App\Column::class)->create();
+        $tag = factory(\App\Tag::class)->create();
+        $task = factory(\App\Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id]);
     }
 
     private function fillCreateRequestData($suffix = null)

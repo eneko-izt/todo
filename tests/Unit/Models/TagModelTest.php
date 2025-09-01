@@ -68,19 +68,19 @@ class TagModelTest extends TestCase
 
     public function test_it_has_one_task()
     {
-        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $column = factory(Column::class)->create();
         $user = factory(User::class)->create();
 
-        $tag = factory(Tag::class)->create(['deleted_at' => null]);
-        $task = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id, 'deleted_at' => null]);
-        $deletedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => now()]);
+        $tag = factory(Tag::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id]);
+        $deletedTask = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         // Attach task to tag
         $tag->tasks()->attach($task->id);
         $tag->tasks()->attach($deletedTask->id);
 
-        $notUsedTag = factory(Tag::class)->create(['deleted_at' => null]);
-        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id, 'deleted_at' => null]);
+        $notUsedTag = factory(Tag::class)->create();
+        $notUsedTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         // Attach unused task to unused tag
         $notUsedTag->tasks()->attach($notUsedTask->id);
@@ -91,13 +91,13 @@ class TagModelTest extends TestCase
 
     public function test_it_has_many_tasks()
     {
-        $column = factory(Column::class)->create(['active' => true, 'deleted_at' => null]);
+        $column = factory(Column::class)->create();
         $user = factory(User::class)->create();
 
-        $tag = factory(Tag::class)->create(['deleted_at' => null]);
-        $task1 = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id, 'deleted_at' => null]);
-        $task2 = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id, 'deleted_at' => null]);
-        $task3 = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id, 'deleted_at' => null]);
+        $tag = factory(Tag::class)->create();
+        $task1 = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id]);
+        $task2 = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id]);
+        $task3 = factory(Task::class)->create(['column_id' => $column->id, 'active' => true, 'user_id' => $user->id]);
 
         // Attach task to tag
         $tag->tasks()->attach($task1->id);

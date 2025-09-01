@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Task;
-use App\Http\Services\TaskService;
+use App\User;
+use App\Mail\TaskSharedMail;
 
-use Illuminate\Support\Facades\Validator;
+use App\Http\Services\TaskService;
+use Illuminate\Support\Facades\Mail;
 
 class TasksController extends Controller
 {
@@ -68,6 +70,8 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        $this->authorize('editTask', $task);
+
         $validator = $this->taskService->updateValidator(request()->all(), $task);
         if ($validator->fails()) {
             return redirect()->back()
@@ -85,6 +89,35 @@ class TasksController extends Controller
         // update tags
         $tags = request('tags' . $id, []);
         $task->tags()->sync($tags);
+
+        return redirect(route("home"));
+    }
+
+    public function share($taskId)
+    {
+        $task = Task::findOrFail($taskId);
+        $user = User::findOrFail(request('userid'));
+
+        $this->authorize('shareTask', $task);
+
+        if (! $task->sharingUsers()->where('user_id', $user->id)->exists())
+        {
+            $task->sharingUsers()->attach($user->id);
+
+            Mail::to($user->email)->queue(new TaskSharedMail($user, $task));
+        }
+
+        return redirect(route("home"));
+    }
+
+    public function unshare($taskId, $userId)
+    {
+        $task = Task::findOrFail($taskId);
+        $user = User::findOrFail($userId);
+
+        $this->authorize('shareTask', $task);
+
+        $task->sharingUsers()->detach($userId);
 
         return redirect(route("home"));
     }

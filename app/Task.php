@@ -26,4 +26,17 @@ class Task extends Model
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
+
+    public function sharingUsers()
+    {
+        return $this->belongsToMany(User::class, 'task_user')->withTimestamps();
+    }
+
+    public function shareableUsers()
+    {
+        return User::active()
+                ->where('id', '!=', auth()->id())
+                ->whereNotIn('id', $this->sharingUsers()->pluck('users.id'))
+                ->get();    
+    }
 }
