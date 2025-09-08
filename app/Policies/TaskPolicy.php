@@ -37,8 +37,7 @@ class TaskPolicy
 
     public function uploadFile(User $user, Task $task)
     {
-        // TODO: change this to allow shared users to upload files too
-        return $this->isOwner($user, $task);
+        return $this->isOwner($user, $task) || $task->sharingUsers->contains($user);
     }
 
     private function isOwner(User $user, Task $task)

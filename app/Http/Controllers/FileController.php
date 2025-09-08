@@ -28,13 +28,14 @@ class FileController extends Controller
 
         $file = request('file');
         $name = $file->hashName();
+        $path = $file->store("uploads");
 
-        $upload = Storage::put("{$name}", $file);
+        $upload = Storage::put("uploads", $file);
         if ($upload)
         {
             $fileModel = new File();
             $fileModel->filename = $file->getClientOriginalName();
-            $fileModel->path = $name;
+            $fileModel->path = $path;
             $fileModel->size = $file->getSize();
             $fileModel->extension = $file->getClientMimeType();
             $fileModel->task_id = $task->id;
@@ -42,5 +43,15 @@ class FileController extends Controller
 
             return back()->with('success', 'File uploaded successfully')->with('file', $name);
         }
+    }
+
+    public function download($id)
+    {
+        $file = File::findOrFail($id);
+        $task = Task::findOrFail($file->task_id);
+
+        $this->authorize('uploadFile', $task);
+
+        return Storage::download($file->path, $file->filename);
     }
 }

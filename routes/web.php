@@ -32,6 +32,7 @@ Route::patch('/tasks/share/{id}', 'TasksController@share')->name('tasks.share');
 Route::patch('/tasks/unshare/{id}/user/{userId}', 'TasksController@unshare')->name('tasks.unshare');
 
 Route::post('/tasks/upload/{id}', 'FileController@store')->name('tasks.upload');
+Route::get('/tasks/download/{id}', 'FileController@download')->name('tasks.download');
 
 /*
 |--------------------------------------------------------------------------
