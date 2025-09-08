@@ -65,6 +65,18 @@
         
         @endif
 
+        @if (auth()->check() && auth()->user()->can('shareTask', $task))
+
+            <!-- Share tasks with other users -->
+            <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
+                Share
+            </button>
+
+        @endif
+    </div>
+
+    <div class="d-flex justify-content-between">
+
         @if (auth()->check() && auth()->user()->can('uploadFile', $task))
 
             <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
@@ -74,15 +86,6 @@
                 <button type="submit">Upload</button>
             </form>
         
-        @endif
-
-        @if (auth()->check() && auth()->user()->can('shareTask', $task))
-
-            <!-- Share tasks with other users -->
-            <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
-                Share
-            </button>
-
         @endif
         
     </div>
