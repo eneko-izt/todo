@@ -65,6 +65,17 @@
         
         @endif
 
+        @if (auth()->check() && auth()->user()->can('uploadFile', $task))
+
+            <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('POST')
+                <input type="file" name="file">
+                <button type="submit">Upload</button>
+            </form>
+        
+        @endif
+
         @if (auth()->check() && auth()->user()->can('shareTask', $task))
 
             <!-- Share tasks with other users -->

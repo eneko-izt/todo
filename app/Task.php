@@ -39,4 +39,9 @@ class Task extends Model
                 ->whereNotIn('id', $this->sharingUsers()->pluck('users.id'))
                 ->get();    
     }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
 }
