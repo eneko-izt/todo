@@ -12,10 +12,9 @@
     @endif
 
     <div>
+        <p>{{ $task->id }}: {{ $task->text }}</p>
 
-        <p>
-            {{ $task->id }}: {{ $task->text }}
-        </p>
+        <hr>
 
         <div>
             @foreach ($task->tags()->active()->get() as $tag)
@@ -26,11 +25,23 @@
                 @endif {{ $tag->getUpperName() }}
             @endforeach
         </div>
-
     </div>
 
-    <div>
+    <div class="d-flex justify-content-center">
+        @if (auth()->check() && auth()->user()->can('editTask', $task))
 
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#staticBackdrop-{{ $task->id }}">
+                Edit
+            </button>
+        
+        @endif
+    </div>
+
+    <hr>
+
+    <div>
         @if (auth()->check() && auth()->user()->can('uploadFile', $task))
             <span class="badge badge-primary">Uploaded files:</span>
 
@@ -41,16 +52,21 @@
             <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
-                <input type="file" name="file">
-                <button type="submit">Upload</button>
+                <label class="btn btn-primary mb-0">
+                    Choose File
+                    <input type="file" name="file" hidden>
+                </label>
+                <button type="submit" class="btn btn-primary">
+                    Upload
+                </button>
             </form>
 
         @endif
-        
     </div>
 
-    <div>
+    <hr>
 
+    <div>
         @if (auth()->check() && auth()->user()->can('shareTask', $task))
 
             @foreach ($task->sharingUsers()->active()->get() as $user)
@@ -79,19 +95,9 @@
         @endif
     </div>
 
+    <hr>
 
-    <div class="d-flex justify-content-between">
-
-        @if (auth()->check() && auth()->user()->can('editTask', $task))
-
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                data-target="#staticBackdrop-{{ $task->id }}">
-                Edit
-            </button>
-        
-        @endif
-
+    <div class="d-flex justify-content-center">
         @if (auth()->check() && auth()->user()->can('shareTask', $task))
 
             <!-- Share tasks with other users -->
