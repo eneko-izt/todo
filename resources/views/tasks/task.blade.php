@@ -31,7 +31,7 @@
         @if (auth()->check() && auth()->user()->can('editTask', $task))
 
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal"
+            <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
                 data-target="#staticBackdrop-{{ $task->id }}">
                 Edit
             </button>
@@ -49,17 +49,16 @@
                 <br><a href="{{ route('tasks.download', $file->id) }}">{{ $file->filename }}</a>
             @endforeach
         
-            <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('POST')
-                <label class="btn btn-primary mb-0">
-                    Choose File
-                    <input type="file" name="file" hidden>
-                </label>
-                <button type="submit" class="btn btn-primary">
-                    Upload
-                </button>
-            </form>
+            <div class="d-flex justify-content-center mt-3">
+                <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="d-flex flex-column align-items-center">
+                    @csrf
+                    @method('POST')
+                    <input type="file" name="file" required class="form-control-file mb-2">
+                    <button type="submit" class="btn btn-primary">
+                        Upload
+                    </button>
+                </form>
+            </div>
 
         @endif
     </div>
@@ -85,6 +84,13 @@
                 </span>
             @endforeach
 
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Share tasks with other users -->
+                <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
+                    Share
+                </button>
+            </div>
+
         @else
 
             @if ($task->user->id != auth()->user()->id)
@@ -92,19 +98,6 @@
                 <span class="badge badge-secondary">{{ $task->user->name }}</span>
             @endif
         
-        @endif
-    </div>
-
-    <hr>
-
-    <div class="d-flex justify-content-center">
-        @if (auth()->check() && auth()->user()->can('shareTask', $task))
-
-            <!-- Share tasks with other users -->
-            <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
-                Share
-            </button>
-
         @endif
     </div>
 
