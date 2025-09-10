@@ -35,6 +35,11 @@ class TaskPolicy
         return $this->isOwner($user, $task);
     }
 
+    public function uploadFile(User $user, Task $task)
+    {
+        return $this->isOwner($user, $task) || $task->sharingUsers->contains($user);
+    }
+
     private function isOwner(User $user, Task $task)
     {
         return auth()->check() && auth()->user()->id == $task->user_id;

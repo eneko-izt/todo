@@ -5,6 +5,7 @@ use App\Role;
 use App\Task;
 use App\User;
 use App\Column;
+use App\File;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -76,6 +77,12 @@ class DatabaseSeeder extends Seeder
             ->each(function ($task) use ($users) {
                 // Attach random users to the task
                 $task->sharingUsers()->attach($users->random(rand(1, 3))->pluck('id')->toArray());
+        });
+
+        factory(File::class, 40)->create()->each(function ($file) {
+            // Attach a random task to the file
+            $file->task_id = Task::inRandomOrder()->first()->id;
+            $file->save();
         });
     }
 }

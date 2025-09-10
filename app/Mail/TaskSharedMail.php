@@ -32,7 +32,7 @@ class TaskSharedMail extends Mailable
      */
     public function build()
     {
-        return $this->from('admin@example.com')
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
             ->subject('Task Shared')
             ->text('emails.task_shared')
             ->with([

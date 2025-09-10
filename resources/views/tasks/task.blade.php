@@ -12,68 +12,96 @@
     @endif
 
     <div>
+        <p>{{ $task->id }}: {{ $task->text }}</p>
 
-        <p>
-            {{ $task->id }}: {{ $task->text }}
-        </p>
         <hr>
-        <p>
+
+        <div>
             @foreach ($task->tags()->active()->get() as $tag)
-                @if (!$loop->first)
+                @if ($loop->first)
+                    <span class="badge badge-primary">Tags:</span>
+                @else (! $loop->first)
                     ,
                 @endif {{ $tag->getUpperName() }}
             @endforeach
-        </p>
-        <div>
-
-            @if (auth()->check() && auth()->user()->can('shareTask', $task))
-
-                @foreach ($task->sharingUsers()->active()->get() as $user)
-                    @if ($loop->first)
-                        <span class="badge badge-primary">Shared with:</span>
-                    @endif
-                    <span class="badge badge-secondary">
-                        {{ $user->name }}
-                        <form action="{{ route('tasks.unshare', [$task->id, $user->id]) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn-close bigger-close" title="Remove this user"
-                                onclick="return confirm('Are you sure you want to unshare this task?')">
-                            </button>
-                        </form>
-                    </span>
-                @endforeach
-            @else
-                @if ($task->user->id != auth()->user()->id)
-                    <span class="badge badge-primary">Owner:</span>
-                    <span class="badge badge-secondary">{{ $task->user->name }}</span>
-                @endif
-            @endif
         </div>
-
     </div>
 
-    <div class="d-flex justify-content-between">
-
+    <div class="d-flex justify-content-center">
         @if (auth()->check() && auth()->user()->can('editTask', $task))
 
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal"
+            <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
                 data-target="#staticBackdrop-{{ $task->id }}">
                 Edit
             </button>
         
         @endif
+    </div>
 
-        @if (auth()->check() && auth()->user()->can('shareTask', $task))
+    <hr>
 
-            <!-- Share tasks with other users -->
-            <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
-                Share
-            </button>
+    <div>
+        @if (auth()->check() && auth()->user()->can('uploadFile', $task))
+            <span class="badge badge-primary">Uploaded files:</span>
+
+            @foreach ($task->files as $file)
+                <br><a href="{{ route('tasks.download', $file->id) }}">{{ $file->filename }}</a>
+            @endforeach
+        
+            <div class="d-flex justify-content-center mt-3">
+                <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="d-flex flex-column align-items-center">
+                    @csrf
+                    @method('POST')
+                    <input type="file" name="file{{ $task->id }}" required class="form-control-file mb-2">
+                    <button type="submit" class="btn btn-primary">
+                        Upload
+                    </button>
+                </form>
+                @error('file' . $task->id)
+                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('file' . $task->id) }}</p>
+                @enderror
+            </div>
 
         @endif
+    </div>
+
+    <hr>
+
+    <div>
+        @if (auth()->check() && auth()->user()->can('shareTask', $task))
+
+            @foreach ($task->sharingUsers()->active()->get() as $user)
+                @if ($loop->first)
+                    <div class="badge badge-primary">Shared with:</div>
+                @endif
+                <span class="badge badge-secondary">
+                    {{ $user->name }}
+                    <form action="{{ route('tasks.unshare', [$task->id, $user->id]) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn-close bigger-close" title="Remove this user"
+                            onclick="return confirm('Are you sure you want to unshare this task?')">
+                        </button>
+                    </form>
+                </span>
+            @endforeach
+
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Share tasks with other users -->
+                <button type="button" id="share-btn-{{ $task->id }}" class="btn btn-primary">
+                    Share
+                </button>
+            </div>
+
+        @else
+
+            @if ($task->user->id != auth()->user()->id)
+                <span class="badge badge-primary">Owner:</span>
+                <span class="badge badge-secondary">{{ $task->user->name }}</span>
+            @endif
         
+        @endif
     </div>
 
     <div id="share-content-{{ $task->id }}" style="display: none;">

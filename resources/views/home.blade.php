@@ -14,7 +14,7 @@
     @can('viewUser', 'App\User')
         <a href="{{ route('users.index') }}" class="btn btn-primary" title="Go to Users page">Users</a>
     @endcan
-    <div class="d-lg-flex justify-content-between w-100 mt-5">
+    <div id="new-task-accordion" class="d-lg-flex justify-content-between w-100 mt-5">
         @forelse ($columns as $column)
             <div class="p-2 text-white @if (!$loop->first) ml-lg-2 @endif"
                 style="min-width: {{ 100 / $columns->count() }}%; min-height: 150px; background-color: {{ $column->colour }};">
@@ -33,7 +33,7 @@
                     New Task
                 </button>
 
-                <div id="new-content-{{ $column->id }}" class="collapse">
+                <div id="new-content-{{ $column->id }}" class="collapse" data-bs-parent="#new-task-accordion">
                     @include('tasks.new', ['column' => $column])
                 </div>
 
@@ -45,21 +45,6 @@
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('[id^="new-btn-"]').forEach(button => {
-        const targetId = button.getAttribute("data-bs-target").replace("#", "");
-        const target = document.getElementById(targetId);
-
-        target.addEventListener("shown.bs.collapse", () => {
-            button.textContent = "Cancel";
-        });
-        target.addEventListener("hidden.bs.collapse", () => {
-            button.textContent = "New Task";
-        });
-    });
-});
-</script>
 
 
 @endsection
