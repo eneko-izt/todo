@@ -53,11 +53,14 @@
                 <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="d-flex flex-column align-items-center">
                     @csrf
                     @method('POST')
-                    <input type="file" name="file" required class="form-control-file mb-2">
+                    <input type="file" name="file{{ $task->id }}" required class="form-control-file mb-2">
                     <button type="submit" class="btn btn-primary">
                         Upload
                     </button>
                 </form>
+                @error('file' . $task->id)
+                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('file' . $task->id) }}</p>
+                @enderror
             </div>
 
         @endif

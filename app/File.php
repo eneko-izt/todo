@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-    //
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }

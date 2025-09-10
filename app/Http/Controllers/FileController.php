@@ -23,15 +23,16 @@ class FileController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        // $nameValidations = ['required', File::max(5 * 1024)];
-        // request()->validate(['file' => $nameValidations]);
+        $this->authorize('uploadFile', $task);
+
+        $nameValidations = ['required', 'file', 'max:5242880'];
+        request()->validate(['file'  . $task->id => $nameValidations]);
 
         $file = request('file');
         $name = $file->hashName();
         $path = $file->store("uploads");
 
-        $upload = Storage::put("uploads", $file);
-        if ($upload)
+        if ($path)
         {
             $fileModel = new File();
             $fileModel->filename = $file->getClientOriginalName();
@@ -41,16 +42,15 @@ class FileController extends Controller
             $fileModel->task_id = $task->id;
             $fileModel->save();
 
-            return back()->with('success', 'File uploaded successfully')->with('file', $name);
+            return back();
         }
     }
 
     public function download($id)
     {
-        $file = File::findOrFail($id);
-        $task = Task::findOrFail($file->task_id);
+        $file = File::with('task')->findOrFail($id);
 
-        $this->authorize('uploadFile', $task);
+        $this->authorize('uploadFile', $file->task);
 
         return Storage::download($file->path, $file->filename);
     }
