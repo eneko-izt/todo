@@ -8,6 +8,10 @@
     <include>
       <directory suffix=".php">./app</directory>
     </include>
+    <report>
+        <html outputDirectory="tests/coverage"/>
+        <text outputFile="php://stdout"/>
+    </report>
   </coverage>
   <testsuites>
     <testsuite name="Unit">
@@ -29,8 +33,4 @@
       <server name="SESSION_DRIVER" value="array" />
       <server name="DB_DEFAULT_STRING_LENGTH" value="191" />
   </php>
-
-  <logging>
-      <log type="coverage-html" target="tests/coverage" />
-  </logging>
 </phpunit>
