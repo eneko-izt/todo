@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Task;
-use App\User;
+use App\Tag;
 use App\Column;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
@@ -21,6 +21,7 @@ class RepoCacheServiceTest extends TestCase
     public function test_columns_are_cached()
     {
         $repoCacheService = new RepoCacheService();
+
         $columns = factory(Column::class)->create(['active' => true]);
         $this->assertCount(1, $repoCacheService->activeColumns());
 
@@ -32,46 +33,67 @@ class RepoCacheServiceTest extends TestCase
         $this->assertCount(2, $repoCacheService->activeColumns());
     }
 
-    public function test_user_viewable_tasks_cached()
+    public function test_tags_are_cached()
     {
         $repoCacheService = new RepoCacheService();
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
 
-        $column = factory(Column::class)->create(['active' => true]);
+        factory(Tag::class)->create(['active' => true]);
+        $this->assertCount(1, $repoCacheService->activeTags());
 
-        factory(Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id, 'active' => true]);
-        $this->assertCount(1, $repoCacheService->userViewableTasks($user, $column));
-
-        $tasks = factory(Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id, 'active' => true]);
-        $this->assertCount(2, Task::where('user_id', $user->id)->where('column_id', $column->id)->active()->get());
-        $this->assertCount(1, $repoCacheService->userViewableTasks($user, $column));
+        factory(Tag::class)->create(['active' => true]);
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(1, $repoCacheService->activeTags());
 
         Cache::flush();
-        $this->assertCount(2, Task::where('user_id', $user->id)->where('column_id', $column->id)->active()->get());
-        $this->assertCount(2, $repoCacheService->userViewableTasks($user, $column));
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(2, $repoCacheService->activeTags());
     }
 
-    public function test_user_viewable_shared_tasks_cached()
+    public function test_tags_inactive_are_cached()
     {
         $repoCacheService = new RepoCacheService();
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
 
-        $column = factory(Column::class)->create(['active' => true]);
+        factory(Tag::class)->create(['active' => true]);
+        $inactiveTag = factory(Tag::class)->create(['active' => false]);
+        $this->assertCount(2, Tag::all());
+        $this->assertCount(1, Tag::active()->get());
+        $this->assertCount(1, $repoCacheService->activeTags());
 
-        factory(Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id, 'active' => true]);
-        $this->assertCount(1, $repoCacheService->userViewableTasks($user, $column));
-
-        $otherUser = factory(User::class)->create();
-        $sharedTask = factory(Task::class)->create(['user_id' => $otherUser->id, 'column_id' => $column->id, 'active' => true]);
-        $sharedTask->sharingUsers()->attach($user->id);
-
-        $this->assertCount(2, Task::where('column_id', $column->id)->active()->get());
-        $this->assertCount(1, $repoCacheService->userViewableTasks($user, $column));
+        $inactiveTag->active = true;
+        $inactiveTag->save();
+        $this->assertCount(2, Tag::all());
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(1, $repoCacheService->activeTags());
 
         Cache::flush();
-        $this->assertCount(2, Task::where('column_id', $column->id)->active()->get());
-        $this->assertCount(2, $repoCacheService->userViewableTasks($user, $column));
+        $this->assertCount(2, Tag::all());
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(2, $repoCacheService->activeTags());
+    }
+
+    public function test_tags_deleted_are_cached()
+    {
+        $repoCacheService = new RepoCacheService();
+
+        factory(Tag::class)->create(['active' => true]);
+        $deleteStatusChangingTag = factory(Tag::class)->create(['active' => true]);
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(2, $repoCacheService->activeTags());
+
+        $deleteStatusChangingTag->Delete();
+        $this->assertCount(1, Tag::active()->get());
+        $this->assertCount(2, $repoCacheService->activeTags());
+
+        Cache::flush();
+        $this->assertCount(1, Tag::active()->get());
+        $this->assertCount(1, $repoCacheService->activeTags());
+
+        $deleteStatusChangingTag->Restore();
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(1, $repoCacheService->activeTags());
+
+        Cache::flush();
+        $this->assertCount(2, Tag::active()->get());
+        $this->assertCount(2, $repoCacheService->activeTags());
     }
 }

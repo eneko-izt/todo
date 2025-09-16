@@ -25,7 +25,14 @@ class Column extends Model
 
     public function viewableTasks()
     {
-        $repoCacheService = app(RepoCacheService::class);
-        return $repoCacheService->userViewableTasks(auth()->user(), $this);
+        $user = auth()->user();
+        $sharedTasks = $user->sharedTasks()
+            ->where('tasks.column_id', $this->id)
+            ->where('tasks.user_id', '!=', $user->id)
+            ->active()
+            ->select('tasks.*')
+            ->orderBy('order');
+
+        return $this->activeTasks()->union($sharedTasks)->distinct('tasks.id')->orderBy('order')->get();
     }
 }

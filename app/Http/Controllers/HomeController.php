@@ -31,7 +31,7 @@ class HomeController extends Controller
     public function index()
     {
         $columns = $this->repoCacheService->activeColumns();
-        $tags = Tag::active()->get();
+        $tags = $this->repoCacheService->activeTags();
 
         return view('home', compact('columns', 'tags'));
     }
