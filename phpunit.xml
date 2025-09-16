@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" 
+    bootstrap="vendor/autoload.php" stopOnFailure="false" stopOnIncomplete="false"
+    stopOnDefect="false" executionOrder="defects" cacheResult="true" testdox="false" verbose="true"
+    noInteraction="true" colors="true">
   <coverage processUncoveredFiles="true">
     <include>
       <directory suffix=".php">./app</directory>
@@ -14,13 +18,19 @@
     </testsuite>
   </testsuites>
   <php>
-    <server name="APP_ENV" value="testing"/>
-    <server name="BCRYPT_ROUNDS" value="4"/>
-    <server name="CACHE_DRIVER" value="array"/>
-    <server name="DB_CONNECTION" value="sqlite"/>
-    <server name="DB_DATABASE" value=":memory:"/>
-    <server name="MAIL_DRIVER" value="array"/>
-    <server name="QUEUE_CONNECTION" value="sync"/>
-    <server name="SESSION_DRIVER" value="array"/>
+      <server name="APP_ENV" value="testing" />
+      <server name="DEBUG" value="false" />
+      <server name="BCRYPT_ROUNDS" value="4" />
+      <server name="CACHE_DRIVER" value="array" />
+      <server name="DB_CONNECTION" value="sqlite" />
+      <server name="DB_DATABASE" value=":memory:" />
+      <server name="MAIL_DRIVER" value="array" />
+      <server name="QUEUE_CONNECTION" value="sync" />
+      <server name="SESSION_DRIVER" value="array" />
+      <server name="DB_DEFAULT_STRING_LENGTH" value="191" />
   </php>
+
+  <logging>
+      <log type="coverage-html" target="tests/coverage" />
+  </logging>
 </phpunit>
