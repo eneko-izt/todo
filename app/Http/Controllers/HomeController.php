@@ -6,6 +6,8 @@ use App\Tag;
 use App\User;
 use App\Column;
 
+use App\Http\Services\RepoCacheService;
+
 class HomeController extends Controller
 {
     /**
@@ -13,9 +15,12 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    private $repoCacheService;
+
+    public function __construct(RepoCacheService $repoCacheService)
     {
         $this->middleware('auth');
+        $this->repoCacheService = $repoCacheService;
     }
 
     /**
@@ -25,7 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $columns = Column::where('active', true)->get();
+        $columns = $this->repoCacheService->activeColumns();
         $tags = Tag::active()->get();
 
         return view('home', compact('columns', 'tags'));
