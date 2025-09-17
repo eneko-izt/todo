@@ -6,6 +6,8 @@ use App\Tag;
 use App\User;
 use App\Column;
 
+use App\Http\Services\CacheService;
+
 class HomeController extends Controller
 {
     /**
@@ -13,9 +15,12 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    private $cacheService;
+
+    public function __construct(CacheService $cacheService)
     {
         $this->middleware('auth');
+        $this->cacheService = $cacheService;
     }
 
     /**
@@ -25,8 +30,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $columns = Column::where('active', true)->get();
-        $tags = Tag::active()->get();
+        $columns = $this->cacheService->activeColumns();
+        $tags = $this->cacheService->activeTags();
 
         return view('home', compact('columns', 'tags'));
     }
