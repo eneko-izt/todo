@@ -10,14 +10,14 @@ class CacheService
 {
     public function activeColumns()
     {
-        return Cache::remember('active_columns', 60 * 24, function () {
+        return Cache::remember('active_columns', now()->addDays(1), function () {
             return Column::active()->get();
         });
     }
 
     public function activeTags()
     {
-        return Cache::remember('active_tags', 60 * 24, function () {
+        return Cache::remember('active_tags', now()->addDays(1), function () {
             return Tag::active()->get();
         });
     }
