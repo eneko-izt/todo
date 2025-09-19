@@ -15,7 +15,9 @@ class ColumnObserver
      */
     public function created(Column $column)
     {
-        //
+        if ($column->active) {
+            app(CacheService::class)->clearActiveColumnsCache();
+        }
     }
 
     /**
@@ -26,8 +28,7 @@ class ColumnObserver
      */
     public function updated(Column $column)
     {
-        if ($column->wasChanged('active')) {
-            // Clear cache for active columns
+        if ($column->active) {
             app(CacheService::class)->clearActiveColumnsCache();
         }
     }
@@ -41,7 +42,6 @@ class ColumnObserver
     public function deleted(Column $column)
     {
         if ($column->active) {
-            // Clear cache for active columns
             app(CacheService::class)->clearActiveColumnsCache();
         }
     }
@@ -55,7 +55,6 @@ class ColumnObserver
     public function restored(Column $column)
     {
         if ($column->active) {
-            // Clear cache for active columns
             app(CacheService::class)->clearActiveColumnsCache();
         }
     }

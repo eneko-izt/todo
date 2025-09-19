@@ -36,6 +36,12 @@ class CacheService
         $this->activeColumns();
     }
 
+    public function clearActiveTagsCache()
+    {
+        Cache::forget('active_tags');
+        $this->activeTags();
+    }
+
     public function checkAndClearTaskCacheWhenTaskCrudChange($task)
     {
         $users = array($task->user_id, ...$task->sharingUsers()->pluck('users.id')->toArray());
