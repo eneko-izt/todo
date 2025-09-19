@@ -26,9 +26,9 @@ class FileController extends Controller
         $this->authorize('uploadFile', $task);
 
         $nameValidations = ['required', 'file', 'max:5242880'];
-        request()->validate(['file'  . $task->id => $nameValidations]);
+        request()->validate(['file' . $task->id => $nameValidations]);
 
-        $file = request('file');
+        $file = request('file' . $task->id);
         $name = $file->hashName();
         $path = $file->store("uploads");
 
