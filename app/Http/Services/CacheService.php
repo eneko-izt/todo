@@ -58,8 +58,6 @@ class CacheService
         foreach ($task->sharingUsers as $user) {
             $this->userViewableTasks($user, $column);
         }
-
-        Cache::forget("user_{$task->user_id}_column_{$column->id}_viewable_tasks");
     }
 
     public function clearUserColumnTasksCache($task, $user)

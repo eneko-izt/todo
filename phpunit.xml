@@ -10,7 +10,7 @@
     </include>
     <report>
         <html outputDirectory="tests/coverage"/>
-        <text outputFile="php://stdout"/>
+        <!-- <text outputFile="php://stdout"/> -->
     </report>
   </coverage>
   <testsuites>

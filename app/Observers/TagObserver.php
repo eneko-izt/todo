@@ -28,7 +28,7 @@ class TagObserver
      */
     public function updated(Tag $tag)
     {
-        if ($tag->active) {
+        if ($tag->wasChanged('active') || (!$tag->wasChanged('active') && $tag->active)) {
             app(CacheService::class)->clearActiveTagsCache();
         }
     }

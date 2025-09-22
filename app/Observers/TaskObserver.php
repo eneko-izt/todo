@@ -28,7 +28,7 @@ class TaskObserver
      */
     public function updated(Task $task)
     {
-        if ($task->active) {
+        if ($task->wasChanged('active') || (!$task->wasChanged('active') && $task->active)) {
             app(CacheService::class)->checkAndClearTaskCacheWhenTaskCrudChange($task);
         }
     }

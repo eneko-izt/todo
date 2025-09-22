@@ -28,7 +28,7 @@ class ColumnObserver
      */
     public function updated(Column $column)
     {
-        if ($column->active) {
+        if ($column->wasChanged('active') || (!$column->wasChanged('active') && $column->active)) {
             app(CacheService::class)->clearActiveColumnsCache();
         }
     }
