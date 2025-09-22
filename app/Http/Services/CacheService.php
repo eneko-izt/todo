@@ -33,37 +33,26 @@ class CacheService
     public function clearActiveColumnsCache()
     {
         Cache::forget('active_columns');
-        $this->activeColumns();
     }
 
     public function clearActiveTagsCache()
     {
         Cache::forget('active_tags');
-        $this->activeTags();
     }
 
-    public function checkAndClearTaskCacheWhenTaskCrudChange($task)
+    public function clearTaskCacheWhenTaskCrudChange($task)
     {
-        $users = array($task->user_id, ...$task->sharingUsers()->pluck('users.id')->toArray());
+        $task->refresh();
+        $users = array($task->user_id, ...$task->sharingUsers->pluck('id')->toArray());
         $column = $task->column;
         foreach ($users as $userId) {
             Cache::forget("user_{$userId}_column_{$column->id}_viewable_tasks");
-        }
-
-        // Preload cache again
-        $user = $task->user;
-        if ($user) {
-            $this->userViewableTasks($user, $column);
-        }
-        foreach ($task->sharingUsers as $user) {
-            $this->userViewableTasks($user, $column);
         }
     }
 
     public function clearUserColumnTasksCache($task, $user)
     {
         Cache::forget("user_{$user->id}_column_{$task->column_id}_viewable_tasks");
-        $this->userViewableTasks($user, $task->column);
     }
 
     private function fetchUserColumnTasksFromDatabase($user, $column)

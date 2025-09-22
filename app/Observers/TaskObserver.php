@@ -16,7 +16,7 @@ class TaskObserver
     public function created(Task $task)
     {
         if ($task->active) {
-            app(CacheService::class)->checkAndClearTaskCacheWhenTaskCrudChange($task);
+            app(CacheService::class)->clearTaskCacheWhenTaskCrudChange($task);
         }
     }
 
@@ -29,7 +29,7 @@ class TaskObserver
     public function updated(Task $task)
     {
         if ($task->wasChanged('active') || (!$task->wasChanged('active') && $task->active)) {
-            app(CacheService::class)->checkAndClearTaskCacheWhenTaskCrudChange($task);
+            app(CacheService::class)->clearTaskCacheWhenTaskCrudChange($task);
         }
     }
 
@@ -42,7 +42,7 @@ class TaskObserver
     public function deleted(Task $task)
     {
         if ($task->active) {
-            app(CacheService::class)->checkAndClearTaskCacheWhenTaskCrudChange($task);
+            app(CacheService::class)->clearTaskCacheWhenTaskCrudChange($task);
         }
     }
 
@@ -55,7 +55,7 @@ class TaskObserver
     public function restored(Task $task)
     {
         if ($task->active) {
-            app(CacheService::class)->checkAndClearTaskCacheWhenTaskCrudChange($task);
+            app(CacheService::class)->clearTaskCacheWhenTaskCrudChange($task);
         }
     }
 
