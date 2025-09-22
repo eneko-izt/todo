@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Tag;
 use App\Column;
+use App\Task;
+use App\User;
 use Tests\TestCase;
 use App\Http\Services\CacheService;
 use Illuminate\Support\Facades\Cache;
@@ -60,6 +62,62 @@ class CacheServiceTest extends TestCase
         $this->assertEquals(Cache::get('active_columns')->pluck('id'), $cacheService->activeColumns()->pluck('id'));
     }
 
+    public function test_columns_cache_refresh_after_create()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create(['active' => true]);
+        $cacheService->activeColumns();
+
+        $this->assertEquals(1, Cache::get('active_columns')->count());
+        $this->assertContains($column->id, Cache::get('active_columns')->pluck('id'));
+
+        $anotherColumn = factory(Column::class)->create(['active' => true]);
+
+        $this->assertEquals(2, Cache::get('active_columns')->count());
+        $this->assertContains($column->id, Cache::get('active_columns')->pluck('id'));
+        $this->assertContains($anotherColumn->id, Cache::get('active_columns')->pluck('id'));
+    }
+
+    public function test_columns_cache_refresh_after_update()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create(['active' => true, 'name' => 'Initial Name']);
+        $cacheService->activeColumns();
+
+        $this->assertEquals(1, Cache::get('active_columns')->count());
+        $this->assertContains($column->id, Cache::get('active_columns')->pluck('id'));
+
+        $column->update(['name' => 'Updated Name']);
+        $this->assertContains($column->name, Cache::get('active_columns')->pluck('name'));
+
+        $column->update(['active' => false]);
+        $this->assertEquals(0, Cache::get('active_columns')->count());
+
+        $column->update(['active' => true]);
+        $this->assertEquals(1, Cache::get('active_columns')->count());
+        $this->assertContains($column->id, Cache::get('active_columns')->pluck('id'));
+    }
+
+    public function test_columns_cache_refresh_after_delete_restore()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create(['active' => true]);
+        $cacheService->activeColumns();
+
+        $this->assertEquals(1, Cache::get('active_columns')->count());
+        $this->assertContains($column->id, Cache::get('active_columns')->pluck('id'));
+
+        $column->delete();
+        $this->assertEquals(0, Cache::get('active_columns')->count());
+
+        $column->restore();
+        $this->assertEquals(1, Cache::get('active_columns')->count());
+        $this->assertContains($column->id, Cache::get('active_columns')->pluck('id'));
+    }
+
     public function test_tags_are_cached()
     {
         $cacheService = new CacheService();
@@ -99,5 +157,171 @@ class CacheServiceTest extends TestCase
 
         $this->assertCount(2, $cacheService->activeTags());
         $this->assertEquals(Cache::get('active_tags')->pluck('id'), $cacheService->activeTags()->pluck('id'));
+    }
+
+    public function test_tags_cache_refresh_after_create()
+    {
+        $cacheService = new CacheService();
+
+        $tag = factory(Tag::class)->create(['active' => true]);
+        $cacheService->activeTags();
+
+        $this->assertEquals(1, Cache::get('active_tags')->count());
+        $this->assertContains($tag->id, Cache::get('active_tags')->pluck('id'));
+
+        $anotherTag = factory(Tag::class)->create(['active' => true]);
+
+        $this->assertEquals(2, Cache::get('active_tags')->count());
+        $this->assertContains($tag->id, Cache::get('active_tags')->pluck('id'));
+        $this->assertContains($anotherTag->id, Cache::get('active_tags')->pluck('id'));
+    }
+
+    public function test_tags_cache_refresh_after_update()
+    {
+        $cacheService = new CacheService();
+
+        $tag = factory(Tag::class)->create(['active' => true, 'name' => 'Initial Name']);
+        $cacheService->activeTags();
+
+        $this->assertEquals(1, Cache::get('active_tags')->count());
+        $this->assertContains($tag->id, Cache::get('active_tags')->pluck('id'));
+
+        $tag->update(['name' => 'Updated Name']);
+        $this->assertContains($tag->name, Cache::get('active_tags')->pluck('name'));
+
+        $tag->update(['active' => false]);
+        $this->assertEquals(0, Cache::get('active_tags')->count());
+
+        $tag->update(['active' => true]);
+        $this->assertEquals(1, Cache::get('active_tags')->count());
+        $this->assertContains($tag->id, Cache::get('active_tags')->pluck('id'));
+    }
+
+    public function test_tags_cache_refresh_after_delete_restore()
+    {
+        $cacheService = new CacheService();
+
+        $tag = factory(Tag::class)->create(['active' => true]);
+        $cacheService->activeTags();
+
+        $this->assertEquals(1, Cache::get('active_tags')->count());
+        $this->assertContains($tag->id, Cache::get('active_tags')->pluck('id'));
+
+        $tag->delete();
+        $this->assertEquals(0, Cache::get('active_tags')->count());
+
+        $tag->restore();
+        $this->assertEquals(1, Cache::get('active_tags')->count());
+        $this->assertContains($tag->id, Cache::get('active_tags')->pluck('id'));
+    }
+
+    public function test_user_tasks_are_cached()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $this->assertTrue(Cache::has("user_{$userOwner->id}_column_{$column->id}_viewable_tasks"));
+        $cachedTasks = Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks");
+        $this->assertCount(1, $cachedTasks);
+        $this->assertContains($task->id, $cachedTasks->pluck('id'));
+
+        $anotherTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+        Cache::forget("user_{$userOwner->id}_column_{$column->id}_viewable_tasks");
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $cachedColumns = Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks");
+        $this->assertCount(2, $cachedColumns);
+        $this->assertContains($column->id, $cachedColumns->pluck('id'));
+        $this->assertContains($anotherTask->id, $cachedColumns->pluck('id'));
+    }
+
+    public function test_user_tasks_equals_cache()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $this->assertEquals(Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'), $cacheService->userViewableTasks($userOwner, $column)->pluck('id'));
+
+        $anotherTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+        Cache::forget("user_{$userOwner->id}_column_{$column->id}_viewable_tasks");
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $this->assertCount(2, $cacheService->userViewableTasks($userOwner, $column));
+        $this->assertEquals(Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'), $cacheService->userViewableTasks($userOwner, $column)->pluck('id'));
+    }
+
+    public function test_tasks_cache_refresh_after_create()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+
+        $anotherTask = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id]);
+
+        $this->assertEquals(2, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+        $this->assertContains($anotherTask->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+    }
+
+    public function test_tasks_cache_refresh_after_update()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id, 'text' => 'Initial text']);
+
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+
+        $task->update(['text' => 'Updated text']);
+        $this->assertContains($task->text, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('text'));
+
+        $task->update(['active' => false]);
+        $this->assertEquals(0, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+
+        $task->update(['active' => true]);
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+    }
+
+    public function test_tasks_cache_refresh_after_delete_restore()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id, 'text' => 'Initial text']);
+
+        $cacheService->userViewableTasks($userOwner, $column);
+
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+
+        $task->delete();
+        $this->assertEquals(0, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+
+        $task->restore();
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
     }
 }
