@@ -36,10 +36,7 @@ class Task extends Model
 
     public function shareableUsers()
     {
-        return User::active()
-                ->where('id', '!=', auth()->id())
-                ->whereNotIn('id', $this->sharingUsers()->pluck('users.id'))
-                ->get();    
+        return User::active()->UsersNotLoggedIn()->UsersNotSharingTask($this)->get();    
     }
 
     public function files()
