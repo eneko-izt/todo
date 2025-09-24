@@ -2,14 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Tag;
 use App\Task;
 use App\User;
 use App\Column;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TaskPolicyTest extends TestCase
 {
