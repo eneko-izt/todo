@@ -271,9 +271,11 @@ class UserModelTest extends TestCase
     {
         $user = factory(User::class)->create();
         $column = factory(Column::class)->create();
-        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $user->sharedTasks()->attach($taskDeleted->id);
+
+        $taskDeleted->delete();
 
         $tasks = $user->sharedTasks()->get();
 
@@ -285,11 +287,13 @@ class UserModelTest extends TestCase
         $user = factory(User::class)->create();
         $column = factory(Column::class)->create();
         $taskActive = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
-        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $user->sharedTasks()->attach($taskActive->id);
         $user->sharedTasks()->attach($taskDeleted->id);
 
+        $taskDeleted->delete();
+        
         $tasks = $user->sharedTasks()->get();
 
         $this->assertCount(1, $tasks);
@@ -302,11 +306,13 @@ class UserModelTest extends TestCase
         $column = factory(Column::class)->create();
         $taskActive1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
         $taskActive2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
-        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $user->sharedTasks()->attach($taskActive1->id);
         $user->sharedTasks()->attach($taskActive2->id);
         $user->sharedTasks()->attach($taskDeleted->id);
+
+        $taskDeleted->delete();
 
         $tasks = $user->sharedTasks()->get();
 

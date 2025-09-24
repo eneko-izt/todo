@@ -337,7 +337,7 @@ class CacheServiceTest extends TestCase
         $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
         $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
 
-        $task->attachSharingUser($anotherUser);
+        $task->sharingUsers()->attach($anotherUser->id);
 
         // check nothing changed for owner user task caching
         $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
@@ -352,7 +352,7 @@ class CacheServiceTest extends TestCase
         $this->assertEquals(1, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->count());
         $this->assertContains($task->id, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
 
-        $task->detachSharingUser($anotherUser);
+        $task->sharingUsers()->detach($anotherUser->id);
         $cacheService->userViewableTasks($anotherUser, $column);
 
         // check nothing changed for owner user task caching
@@ -371,7 +371,7 @@ class CacheServiceTest extends TestCase
         $userOwner = factory(User::class)->create();
         $anotherUser = factory(User::class)->create();
         $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id, 'text' => 'Initial text']);
-        $task->attachSharingUser($anotherUser);
+        $task->sharingUsers()->attach($anotherUser->id);
 
         $cacheService->userViewableTasks($userOwner, $column);
         $cacheService->userViewableTasks($anotherUser, $column);
