@@ -78,6 +78,8 @@ class User extends Authenticatable
 
     public function sharedTasks()
     {
-        return $this->belongsToMany(Task::class)->withTimestamps();
+        return $this->belongsToMany(Task::class)
+            ->using(\App\TaskUser::class)
+            ->withTimestamps();
     }
 }

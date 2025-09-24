@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Events\TaskUserAttached;
-use App\Events\TaskUserDetached;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -31,19 +29,9 @@ class Task extends Model
 
     public function sharingUsers()
     {
-        return $this->belongsToMany(User::class, 'task_user')->withTimestamps();
-    }
-
-    public function attachSharingUser($userId)
-    {
-        $this->sharingUsers()->attach($userId);
-        event(new TaskUserAttached($this, $userId));
-    }
-
-    public function detachSharingUser($userId)
-    {
-        $this->sharingUsers()->detach($userId);
-        event(new TaskUserDetached($this, $userId));
+        return $this->belongsToMany(User::class)
+            ->using(\App\TaskUser::class)
+            ->withTimestamps();
     }
 
     public function shareableUsers()

@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Column;
 use App\Tag;
 use App\Task;
+use App\TaskUser;
 use App\Observers\ColumnObserver;
 use App\Observers\TagObserver;
 use App\Observers\TaskObserver;
+use App\Observers\TaskUserObserver;
 use Illuminate\Support\ServiceProvider;
 
 class ObserverServiceProvider extends ServiceProvider
@@ -37,5 +39,8 @@ class ObserverServiceProvider extends ServiceProvider
 
         $taskObserver = new TaskObserver();
         Task::observe($taskObserver);
+
+        $taskUserObserver = new TaskUserObserver();
+        TaskUser::observe($taskUserObserver);
     }
 }

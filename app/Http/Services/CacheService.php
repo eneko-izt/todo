@@ -2,9 +2,9 @@
 
 namespace App\Http\Services;
 
-use App\User;
 use App\Tag;
 use App\Column;
+use App\Task;
 use Illuminate\Support\Facades\Cache;
 
 class CacheService
@@ -50,9 +50,10 @@ class CacheService
         }
     }
 
-    public function clearUserColumnTasksCache($task, $user)
+    public function clearUserColumnTasksCache($taskId, $userId)
     {
-        Cache::forget("user_{$user->id}_column_{$task->column_id}_viewable_tasks");
+        $task = Task::findOrFail($taskId);
+        Cache::forget("user_{$userId}_column_{$task->column_id}_viewable_tasks");
     }
 
     private function fetchUserColumnTasksFromDatabase($user, $column)

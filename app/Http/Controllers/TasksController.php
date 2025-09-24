@@ -102,7 +102,7 @@ class TasksController extends Controller
 
         if (! $task->sharingUsers()->where('user_id', $user->id)->exists())
         {
-            $task->attachSharingUser($user);
+            $task->sharingUsers()->attach($user->id);
 
             Mail::to($user->email)->queue(new TaskSharedMail($user, $task));
         }
@@ -113,11 +113,10 @@ class TasksController extends Controller
     public function unshare($taskId, $userId)
     {
         $task = Task::findOrFail($taskId);
-        $user = User::findOrFail($userId);
 
         $this->authorize('shareTask', $task);
 
-        $task->detachSharingUser($user);
+        $task->sharingUsers()->detach($userId);
 
         return redirect(route("home"));
     }

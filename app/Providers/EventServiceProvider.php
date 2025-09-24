@@ -2,11 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\TaskUserAttached;
-use App\Events\TaskUserDetached;
 use Illuminate\Auth\Events\Registered;
-use App\Listeners\ProcessTaskUserAttached;
-use App\Listeners\ProcessTaskUserDetached;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -21,12 +17,6 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        TaskUserAttached::class => [
-            ProcessTaskUserAttached::class,
-        ],
-        TaskUserDetached::class => [
-            ProcessTaskUserDetached::class,
-        ]
     ];
 
     /**
