@@ -14,6 +14,9 @@
     @can('viewUser', 'App\User')
         <a href="{{ route('users.index') }}" class="btn btn-primary" title="Go to Users page">Users</a>
     @endcan
+    @can('viewAllTasks', 'App\Task')
+        <a href="{{ route('tasks.index') }}" class="btn btn-primary" title="Go to All Tasks page">All Tasks</a>
+    @endcan
     <div id="new-task-accordion" class="d-lg-flex justify-content-between w-100 mt-5">
         @forelse ($columns as $column)
             <div class="p-2 text-white @if (!$loop->first) ml-lg-2 @endif"

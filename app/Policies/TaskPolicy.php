@@ -40,6 +40,11 @@ class TaskPolicy
         return $this->isOwner($user, $task) || $task->sharingUsers->contains($user);
     }
 
+    public function viewAllTasks(User $user)
+    {
+        return is_admin();
+    }
+
     private function isOwner(User $user, Task $task)
     {
         return auth()->check() && auth()->user()->id == $task->user_id;
