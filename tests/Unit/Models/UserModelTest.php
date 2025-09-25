@@ -57,6 +57,67 @@ class UserModelTest extends TestCase
         $this->assertEquals('role_user', $relation->getTable());
     }
 
+    public function test_scope_UsersNotLoggedIn()
+    {
+        // Create 3 users
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+
+        // Log in as $user1
+        $this->actingAs($user1);
+
+        // Call the scope
+        $usersNotLoggedIn = User::usersNotLoggedIn()->get();
+
+        // Assert that logged-in user is not in the collection
+        $this->assertFalse($usersNotLoggedIn->contains($user1));
+        
+        // Assert that other users are included
+        $this->assertTrue($usersNotLoggedIn->contains($user2));
+        $this->assertTrue($usersNotLoggedIn->contains($user3));
+
+        // Assert count
+        $this->assertCount(2, $usersNotLoggedIn);
+    }
+
+    public function test_scope_UsersNotSharingTask()
+    {
+        // Create 3 users
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+
+        // Log in as $user1
+        $this->actingAs($user1);
+
+        $column = factory(Column::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user1->id]);
+
+        // Call the scope
+        $usersNotSharingTask = User::usersNotSharingTask($task)->get();
+
+        $this->assertTrue($usersNotSharingTask->contains($user1));
+        $this->assertTrue($usersNotSharingTask->contains($user2));
+        $this->assertTrue($usersNotSharingTask->contains($user3));
+
+        // Assert count
+        $this->assertCount(3, $usersNotSharingTask);
+
+        $task->sharingUsers()->attach($user2->id);
+        $task->sharingUsers()->attach($user3->id);
+
+        // Call the scope
+        $usersNotSharingTask = User::usersNotSharingTask($task)->get();
+
+        $this->assertTrue($usersNotSharingTask->contains($user1));
+        $this->assertFalse($usersNotSharingTask->contains($user2));
+        $this->assertFalse($usersNotSharingTask->contains($user3));
+
+        // Assert count
+        $this->assertCount(1, $usersNotSharingTask);
+    }
+
     public function test_has_role_name_returns_true_when_role_exists_and_not_deleted()
     {
         $role = new Role(['name' => 'admin']);
@@ -271,9 +332,11 @@ class UserModelTest extends TestCase
     {
         $user = factory(User::class)->create();
         $column = factory(Column::class)->create();
-        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $user->sharedTasks()->attach($taskDeleted->id);
+
+        $taskDeleted->delete();
 
         $tasks = $user->sharedTasks()->get();
 
@@ -285,11 +348,13 @@ class UserModelTest extends TestCase
         $user = factory(User::class)->create();
         $column = factory(Column::class)->create();
         $taskActive = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
-        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $user->sharedTasks()->attach($taskActive->id);
         $user->sharedTasks()->attach($taskDeleted->id);
 
+        $taskDeleted->delete();
+        
         $tasks = $user->sharedTasks()->get();
 
         $this->assertCount(1, $tasks);
@@ -302,11 +367,13 @@ class UserModelTest extends TestCase
         $column = factory(Column::class)->create();
         $taskActive1 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
         $taskActive2 = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
-        $taskDeleted = factory(Task::class)->state('deleted')->create(['column_id' => $column->id, 'user_id' => $user->id]);
+        $taskDeleted = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
         $user->sharedTasks()->attach($taskActive1->id);
         $user->sharedTasks()->attach($taskActive2->id);
         $user->sharedTasks()->attach($taskDeleted->id);
+
+        $taskDeleted->delete();
 
         $tasks = $user->sharedTasks()->get();
 

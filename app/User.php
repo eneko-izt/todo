@@ -41,6 +41,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function scopeUsersNotLoggedIn($query)
+    {
+        return $query->where('id', '!=', auth()->id());
+    }
+
+    public function scopeUsersNotSharingTask($query, $task)
+    {
+        return $query->whereNotIn('id', $task->sharingUsers()->pluck('users.id'));
+    }
+
     public function tasks()
     {
         return $this->hasMany(Task::class);
@@ -78,6 +88,8 @@ class User extends Authenticatable
 
     public function sharedTasks()
     {
-        return $this->belongsToMany(Task::class)->withTimestamps();
+        return $this->belongsToMany(Task::class)
+            ->using(\App\TaskUser::class)
+            ->withTimestamps();
     }
 }

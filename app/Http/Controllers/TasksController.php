@@ -113,7 +113,6 @@ class TasksController extends Controller
     public function unshare($taskId, $userId)
     {
         $task = Task::findOrFail($taskId);
-        $user = User::findOrFail($userId);
 
         $this->authorize('shareTask', $task);
 

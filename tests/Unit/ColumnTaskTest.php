@@ -15,8 +15,7 @@ class ColumnTaskTest extends TestCase
         $column = factory(\App\Column::class)->create();
         $task = factory(\App\Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id]);
 
-        $this->actingAs($user);
-        $tasks = $column->activeTasks()->get();
+        $tasks = $column->activeTasks($user->id)->get();
         $this->assertTrue($tasks->count() == 1);
         $this->assertTrue($tasks->contains($task->id));
     }
@@ -28,9 +27,8 @@ class ColumnTaskTest extends TestCase
         $task = factory(\App\Task::class)->create(['user_id' => $user->id, 'column_id' => $column->id]);
 
         $userNotOwner = factory(\App\User::class)->create();
-        $this->actingAs($userNotOwner);
 
-        $tasks = $column->activeTasks()->get();
+        $tasks = $column->activeTasks($userNotOwner->id)->get();
         $this->assertTrue($tasks->count() == 0);
         $this->assertFalse($tasks->contains($task->id));
     }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Services\CacheService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,21 +18,14 @@ class Column extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function activeTasks()
+    public function activeTasks($userId)
     {
-        return $this->tasks()->where('user_id', auth()->user()->id)->active()->orderBy('order');
+        return $this->tasks()->where('user_id', $userId)->active()->orderBy('order');
     }
 
     public function viewableTasks()
     {
-        $user = auth()->user();
-        $sharedTasks = $user->sharedTasks()
-            ->where('tasks.column_id', $this->id)
-            ->where('tasks.user_id', '!=', $user->id)
-            ->active()
-            ->select('tasks.*')
-            ->orderBy('order');
-
-        return $this->activeTasks()->union($sharedTasks)->distinct('tasks.id')->orderBy('order')->get();
+        $cacheService = app(CacheService::class);
+        return $cacheService->userViewableTasks(auth()->user(), $this);
     }
 }
