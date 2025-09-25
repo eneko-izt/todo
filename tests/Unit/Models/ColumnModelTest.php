@@ -117,8 +117,7 @@ class ColumnModelTest extends TestCase
         // Inactive task for authenticated user
         $inactiveTask = factory(Task::class)->state('inactive')->create(['column_id' => $column->id, 'user_id' => $user->id]);
 
-        $this->actingAs($user);
-        $activeTasks = $column->activeTasks()->get();
+        $activeTasks = $column->activeTasks($user->id)->get();
 
         $this->assertTrue($activeTasks->contains($taskForUser));
         $this->assertFalse($activeTasks->contains($taskOtherUser));
