@@ -2,7 +2,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('tags.index') }}" alt="Tags">Tags</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Trash ({{ $tags->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page">Trash ({{ $tags->count() }})</li>
 @endsection
 
 @section('content')
@@ -62,6 +62,5 @@
             </tbody>
             
         </table>
-        {{ $tags->links() }}
     </div>
 @endsection

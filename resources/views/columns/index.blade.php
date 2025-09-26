@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page" alt="Columns">Columns ({{ $columns->total() }})
+    <li class="breadcrumb-item active" aria-current="page" alt="Columns">Columns ({{ $columns->count() }})
     </li>
 @endsection
 
@@ -77,7 +77,6 @@
             </tbody>
 
         </table>
-        {{ $columns->links() }}
     </div>
 
 @endsection

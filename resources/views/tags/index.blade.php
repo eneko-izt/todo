@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">Tags ({{ $tags->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page">Tags ({{ $tags->count() }})</li>
 @endsection
 
 @section('create_trash')
@@ -75,6 +75,6 @@
             </tbody>
 
         </table>
-        {{ $tags->links() }}
     </div>
+
 @endsection
