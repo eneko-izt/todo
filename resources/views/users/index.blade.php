@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page" alt="Users">Users ({{ $users->total() }})
+    <li class="breadcrumb-item active" aria-current="page" alt="Users">Users ({{ $users->count() }})
     </li>
 @endsection
 
@@ -22,16 +22,19 @@
             <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
         @endif
 
-        <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
+        <table id="myTable" class="table table-striped table-bordered table-hover dataTables-taula dataTable"
             width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
-            <tr>
-                <th width="20%">Name</th>
-                <th width="20%">Email</th>
-                <th width="10%">Active</th>
-                <th width="20%">Roles</th>
-                <th width="10%"></th>
-                <th></th>
-            </tr>
+            <thead>
+                <tr>
+                    <th width="20%">Name</th>
+                    <th width="20%">Email</th>
+                    <th width="10%">Active</th>
+                    <th width="20%">Roles</th>
+                    <th width="10%"></th>
+                </tr>
+            </thead>
+
+            <tbody>
 
             @forelse ($users as $user)
                 <tr>
@@ -65,7 +68,8 @@
                 <p>No users found.</p>
             @endforelse
 
+            </tbody>
+
         </table>
-        {{ $users->links() }}
     </div>
 @endsection
