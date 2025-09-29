@@ -33,6 +33,6 @@ class HomeController extends Controller
         $columns = $this->cacheService->activeColumns();
         $tags = $this->cacheService->activeTags();
 
-        return view('home', compact('columns', 'tags'));
+        return view('home2', compact('columns', 'tags'));
     }
 }
