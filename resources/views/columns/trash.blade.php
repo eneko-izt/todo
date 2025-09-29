@@ -2,20 +2,25 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('columns.index') }}" alt="Columns">Columns</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->count() }})</li>
 @endsection
 
 @section('content')
     <div class="dataTables_scrollHeadInner"
         style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
-        <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
+
+        <table id="myTable" class="table table-striped table-bordered table-hover dataTables-taula dataTable"
             width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
-            <tr>
-                <th>Column</th>
-                <th>Colour</th>
-                <th>Active</th>
-                <th></th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Colour</th>
+                    <th>Active</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
 
             @forelse ($columns as $column)
                 <tr>
@@ -54,7 +59,8 @@
                 <p>No columns found.</p>
             @endforelse
 
+            </tbody>
+
         </table>
-        {{ $columns->links() }}
     </div>
 @endsection

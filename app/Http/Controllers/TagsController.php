@@ -23,14 +23,14 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = Tag::withCount('tasks')->paginate(10);
+        $tags = Tag::withCount('tasks')->get();
 
         return view('tags.index', compact('tags'));
     }
 
     public function trash()
     {
-        $tags = Tag::onlyTrashed()->paginate(10);
+        $tags = Tag::onlyTrashed()->get();
 
         return view('tags.trash', compact('tags'));
     }
