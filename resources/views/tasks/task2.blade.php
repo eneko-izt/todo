@@ -79,9 +79,7 @@
         <!-- Action Buttons -->
         <div class="flex gap-2">
             @if (auth()->check() && auth()->user()->can('editTask', $task))
-                <button 
-                    type="button" 
-                    class="border px-2 py-1 rounded text-xs"
+                <button type="button"  class="border px-2 py-1 rounded text-xs"
                     onclick="document.getElementById('modal-{{ $task->id }}').classList.remove('hidden')">
                     Edit
                 </button>
