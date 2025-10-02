@@ -8,77 +8,93 @@
                     Columns
                 </a>
             </li>
-            <li class="text-gray-500">/</li>
-            <li class="text-gray-700 font-semibold">
-                Trash ({{ $columns->count() }})
-            </li>
         </ol>
     </nav>
 @endsection
 
 @section('content')
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-        <table class="min-w-full border border-gray-200 rounded-lg divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-100 text-gray-700 text-left">
-                <tr>
-                    <th class="px-4 py-2 font-semibold">Column</th>
-                    <th class="px-4 py-2 font-semibold">Colour</th>
-                    <th class="px-4 py-2 font-semibold">Active</th>
-                    <th class="px-4 py-2 font-semibold text-right">Actions</th>
-                </tr>
-            </thead>
+<div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+    @if (session('error'))
+        <p class="text-sm text-red-600 font-medium mb-3">
+            {{ session('error') }}
+        </p>
+    @endif
 
-            <tbody class="divide-y divide-gray-200">
-                @forelse ($columns as $column)
-                    <tr>
-                        <td class="px-4 py-2">
-                            {{ $column->getUpperName() }}
-                        </td>
-                        <td class="px-4 py-2">
-                            <span class="px-2 py-1 rounded text-white text-xs font-medium"
-                                  style="background-color: {{ $column->colour }};">
-                                {{ $column->colour }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-2">
-                            {{ $column->active ? 'Yes' : 'No' }}
-                        </td>
-                        <td class="px-4 py-2 flex space-x-2 justify-end">
-                            @if (auth()->user()->can('deleteColumn', App\Column::class))
-                                <!-- Restore -->
+    <table id="myTable" class="min-w-full text-sm" role="grid">
+        <thead class="bg-gray-100 text-left text-gray-700">
+            <tr>
+                <th class="px-4 py-2 font-semibold">Column</th>
+                <th class="px-4 py-2 font-semibold">Colour</th>
+                <th class="px-4 py-2 font-semibold">Active</th>
+                <th class="px-4 py-2 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($columns as $column)
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2">{{ $column->getUpperName() }}</td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 py-1 text-white text-xs font-medium rounded"
+                            style="background-color: {{ $column->colour }};">
+                            {{ $column->colour }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-2">{{ $column->active ? 'Yes' : 'No' }}</td>
+                    <td class="px-4 py-2 flex space-x-2 justify-end">
+                        @if(auth()->user()->can('deleteColumn', App\Column::class))
+                            <div class="flex space-x-2">
                                 <form action="{{ route('columns.restore', $column->id) }}" method="POST"
-                                      onsubmit="return confirm('Are you sure you want to restore this column?')">
+                                    onsubmit="return confirm('Restore this column?')">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit"
-                                        class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-md shadow hover:bg-green-700"
-                                        title="Restore this column">
+                                            class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-md shadow hover:bg-green-700">
                                         Restore
                                     </button>
                                 </form>
 
-                                <!-- Permanent Delete -->
                                 <form action="{{ route('columns.destroy', $column->id) }}" method="POST"
-                                      onsubmit="return confirm('Are you sure you want to completely delete this column?')">
+                                    onsubmit="return confirm('Delete permanently?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700"
-                                        title="Delete this column">
+                                            class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700">
                                         Delete
                                     </button>
                                 </form>
-                            @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">
-                            No columns found.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                            </div>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endsection
+
+@section('scripts')
+    <!-- Include DataTables CSS & JS -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                paging: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                responsive: true,
+                language: {
+                    emptyTable: "No columns found.",
+                    paginate: { previous: 'Previous', next: 'Next' },
+                    lengthMenu: "Show _MENU_ entries"
+                },
+                dom: '<"flex justify-between items-center mb-2"<"flex items-center space-x-2"l><"ml-auto"f>>t<"flex justify-between items-center mt-2"ip>'
+            });
+        });
+    </script>
 @endsection
