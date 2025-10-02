@@ -1,75 +1,71 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page" alt="Users">Users ({{ $users->count() }})
+    <li class="text-sm text-gray-600">
+        Users ({{ $users->count() }})
     </li>
 @endsection
 
 @section('create_trash')
-    <div class="d-flex justify-content-between">
+    <div class="flex justify-between mb-4">
         @can('createUser', App\User::class)
-            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm" title = "Create a user"
-                alt = "Create a user">New</a>
+            <a href="{{ route('users.create') }}"
+               class="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700"
+               title="Create a user">
+               New
+            </a>
         @endcan
     </div>
 @endsection
 
 @section('content')
-    <div class="dataTables_scrollHeadInner"
-        style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
-
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
         @if (session('error'))
-            <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
+            <p class="text-sm text-red-600 font-medium mb-3">{{ session('error') }}</p>
         @endif
 
-        <table id="myTable" class="table table-striped table-bordered table-hover dataTables-taula dataTable"
-            width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
-            <thead>
+        <table class="min-w-full border border-gray-200 rounded-lg divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-100 text-gray-700 text-left">
                 <tr>
-                    <th width="20%">Name</th>
-                    <th width="20%">Email</th>
-                    <th width="10%">Active</th>
-                    <th width="20%">Roles</th>
-                    <th width="10%"></th>
+                    <th class="px-4 py-2 font-semibold w-1/5">Name</th>
+                    <th class="px-4 py-2 font-semibold w-1/5">Email</th>
+                    <th class="px-4 py-2 font-semibold w-1/10">Active</th>
+                    <th class="px-4 py-2 font-semibold w-1/5">Roles</th>
+                    <th class="px-4 py-2 font-semibold w-1/10 text-right">Actions</th>
                 </tr>
             </thead>
 
-            <tbody>
-
-            @forelse ($users as $user)
-                <tr>
-                    <td>
-                        {{ $user->name }}
-                    </td>
-                    <td>
-                        {{ $user->email }}
-                    </td>
-                    <td>
-                        {{ $user->active ? 'Yes' : 'No' }}
-                    </td>
-                    <td>
-                        @forelse ($user->roles as $role)
-                            @if (!$loop->first)
-                                /
-                            @endif
-                            {{ $role->name }}
-                        @empty
-                        @endforelse
-                    </td>
-                    <td>
-                        @can('editUser', App\User::class)
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm"
-                                title="Edit this user" alt="Edit this user">Edit</a>
-                        @endcan
-                    </td>
-                </tr>
-
-            @empty
-                <p>No users found.</p>
-            @endforelse
-
+            <tbody class="divide-y divide-gray-200">
+                @forelse ($users as $user)
+                    <tr>
+                        <td class="px-4 py-2">{{ $user->name }}</td>
+                        <td class="px-4 py-2">{{ $user->email }}</td>
+                        <td class="px-4 py-2">{{ $user->active ? 'Yes' : 'No' }}</td>
+                        <td class="px-4 py-2">
+                            @forelse ($user->roles as $role)
+                                @if (!$loop->first)/@endif{{ $role->name }}
+                            @empty
+                                <span class="text-gray-400">No roles</span>
+                            @endforelse
+                        </td>
+                        <td class="px-4 py-2 text-right">
+                            @can('editUser', App\User::class)
+                                <a href="{{ route('users.edit', $user->id) }}"
+                                   class="px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-md shadow hover:bg-indigo-700"
+                                   title="Edit this user">
+                                   Edit
+                                </a>
+                            @endcan
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-4 py-4 text-center text-gray-500">
+                            No users found.
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
-
         </table>
     </div>
 @endsection

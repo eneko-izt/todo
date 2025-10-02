@@ -1,63 +1,74 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('tags.index') }}">Tags</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
+    <nav class="flex text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-2">
+            <li>
+                <a href="{{ route('tags.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                    Tags
+                </a>
+            </li>
+            <li class="text-gray-500">/</li>
+            <li class="text-gray-700 font-semibold">
+                {{ $title }}
+            </li>
+        </ol>
+    </nav>
 @endsection
 
 @section('content')
-    <h1 class="title">{{ $title }}</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ $title }}</h1>
 
-    <form action="{{ $route }}" method="POST">
+    <form action="{{ $route }}" method="POST" class="space-y-6 bg-white shadow-md rounded-lg p-6">
         @csrf
         @method($routeMethod)
 
-        <div class="field">
-            <label class="label" for="name">Name</label>
-            <div class="control">
-                <input class="input @error('name') help is-danger @enderror" type="text"
-                    name="name" id="name" value="{{ old('name', $tag->name ?? '') }}"
-                    maxlength="255" style="@error('name') color:#d8000c @enderror" required>
+        <!-- Name -->
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input type="text" name="name" id="name"
+                   value="{{ old('name', $tag->name ?? '') }}"
+                   maxlength="255" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('name') border-red-500 text-red-600 @enderror">
 
-                @error('name')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('name') }}</p>
-                @enderror
-            </div>
+            @error('name')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
-        <div class="field">
-            <label class="label" for="colour">Colour</label>
-            <div class="control">
-                <input class="input @error('colour') is-danger @enderror" type="text" name="colour"
-                    id="colour" value="{{ old('colour', $tag->colour ?? '') }}" maxlength="10"
-                    style="@error('colour') color:#d8000c @enderror" required>
 
-                @error('colour')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('colour') }}</p>
-                @enderror
-            </div>
+        <!-- Colour -->
+        <div>
+            <label for="colour" class="block text-sm font-medium text-gray-700">Colour</label>
+            <input type="text" name="colour" id="colour"
+                   value="{{ old('colour', $tag->colour ?? '') }}"
+                   maxlength="10" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('colour') border-red-500 text-red-600 @enderror">
+
+            @error('colour')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
-        <div class="field">
-            <div class="control">
-                <input type="checkbox" name="active"
-                    @if (old('active') == 'on' && !$tag->exists) checked
-                    @elseif (old('active') == null && !$tag->exists && $errors->isEmpty())
-                        checked
-                    @elseif (old('active') == 'on' && $tag->exists)
-                        checked
-                    @elseif ($tag->exists && $tag->active && old('active') == null && $errors->isEmpty())
-                        checked
-                    @elseif ($tag->exists && old('active') == 'on')
-                        checked @endif>
-                <label class="label" for="active">Active</label>
-            </div>
+
+        <!-- Active -->
+        <div class="flex items-center">
+            <input type="checkbox" name="active" id="active"
+                   class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                   @if (old('active') == 'on' && !$tag->exists) checked
+                   @elseif (old('active') == null && !$tag->exists && $errors->isEmpty()) checked
+                   @elseif (old('active') == 'on' && $tag->exists) checked
+                   @elseif ($tag->exists && $tag->active && old('active') == null && $errors->isEmpty()) checked
+                   @elseif ($tag->exists && old('active') == 'on') checked @endif>
+            <label for="active" class="ml-2 text-sm text-gray-700">Active</label>
         </div>
-        <div class="field is-grouped">
-            <div class="control">
-                @if (auth()->user()->can($policy, App\Tag::class))
-                    <button class="btn btn-primary is-link" type="submit"
-                        title={{ $button }}>{{ $button }}</button>
-                @endif
-            </div>
+
+        <!-- Submit -->
+        <div>
+            @if (auth()->user()->can($policy, App\Tag::class))
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {{ $button }}
+                </button>
+            @endif
         </div>
     </form>
 @endsection

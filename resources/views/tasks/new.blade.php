@@ -1,50 +1,47 @@
-<div border="1" class="p-2 mb-2 bg-light text-dark rounded">
-    <form action="{{ route('tasks.store') }}" method="POST">
-        @csrf
-        <div>
+<div class="bg-white shadow rounded-xl p-4 space-y-4">
 
-            @error('user_id' . $column->id)
-                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
-            @enderror
+    @error('user_id' . $column->id)
+        <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
+    @enderror
 
-            <label for="text{{ $column->id }}">Text:</label>
-            <textarea class="form-control mb-2 @error('text' . $column->id) help is-danger @enderror"
-                name="text{{ $column->id }}" id='text{{ $column->id }}' rows="3" maxlength="255"
-                style="@error('text' . $column->id) color:#d8000c @enderror" required>{{ old("text{$column->id}") }}</textarea>
+    <!-- Text -->
+    <div class="flex flex-col">
+        <label for="text{{ $column->id }}" class="text-sm font-medium text-gray-700 mb-1">Text:</label>
+        <textarea name="text{{ $column->id }}" id="text{{ $column->id }}" rows="3" maxlength="255"
+            class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400 @error('text' . $column->id) border-red-500 @enderror"
+            required>{{ old("text{$column->id}") }}</textarea>
+        @error('text' . $column->id)
+            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+        @enderror
+    </div>
 
-            @error('text' . $column->id)
-                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
-            @enderror
+    <!-- Order -->
+    <div class="flex flex-col">
+        <label for="order{{ $column->id }}" class="text-sm font-medium text-gray-700 mb-1">Order:</label>
+        <input type="number" name="order{{ $column->id }}" id="order{{ $column->id }}" min="0" max="100"
+            value="{{ old('order' . $column->id) }}"
+            class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400 @error('order' . $column->id) border-red-500 @enderror"
+            required>
+        @error('order' . $column->id)
+            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+        @enderror
+    </div>
 
-            <label for="order">Order:</label>
-            <input type="number"
-                class="form-control mb-2 @error('order{{ $column->id }}') help is-danger @enderror"
-                name='order{{ $column->id }}' id='order{{ $column->id }}'
-                value="{{ old('order' . $column->id) }}" min="0" max="100"
-                style="@error('order' . $column->id) color:#d8000c @enderror" required>
+    <!-- Tags -->
+    <div class="flex flex-col">
+        <label for="tags{{ $column->id }}[]" class="text-sm font-medium text-gray-700 mb-1">Tags:</label>
+        <select name="tags{{ $column->id }}[]" id="tags{{ $column->id }}[]" multiple
+            size="8"
+            class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400">
+            @foreach ($tags as $tag)
+                <option value="{{ $tag->id }}"
+                    @if (in_array($tag->id, old('tags' . $column->id, []))) selected @endif>
+                    {{ $tag->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-            @error('order' . $column->id)
-                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
-            @enderror
+    <input type="hidden" name="column_id" id="column_id" value="{{ $column->id ?? '' }}">
 
-            <label for="input">Tags:</label>
-            <select class="form-control select2" name="tags{{ $column->id }}[]"
-                id="tags{{ $column->id }}" style="width: 100%;" multiple>
-                @foreach ($tags as $tag)
-                    <option value="{{ $tag->id }}"
-                        @if (in_array($tag->id, old('tags' . $column->id, []))) selected @endif>
-                        {{ $tag->name }}
-                    </option>
-                @endforeach
-            </select>
-
-            <input type="hidden" name="column_id" id="column_id" value="{{ $column->id ?? '' }}">
-
-            <div class="control">
-                <button class="btn btn-primary bottom" type="submit"
-                    Title="Create a new task">New</button>
-            </div>
-
-        </div>
-    </form>
 </div>
