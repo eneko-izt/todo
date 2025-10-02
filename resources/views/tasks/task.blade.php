@@ -87,6 +87,19 @@
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
                 <button id="share-btn-{{ $task->id }}" class="border px-2 py-1 rounded text-xs">+ User</button>
             @endif
+
+            @if (auth()->check() && auth()->user()->can('deleteTask', $task))
+                <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="border px-2 py-1 rounded text-xs"
+                        title="Remove this task"
+                        onclick="return confirm('Are you sure you want to remove this task?')">
+                        Delete
+                    </button>
+                </form>
+            @endif
+
         </div>
 
         <!-- Share User Section (Initially Hidden) -->
