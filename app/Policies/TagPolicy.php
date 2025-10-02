@@ -13,6 +13,11 @@ class TagPolicy
         return is_admin();
     }
 
+    public function viewTrash()
+    {
+        return is_admin();
+    }
+
     public function editTag()
     {
         return is_admin();

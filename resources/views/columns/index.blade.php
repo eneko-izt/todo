@@ -1,26 +1,9 @@
 @extends('layouts.app')
 
-@section('create_trash')
-    <div class="flex space-x-2 mb-4">
-        @can('createColumn', App\Column::class)
-            <a href="{{ route('columns.create') }}"
-                class="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700"
-                title="Create a column">
-                New
-            </a>
-        @endcan
-        @can('deleteColumn', App\Column::class)
-            <a href="{{ route('columns.trash') }}"
-                class="px-3 py-1 bg-gray-600 text-white text-sm font-medium rounded-md shadow hover:bg-gray-700"
-                title="View deleted columns">
-                Trash
-            </a>
-        @endcan
-    </div>
-@endsection
-
 @section('content')
 <div class="overflow-x-auto bg-white shadow-md rounded-md p-4">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">All columns</h1>
+
     @if (session('error'))
         <p class="text-sm text-red-600 font-medium mb-3">
             {{ session('error') }}

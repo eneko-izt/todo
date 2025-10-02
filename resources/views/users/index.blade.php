@@ -1,19 +1,9 @@
 @extends('layouts.app')
 
-@section('create_trash')
-    <div class="flex space-x-2 mb-4">
-        @can('createUser', App\User::class)
-            <a href="{{ route('users.create') }}"
-                class="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700"
-                title="Create a user">
-                New
-            </a>
-        @endcan
-    </div>
-@endsection
-
 @section('content')
 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">All users</h1>
+
     @if (session('error'))
         <p class="text-sm text-red-600 font-medium mb-3">
             {{ session('error') }}

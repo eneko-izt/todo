@@ -19,27 +19,118 @@
 
 <body class="h-screen bg-gray-100">
 
+    @php
+        $currentRoute = Route::currentRouteName();
+    @endphp
+
     <!-- Sidebar -->
     <div id="sidebar"
-         class="fixed inset-y-0 left-0 w-56 bg-gray-800 text-white p-4 pt-12 flex flex-col space-y-2 transform transition-transform duration-300 z-20">
+        class="fixed inset-y-0 left-0 w-56 bg-gray-800 text-white p-4 pt-12 flex flex-col space-y-2 transform transition-transform duration-300 z-20">
+
+        <!-- Home -->
         <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
-           href="{{ route('welcome') }}">Home</a>
+            href="{{ route('welcome') }}">
+            Home
+        </a>
+
+        <!-- Dashboard -->
         @if(auth()->check())
             <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
-               href="{{ route('home') }}">Dashboard</a>
+                href="{{ route('home') }}">
+                Dashboard
+            </a>
         @endif
+
+        <!-- Columns -->
         @can('viewColumn', App\Column::class)
-            <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
-               href="{{ route('columns.index') }}">Manage Columns</a>
+            <div x-data="{ open: {{ Str::startsWith($currentRoute, 'columns.') ? 'true' : 'false' }} }" class="mb-2">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
+                    <span>Columns</span>
+                    <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
+                    <a href="{{ route('columns.index') }}"
+                        class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'columns.index') ? 'bg-gray-600' : '' }}">
+                        List
+                    </a>
+                    @can('createColumn', App\Column::class)
+                        <a href="{{ route('columns.create') }}"
+                            class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'columns.create') ? 'bg-gray-600' : '' }}">
+                            New
+                        </a>
+                    @endcan
+                    @can('viewColumn', App\Column::class)
+                        <a href="{{ route('columns.trash') }}"
+                            class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'columns.trash') ? 'bg-gray-600' : '' }}">
+                            Trash
+                        </a>
+                    @endcan
+                </div>
+            </div>
         @endcan
+
+        <!-- Tags -->
         @can('viewTag', App\Tag::class)
-            <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
-               href="{{ route('tags.index') }}">Manage Tags</a>
+            <div x-data="{ open: {{ Str::startsWith($currentRoute, 'tags.') ? 'true' : 'false' }} }" class="mb-2">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
+                    <span>Tags</span>
+                    <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
+                    <a href="{{ route('tags.index') }}"
+                        class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tags.index') ? 'bg-gray-600' : '' }}">
+                        List
+                    </a>
+                    @can('createTag', App\Tag::class)
+                        <a href="{{ route('tags.create') }}"
+                            class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tags.create') ? 'bg-gray-600' : '' }}">
+                            New
+                        </a>
+                    @endcan
+                    @can('viewTrash', App\Tag::class)
+                        <a href="{{ route('tags.trash') }}"
+                            class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tags.trash') ? 'bg-gray-600' : '' }}">
+                            Trash
+                        </a>
+                    @endcan
+                </div>
+            </div>
         @endcan
+
+        <!-- Users -->
         @can('viewUser', App\User::class)
-            <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center"
-               href="{{ route('users.index') }}">Manage Users</a>
+            <div x-data="{ open: {{ Str::startsWith($currentRoute, 'users.') ? 'true' : 'false' }} }" class="mb-2">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
+                    <span>Users</span>
+                    <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
+                    <a href="{{ route('users.index') }}"
+                        class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'users.index') ? 'bg-gray-600' : '' }}">
+                        List
+                    </a>
+                    @can('createUser', App\User::class)
+                        <a href="{{ route('users.create') }}"
+                            class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'users.create') ? 'bg-gray-600' : '' }}">
+                            New
+                        </a>
+                    @endcan
+                </div>
+            </div>
         @endcan
+
     </div>
 
     <!-- Toggle Sidebar Button -->
@@ -89,8 +180,6 @@
 
             <!-- Page content -->
             <div class="flex flex-col space-y-6">
-                @yield('breadcrumb')
-                @yield('create_trash')
                 @yield('content')
             </div>
 

@@ -1,23 +1,14 @@
 @extends('layouts.app')
 
-@section('breadcrumb')
-    <nav class="flex text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-2">
-            <li>
-                <a href="{{ route('columns.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">
-                    Columns
-                </a>
-            </li>
-            <li class="text-gray-500">/</li>
-            <li class="text-gray-700 font-semibold">
-                {{ $title }}
-            </li>
-        </ol>
-    </nav>
-@endsection
-
 @section('content')
+<div class="overflow-x-auto bg-white shadow-md rounded-md p-4">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ $title }}</h1>
+
+    @if (session('error'))
+        <p class="text-sm text-red-600 font-medium mb-3">
+            {{ session('error') }}
+        </p>
+    @endif
 
     <form action="{{ $route }}" method="POST" class="space-y-6 bg-white shadow-md rounded-lg p-6">
         @csrf
@@ -71,4 +62,5 @@
             @endif
         </div>
     </form>
+</div>
 @endsection

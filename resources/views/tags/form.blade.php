@@ -1,22 +1,7 @@
 @extends('layouts.app')
 
-@section('breadcrumb')
-    <nav class="flex text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-2">
-            <li>
-                <a href="{{ route('tags.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">
-                    Tags
-                </a>
-            </li>
-            <li class="text-gray-500">/</li>
-            <li class="text-gray-700 font-semibold">
-                {{ $title }}
-            </li>
-        </ol>
-    </nav>
-@endsection
-
 @section('content')
+<div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ $title }}</h1>
 
     <form action="{{ $route }}" method="POST" class="space-y-6 bg-white shadow-md rounded-lg p-6">
@@ -71,4 +56,5 @@
             @endif
         </div>
     </form>
+</div
 @endsection
