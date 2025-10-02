@@ -179,7 +179,7 @@
             </header>
 
             <!-- Page content -->
-            <div class="flex flex-col space-y-6">
+            <div class="flex space-x-6">
                 @yield('content')
             </div>
 
