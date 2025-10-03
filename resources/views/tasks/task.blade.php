@@ -172,11 +172,15 @@
 
 
 <script>
-    document.getElementById('share-btn-{{ $task->id }}').addEventListener('click', function() {
-        console.log('Share button clicked');
-        const content = document.getElementById('share-content-{{ $task->id }}');
-        content.style.display = (content.style.display === 'none' || content.style.display === '') 
-            ? 'block' 
-            : 'none';
-    });
+    $shareBtn = document.getElementById('share-btn-{{ $task->id }}');
+    if ($shareBtn) {
+        $shareBtn.addEventListener('click', function() {
+            const content = document.getElementById('share-content-{{ $task->id }}');
+            if (content) {
+                content.style.display = (content.style.display === 'none' || content.style.display === '') 
+                    ? 'block' 
+                    : 'none';
+            }
+        });
+    }
 </script>
