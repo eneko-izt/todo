@@ -79,20 +79,20 @@
         <!-- Action Buttons -->
         <div class="flex gap-2">
             @if (auth()->check() && auth()->user()->can('editTask', $task))
-                <button type="button"  class="border px-2 py-1 rounded text-xs"
+                <button type="button"  class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
                     onclick="document.getElementById('modal-{{ $task->id }}').classList.remove('hidden')">
                     Edit
                 </button>
             @endif
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
-                <button id="share-btn-{{ $task->id }}" class="border px-2 py-1 rounded text-xs">+ User</button>
+                <button id="share-btn-{{ $task->id }}" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">Share</button>
             @endif
 
             @if (auth()->check() && auth()->user()->can('deleteTask', $task))
                 <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="border px-2 py-1 rounded text-xs"
+                    <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
                         title="Remove this task"
                         onclick="return confirm('Are you sure you want to remove this task?')">
                         Delete
