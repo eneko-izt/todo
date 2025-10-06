@@ -21,33 +21,6 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($tasks as $task)
-                <tr class="px-4 py-2">
-                    <td class="px-4 py-2">
-                        {{ $task->column->name }}
-                    </td>
-                    <td class="px-4 py-2">
-                        {{ $task->text }}
-                    </td>
-                    <td class="px-4 py-2">
-                        @forelse ($task->tags as $tag)
-                            @if (!$loop->first)/@endif{{ $tag->name }}
-                        @empty
-                            <span class="text-gray-400">No tags</span>
-                        @endforelse
-                    </td>
-                    <td class="px-4 py-2">
-                        {{ $task->user->name }}
-                    </td>
-                    <td class="px-4 py-2">
-                        @forelse ($task->sharingUsers as $user)
-                            @if (!$loop->first)/@endif{{ $user->name }}
-                        @empty
-                            <span class="text-gray-400">No shared users</span>
-                        @endforelse
-                    </td>
-                </tr>
-            @endforeach
         </tbody>
     </table>
 </div>
@@ -55,25 +28,21 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#myTable').DataTable({
-            paging: true,
-            pageLength: 10,
-            lengthMenu: [5, 10, 25, 50],
-            searching: true,
-            ordering: true,
-            info: true,
-            autoWidth: false,
-            responsive: true,
-            language: {
-                paginate: {
-                    emptyTable: "No columns found.",
-                    previous: 'Previous',
-                    next: 'Next'
-                },
-                lengthMenu: "Show _MENU_ entries"
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('tasks.data') }}",
+                type: "GET"
             },
-            dom: '<"flex justify-between items-center mb-2"<"flex items-center space-x-2"l><"ml-auto"f>>t<"flex justify-between items-center mt-2"ip>'
+            columns: [
+                { data: 'column_name', name: 'column.name' },
+                { data: 'text', name: 'text' },
+                { data: 'tags', name: 'tags', orderable: false, searchable: false },
+                { data: 'user_name', name: 'user.name' },
+                { data: 'sharing_users', name: 'sharing_users', orderable: false, searchable: false },
+            ]
         });
     });
 </script>
