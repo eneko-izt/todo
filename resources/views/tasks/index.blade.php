@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">All tags</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">All tasks</h1>
 
     @if (session('error'))
         <p class="text-sm text-red-600 font-medium mb-3">
@@ -13,48 +13,38 @@
     <table id="myTable" class="min-w-full text-sm" role="grid">
         <thead class="bg-gray-100 text-left text-gray-700">
             <tr>
-                <th class="px-4 py-2 font-semibold">Tag</th>
-                <th class="px-4 py-2 font-semibold">Colour</th>
-                <th class="px-4 py-2 font-semibold">Active</th>
-                <th class="px-4 py-2 font-semibold text-right">Actions</th>
+                <th class="px-4 py-2 font-semibold">Column</th>
+                <th class="px-4 py-2 font-semibold">Task</th>
+                <th class="px-4 py-2 font-semibold">Tags</th>
+                <th class="px-4 py-2 font-semibold">Owner</th>
+                <th class="px-4 py-2 font-semibold">Shared with</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($tags as $tag)
-                <tr class="hover:bg-gray-50">
+            @foreach ($tasks as $task)
+                <tr class="px-4 py-2">
                     <td class="px-4 py-2">
-                        {{ $tag->getUpperName() }}
+                        {{ $task->column->name }}
                     </td>
                     <td class="px-4 py-2">
-                        <span class="px-2 py-1 rounded text-white text-xs font-medium"
-                                style="background-color: {{ $tag->colour }};">
-                            {{ $tag->colour }}
-                        </span>
+                        {{ $task->text }}
                     </td>
                     <td class="px-4 py-2">
-                        {{ $tag->active ? 'Yes' : 'No' }}
+                        @forelse ($task->tags as $tag)
+                            @if (!$loop->first)/@endif{{ $tag->name }}
+                        @empty
+                            <span class="text-gray-400">No tags</span>
+                        @endforelse
                     </td>
-                    <td class="px-4 py-2 flex space-x-2 justify-end">
-                        @can('editTag', App\Tag::class)
-                            <a href="{{ route('tags.edit', $tag->id) }}"
-                                class="px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-md shadow hover:bg-indigo-700"
-                                title="Edit this tag">
-                                Edit
-                            </a>
-                        @endcan
-
-                        @if ($tag->tasks_count == 0 && auth()->user()->can('deleteTag', App\Tag::class))
-                            <form action="{{ route('tags.delete', $tag->id) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure you want to delete this tag?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700"
-                                    title="Delete this tag">
-                                    Delete
-                                </button>
-                            </form>
-                        @endif
+                    <td class="px-4 py-2">
+                        {{ $task->user->name }}
+                    </td>
+                    <td class="px-4 py-2">
+                        @forelse ($task->sharingUsers as $user)
+                            @if (!$loop->first)/@endif{{ $user->name }}
+                        @empty
+                            <span class="text-gray-400">No shared users</span>
+                        @endforelse
                     </td>
                 </tr>
             @endforeach
