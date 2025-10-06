@@ -34,6 +34,8 @@ Route::patch('/tasks/unshare/{id}/user/{userId}', 'TasksController@unshare')->na
 Route::post('/tasks/upload/{id}', 'FileController@store')->name('tasks.upload');
 Route::get('/tasks/download/{id}', 'FileController@download')->name('tasks.download');
 
+Route::get('/tasks', 'TasksController@index')->name('tasks.index')->middleware('can:adminAllTasks, App\Task');
+
 /*
 |--------------------------------------------------------------------------
 | Column Management

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\User;
+use App\Tag;
 use App\Mail\TaskSharedMail;
 
 use App\Http\Services\TaskService;
@@ -29,12 +30,13 @@ class TasksController extends Controller
         $this->taskService = $taskService;
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
 
+    public function index()
+    {
+        $tags = Tag::withCount('tasks')->get();
+
+        return view('tasks.index', compact('tags'));
+    }
 
     public function store()
     {

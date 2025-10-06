@@ -34,12 +34,12 @@
         </a>
 
         <!-- Dashboard -->
-        @if(auth()->check())
+        @can('viewDashboard', App\Task::class)
             <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
                 href="{{ route('home') }}">
                 Dashboard
             </a>
-        @endif
+        @endcan
 
         <!-- Columns -->
         @can('viewColumn', App\Column::class)
@@ -129,6 +129,14 @@
                     @endcan
                 </div>
             </div>
+        @endcan
+
+        <!-- Admin All tasks -->
+        @can('adminAllTasks', App\Task::class)
+            <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
+                href="{{ route('tasks.index') }}">
+                All Tasks
+            </a>
         @endcan
 
     </div>
