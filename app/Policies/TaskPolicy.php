@@ -10,14 +10,9 @@ class TaskPolicy
 {
     use HandlesAuthorization;
 
-    public function viewDashboard()
+    public function viewTask()
     {
-        return auth()->check();
-    }
-
-    public function adminAllTasks()
-    {
-        return is_admin();
+        return false;
     }
 
     public function editTask(User $user, Task $task)
