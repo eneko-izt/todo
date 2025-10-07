@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\User;
-use App\Mail\TaskSharedMail;
+use Exception;
 
+use App\Mail\TaskSharedMail;
 use App\Http\Services\TaskService;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 class TasksController extends Controller
 {
@@ -55,7 +57,7 @@ class TasksController extends Controller
 
             return redirect(route("home"));
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->validator)
                 ->withInput()
@@ -109,9 +111,15 @@ class TasksController extends Controller
 
         if (! $task->sharingUsers()->where('user_id', $user->id)->exists())
         {
-            $task->sharingUsers()->attach($user->id);
-
-            Mail::to($user->email)->queue(new TaskSharedMail($user, $task));
+            try {
+                Mail::to($user->email)->queue(new TaskSharedMail($user, $task));
+                $task->sharingUsers()->attach($user->id);
+            }
+            catch (Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['email' => 'An error occurred while sharing task ' . $taskId . ' with user ' . $user->name])
+                    ->withInput();
+            }
         }
 
         return redirect(route("home"));

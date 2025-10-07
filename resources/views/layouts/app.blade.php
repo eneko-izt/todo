@@ -151,6 +151,11 @@
                     <span id="currentDate" class="text-gray-600 font-medium"></span>
                 </div>
 
+                @error('email')
+                    <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
+                @enderror
+
+
                 @auth
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open"
