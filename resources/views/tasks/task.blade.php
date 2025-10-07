@@ -1,6 +1,7 @@
 {{-- Task card wrapper --}}
 <div class="bg-white shadow rounded-xl mb-3"
-     x-data="{ open: {{ old('task_id') == $task->id ? 'true' : 'false' }} }">
+     x-data="{ open: {{ old('task_id') == $task->id ? 'true' : 'false' }},
+                shareOpen: false }">
 
      <div class="p-3">
         <p class="font-medium mb-2">{{ $task->id }}: {{ $task->text }}</p>
@@ -90,7 +91,11 @@
             @endif
 
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
-                <button id="share-btn-{{ $task->id }}" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">Share</button>
+                <button type="button"
+                        class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
+                        @click="shareOpen = !shareOpen">
+                    Share
+                </button>
             @endif
 
             @if (auth()->check() && auth()->user()->can('deleteTask', $task))
@@ -108,19 +113,17 @@
         </div>
 
         <!-- Share User Section (Initially Hidden) -->
-        <div id="share-content-{{ $task->id }}" class="bg-white shadow rounded-xl p-3 mt-2" style="display: none;">
+        <div x-show="shareOpen" x-cloak class="bg-white shadow rounded-xl p-3 mt-2">
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
                 <form action="{{ route('tasks.share', $task->id) }}" method="POST" class="flex flex-col space-y-2">
                     @csrf
                     @method('PATCH')
-
                     <label for="user-{{ $task->id }}" class="text-sm font-medium text-gray-700">Choose a user:</label>
                     <select name="userid" id="user-{{ $task->id }}" class="border rounded p-1 text-sm max-w-[200px]">
                         @foreach ($task->shareableUsers() as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
-
                     <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600" title="Share task with user">
                         Save
                     </button>
