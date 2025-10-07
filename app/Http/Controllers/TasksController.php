@@ -38,21 +38,29 @@ class TasksController extends Controller
 
     public function store()
     {
-        $this->taskService->createValidator(request()->all())->validate();
+        try {
+            $this->taskService->createValidator(request()->all())->validate();
 
-        $attributes = [];
-        $attributes['active'] = 1;
-        $attributes['user_id'] = auth()->id();
-        $attributes['column_id'] = request('column_id');
-        $attributes['order'] = request('order' . $attributes['column_id'], 0);
-        $attributes['text'] = request('text' . $attributes['column_id']);
+            $attributes = [];
+            $attributes['active'] = 1;
+            $attributes['user_id'] = auth()->id();
+            $attributes['column_id'] = request('column_id');
+            $attributes['order'] = request('order' . $attributes['column_id'], 0);
+            $attributes['text'] = request('text' . $attributes['column_id']);
 
-        $task = Task::create($attributes);
+            $task = Task::create($attributes);
 
-        $tags = request('tags' . $attributes['column_id'], []);
-        $task->tags()->attach($tags);
+            $tags = request('tags' . $attributes['column_id'], []);
+            $task->tags()->attach($tags);
 
-        return redirect(route("home"));
+            return redirect(route("home"));
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('modal_id', 'newTaskModal-' . request('column_id'));
+        }
     }
 
     public function delete($id)
@@ -81,7 +89,6 @@ class TasksController extends Controller
         }
 
         $task->text = request('text' . $id);
-        $task->active = request('active' . $id) == 'on' ? 1 : 0;
         $task->order = request('order' . $id);
         $task->column_id = request('column_id' . $id);
         $task->save();

@@ -11,12 +11,6 @@
         @enderror
     </div>
 
-    <!-- Active -->
-    <div class="flex items-center gap-2">
-        <input type="checkbox" name="active{{ $task->id }}" id="active{{ $task->id }}" class="w-4 h-4" @if($task->active) checked @endif>
-        <label for="active{{ $task->id }}" class="text-sm font-medium text-gray-700">Active</label>
-    </div>
-
     <!-- Order -->
     <div class="flex flex-col">
         <label for="order{{ $task->id }}" class="text-sm font-medium text-gray-700 mb-1">Order:</label>

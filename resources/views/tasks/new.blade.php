@@ -42,6 +42,4 @@
         </select>
     </div>
 
-    <input type="hidden" name="column_id" id="column_id" value="{{ $column->id ?? '' }}">
-
 </div>

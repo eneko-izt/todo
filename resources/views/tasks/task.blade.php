@@ -1,5 +1,8 @@
-<div class="bg-white shadow rounded-xl mb-3">
-    <div class="p-3">
+{{-- Task card wrapper --}}
+<div class="bg-white shadow rounded-xl mb-3"
+     x-data="{ open: {{ old('task_id') == $task->id ? 'true' : 'false' }} }">
+
+     <div class="p-3">
         <p class="font-medium mb-2">{{ $task->id }}: {{ $task->text }}</p>
         <div class="flex flex-wrap gap-2 mb-2">
             @foreach ($task->tags()->active()->get() as $tag)
@@ -79,11 +82,13 @@
         <!-- Action Buttons -->
         <div class="flex gap-2">
             @if (auth()->check() && auth()->user()->can('editTask', $task))
-                <button type="button"  class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
-                    onclick="document.getElementById('modal-{{ $task->id }}').classList.remove('hidden')">
+                 <button type="button" 
+                        class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
+                        @click="open = true">
                     Edit
                 </button>
             @endif
+
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
                 <button id="share-btn-{{ $task->id }}" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">Share</button>
             @endif
@@ -123,38 +128,40 @@
             @endif
         </div>
 
-        <!-- Tailwind Modal -->
+        <!-- Edit Modal -->
         <form action="{{ route('tasks.update', $task->id) }}" method="POST">
             @csrf
             @method('PATCH')
 
             <!-- Modal overlay -->
-            <div id="modal-{{ $task->id }}" 
-                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+            <div x-show="open"
+                x-transition.opacity
+                x-cloak
+                @click.self="open = false"
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
 
                 <!-- Modal card (like task card) -->
-                <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-2 border border-gray-200" style="background-color: {{ $column->colour }};">
+                <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-2 border border-gray-200"
+                    style="background-color: {{ $column->colour }};">
                     
                     <!-- Header -->
                     <div class="flex justify-between items-center border-b px-4 py-2">
                         <h3 class="text-lg font-bold text-gray-800">Edit Task</h3>
-                        <button type="button" 
-                                class="text-gray-500 hover:text-gray-800"
-                                onclick="document.getElementById('modal-{{ $task->id }}').classList.add('hidden')">
-                            &times;
-                        </button>
+                        <button type="button" class="text-gray-500 hover:text-gray-800" @click="open = false">&times;</button>
                     </div>
 
                     <!-- Body -->
                     <div class="px-4 py-4">
                         @include('tasks.form', ['task' => $task])
+                        <input type="hidden" name="task_id" value="{{ $task->id }}">
                     </div>
 
                     <!-- Footer -->
                     <div class="flex justify-end gap-2 border-t px-4 py-2">
                         <button type="button" 
                                 class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
-                                onclick="document.getElementById('modal-{{ $task->id }}').classList.add('hidden')">
+                                @click="open = false">
                             Cancel
                         </button>
                         <button type="submit" 
@@ -169,18 +176,3 @@
 
     </div>
 </div>
-
-
-<script>
-    $shareBtn = document.getElementById('share-btn-{{ $task->id }}');
-    if ($shareBtn) {
-        $shareBtn.addEventListener('click', function() {
-            const content = document.getElementById('share-content-{{ $task->id }}');
-            if (content) {
-                content.style.display = (content.style.display === 'none' || content.style.display === '') 
-                    ? 'block' 
-                    : 'none';
-            }
-        });
-    }
-</script>
