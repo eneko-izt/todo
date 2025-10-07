@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">Tags ({{ $tags->total() }})</li>
+    <li class="breadcrumb-item active" aria-current="page">Tags ({{ $tags->count() }})</li>
 @endsection
 
 @section('create_trash')
@@ -25,14 +25,18 @@
             <p class="help is-danger" style="color:#d8000c">{{ session('error') }}</p>
         @endif
 
-        <table class="table table-striped table-bordered table-hover dataTables-taula dataTable"
+        <table id="myTable" class="table table-striped table-bordered table-hover dataTables-taula dataTable"
             width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
-            <tr>
-                <th>Tag</th>
-                <th>Colour</th>
-                <th>Active</th>
-                <th></th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Tag</th>
+                    <th>Colour</th>
+                    <th>Active</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
 
             @forelse ($tags as $tag)
                 <tr>
@@ -68,7 +72,9 @@
                 <p>No tags found.</p>
             @endforelse
 
+            </tbody>
+
         </table>
-        {{ $tags->links() }}
     </div>
+
 @endsection

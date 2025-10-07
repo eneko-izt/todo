@@ -27,7 +27,7 @@ class TaskPolicy
 
     public function deleteTask(User $user, Task $task)
     {
-        return $this->isOwner($user, $task);
+        return $this->isOwner($user, $task) && ($task->sharingUsers()->count() == 0);
     }
 
     public function shareTask(User $user, Task $task)
