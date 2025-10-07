@@ -33,9 +33,9 @@ class TasksController extends Controller
 
     public function index()
     {
-        $tasks = Task::all();
+        $tags = Tag::withCount('tasks')->get();
 
-        return view('tasks.index', compact('tasks'));
+        return view('tasks.index', compact('tags'));
     }
 
     public function store()
