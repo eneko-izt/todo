@@ -8,6 +8,7 @@ use Exception;
 
 use App\Mail\TaskSharedMail;
 use App\Http\Services\TaskService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
@@ -50,16 +51,26 @@ class TasksController extends Controller
             $attributes['order'] = request('order' . $attributes['column_id'], 0);
             $attributes['text'] = request('text' . $attributes['column_id']);
 
+            DB::beginTransaction();
+
             $task = Task::create($attributes);
 
             $tags = request('tags' . $attributes['column_id'], []);
             $task->tags()->attach($tags);
+
+            DB::commit();
 
             return redirect(route("home"));
 
         } catch (ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->validator)
+                ->withInput()
+                ->with('modal_id', 'newTaskModal-' . request('column_id'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withErrors(['creation_error' => 'An error occurred while creating the task'])
                 ->withInput()
                 ->with('modal_id', 'newTaskModal-' . request('column_id'));
         }
@@ -90,14 +101,28 @@ class TasksController extends Controller
                 ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
 
-        $task->text = request('text' . $id);
-        $task->order = request('order' . $id);
-        $task->column_id = request('column_id' . $id);
-        $task->save();
+        try {
+            DB::beginTransaction();
+            // update task
+            $task->text = request('text' . $id);
+            $task->order = request('order' . $id);
+            $task->column_id = request('column_id' . $id);
+            $task->save();
 
-        // update tags
-        $tags = request('tags' . $id, []);
-        $task->tags()->sync($tags);
+            // update tags
+            $tags = request('tags' . $id, []);
+            $task->tags()->sync($tags);
+
+            DB::commit();
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->withErrors(['update_error' => 'An error occurred while updating task ' . $id])
+                ->withInput()
+                ->with('modal_id', 'staticBackdrop-' . $task->id);
+        }
 
         return redirect(route("home"));
     }
@@ -112,10 +137,13 @@ class TasksController extends Controller
         if (! $task->sharingUsers()->where('user_id', $user->id)->exists())
         {
             try {
+                DB::beginTransaction();
                 Mail::to($user->email)->queue(new TaskSharedMail($user, $task));
                 $task->sharingUsers()->attach($user->id);
+                DB::commit();
             }
             catch (Exception $e) {
+                DB::rollBack();
                 return redirect()->back()
                     ->withErrors(['email' => 'An error occurred while sharing task ' . $taskId . ' with user ' . $user->name])
                     ->withInput();
