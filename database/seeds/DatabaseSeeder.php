@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@izt.eus',
             'email_verified_at' => now(),
             'password' => bcrypt('pasahitza'),
+            'language' => 'eu',
             'remember_token' => ''
         ]);
 
