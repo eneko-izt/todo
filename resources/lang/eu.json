@@ -16,7 +16,7 @@
 
     "Home": "Hasiera",
     "Dashboard": "Eremua",
-    "Task Manager": "Ataza kudeatzailea",
+    "Task Manager": "Ataza Kudeatzailea",
     "Logout": "Saioa itzali",
     "Columns": "Zutabeak",
     "Tags": "Etiketak",
@@ -81,5 +81,11 @@
     "New User": "Erabiltzaile Berria",
     "Edit User": "Editatu Erabiltzailea",
     "All Users": "Erabiltzaile Guztiak",
-    "Edit this user.": "Editatu erabiltzaile hau."
+    "Edit this user.": "Editatu erabiltzaile hau.",
+    "Show _MENU_ entries": "Erakutsi _MENU_ sarrera",
+    "No matching records found": "Ez da bat etorririk aurkitu",
+    "Showing _START_ to _END_ of _TOTAL_ entries": "Erakutsi _START_ - _END_ / _TOTAL_ sarrera",
+    "Showing 0 to 0 of 0 entries": "Erakutsi 0 - 0 / 0 sarrera",
+    "(filtered from _MAX_ total entries)": "(iragazi _MAX_ sarrera guztietatik)",
+    "Search:": "Bilatu:"
 }

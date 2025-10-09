@@ -81,5 +81,11 @@
     "New User": "New User",
     "Edit User": "Edit User",
     "All Users": "All Users",
-    "Edit this user.": "Edit this user."
+    "Edit this user.": "Edit this user.",
+    "Show _MENU_ entries": "Show _MENU_ entries",
+    "No matching records found": "No matching records found",
+    "Showing _START_ to _END_ of _TOTAL_ entries": "Showing _START_ to _END_ of _TOTAL_ entries",
+    "Showing 0 to 0 of 0 entries": "Showing 0 to 0 of 0 entries",
+    "(filtered from _MAX_ total entries)": "(filtered from _MAX_ total entries)",
+    "Search:": "Search:"
 }
