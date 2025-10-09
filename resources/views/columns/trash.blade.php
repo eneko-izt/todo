@@ -1,66 +1,90 @@
 @extends('layouts.app')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('columns.index') }}" alt="Columns">Columns</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Trash ({{ $columns->count() }})</li>
-@endsection
-
 @section('content')
-    <div class="dataTables_scrollHeadInner"
-        style="box-sizing: content-box; width: 1650px; padding-right: 0px;">
+<div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Columns Trash</h1>
 
-        <table id="myTable" class="table table-striped table-bordered table-hover dataTables-taula dataTable"
-            width="100%" role="grid" style="margin-left: 0px; width: 1650px;">
-            <thead>
-                <tr>
-                    <th>Column</th>
-                    <th>Colour</th>
-                    <th>Active</th>
-                    <th></th>
-                </tr>
-            </thead>
+    @if (session('error'))
+        <p class="text-sm text-red-600 font-medium mb-3">
+            {{ session('error') }}
+        </p>
+    @endif
 
-            <tbody>
-
-            @forelse ($columns as $column)
-                <tr>
-                    <td>
-                        {{ $column->getUpperName() }}
+    <table id="myTable" class="min-w-full text-sm" role="grid">
+        <thead class="bg-gray-100 text-left text-gray-700">
+            <tr>
+                <th class="px-4 py-2 font-semibold">Column</th>
+                <th class="px-4 py-2 font-semibold">Colour</th>
+                <th class="px-4 py-2 font-semibold">Active</th>
+                <th class="px-4 py-2 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($columns as $column)
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2">{{ $column->getUpperName() }}</td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 py-1 text-white text-xs font-medium rounded"
+                            style="background-color: {{ $column->colour }};">
+                            {{ $column->colour }}
+                        </span>
                     </td>
-                    <td class="p-2 text-white badge mr-5"
-                        style="background-color: {{ $column->colour }};">
-                        {{ $column->colour }}
-                    </td>
-                    <td>{{ $column->active }}</td>
-                    <td>
-                        @if (auth()->user()->can('deleteColumn', App\Column::class))
-                            <form action="{{ route('columns.restore', $column->id) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="btn btn-primary btn-sm"
-                                    title="Restore this column"
-                                    onclick="return confirm('Are you sure you want to restore this column?')">
-                                    Restore
-                                </button>
-                            </form>
-                            <form action="{{ route('columns.destroy', $column->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-primary btn-sm" title="Delete this column"
-                                    onclick="return confirm('Are you sure you want to completely delete this column?')">
-                                    Delete
-                                </button>
-                            </form>
+                    <td class="px-4 py-2">{{ $column->active ? 'Yes' : 'No' }}</td>
+                    <td class="px-4 py-2 flex space-x-2 justify-end">
+                        @if(auth()->user()->can('deleteColumn', App\Column::class))
+                            <div class="flex space-x-2">
+                                <form action="{{ route('columns.restore', $column->id) }}" method="POST"
+                                    onsubmit="return confirm('Restore this column?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                            class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-md shadow hover:bg-green-700">
+                                        Restore
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('columns.destroy', $column->id) }}" method="POST"
+                                    onsubmit="return confirm('Delete permanently?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
                         @endif
                     </td>
                 </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endsection
 
-            @empty
-                <p>No columns found.</p>
-            @endforelse
+@section('scripts')
+    <!-- Include DataTables CSS & JS -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-            </tbody>
-
-        </table>
-    </div>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                paging: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                responsive: true,
+                language: {
+                    emptyTable: "No columns found.",
+                    paginate: { previous: 'Previous', next: 'Next' },
+                    lengthMenu: "Show _MENU_ entries"
+                },
+                dom: '<"flex justify-between items-center mb-2"<"flex items-center space-x-2"l><"ml-auto"f>>t<"flex justify-between items-center mt-2"ip>'
+            });
+        });
+    </script>
 @endsection

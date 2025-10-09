@@ -2,9 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Tag;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TaskCRUDTest extends TestCase
 {
@@ -138,6 +139,19 @@ class TaskCRUDTest extends TestCase
         $this->assertDatabaseHas('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
     }
 
+    public function test_Share_Task_With_Mail_Error()
+    {
+        config(['mail.from.address' => 'invalid-email-address']);
+
+        // Sharing a task
+        $response = $this->actingAs($this->userOwner)->patch(route('tasks.share', ['id' => $this->task->id]), [
+            'userid' => $this->userNotOwner->id
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors('email');
+        $this->assertDatabaseMissing('task_user', ['task_id' => $this->task->id, 'user_id' => $this->userNotOwner->id]);
+    }
+
     public function test_User_Can_View_Their_Own_Task()
     {
         $this->actingAs($this->userOwner);
@@ -170,6 +184,44 @@ class TaskCRUDTest extends TestCase
 
         $this->actingAs($anotherUser);
         $this->assertFalse($this->column->viewableTasks()->contains($this->task), 'User should be able to view their own task');
+    }
+
+    public function test_Can_Create_Task_With_Valid_Tags()
+    {
+        $tag = factory(Tag::class)->create();
+
+        $response = $this->actingAs($this->userOwner)->post(route('tasks.store'), [
+            'column_id' => $this->column->id,
+            'order' . $this->column->id => 1,
+            'text' . $this->column->id => 'test_Cannot_Create_Task_With_Invalid_Tags',
+            'tags' . $this->column->id => [$tag->id]
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('tasks', ['user_id' => $this->userOwner->id, 
+                                        'column_id' => $this->column->id, 
+                                        'text' => 'test_Cannot_Create_Task_With_Invalid_Tags']);
+        $this->assertDatabaseHas('tag_task', ['tag_id' => $tag->id]);
+    }
+
+    public function test_Cannot_Create_Task_With_Invalid_Tags()
+    {
+        $tag = factory(Tag::class)->create();
+
+        $response = $this->actingAs($this->userOwner)->post(route('tasks.store'), [
+            'column_id' => $this->column->id,
+            'order' . $this->column->id => 1,
+            'text' . $this->column->id => 'test_Cannot_Create_Task_With_Invalid_Tags',
+            'tags' . $this->column->id => [$tag->id, $tag->id + 1]
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+        $this->assertDatabaseMissing('tasks', ['user_id' => $this->userOwner->id, 
+                                        'column_id' => $this->column->id, 
+                                        'text' => 'test_Cannot_Create_Task_With_Invalid_Tags']);
+        $this->assertDatabaseMissing('tag_task', ['tag_id' => $tag->id]);
     }
 
     private function fillDatabase()
