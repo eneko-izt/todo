@@ -28,7 +28,7 @@
     "Cancel": "Cancel",
     "Create New Task": "Create New Task",
     "No columns found.": "No columns found.",
-    "All columns": "All columns",
+    "All Columns": "All Columns",
     "Name": "Name",
     "Colour": "Colour",
     "Active": "Active",
@@ -47,7 +47,7 @@
     "Restore this column?": "Restore this column?",
     "Restore": "Restore",
     "Delete permanently?": "Delete permanently?",
-    "All tags": "All tags",
+    "All Tags": "All Tags",
     "Tag": "Tag",
     "Edit this tag": "Edit this tag",
     "Delete this tag": "Delete this tag",
@@ -67,8 +67,19 @@
     "E-Mail": "E-Mail",
     "Language": "Language",
     "Roles": "Roles",
-    
-
-    "+ Task": "+ Task",
-    "Browse": "Browse"
+    "New Column": "New Column",
+    "Edit Column": "Edit Column",
+    "Create": "Create",
+    "You cannot delete this column because it has tasks.": "You cannot delete this column because it has tasks.",
+    "New Tag": "New Tag",
+    "Edit Tag": "Edit Tag",
+    "Browse": "Browse",
+    "You cannot delete this tag because it has tasks.": "You cannot delete this tag because it has tasks.",
+    "An error occurred while creating the task.": "An error occurred while creating the task.",
+    "An error occurred while updating the task.": "An error occurred while updating the task.",
+    "An error occurred while sharing the task.": "An error occurred while sharing the task.",
+    "New User": "New User",
+    "Edit User": "Edit User",
+    "All Users": "All Users",
+    "Edit this user.": "Edit this user."
 }

@@ -42,8 +42,8 @@ class UsersController extends Controller
 
     public function create()
     {
-        $title = 'New user';
-        $button = 'Create';
+        $title = __('New User');
+        $button = __('Create');
         $policy = 'createUser';
         $route = route('users.store');
         $routeMethod = 'POST';
@@ -72,8 +72,8 @@ class UsersController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit user';
-        $button = 'Save';
+        $title = __('Edit User');
+        $button = __('Save');
         $policy = 'editUser';
         $route = route('users.update', $id);
         $routeMethod = 'PATCH';

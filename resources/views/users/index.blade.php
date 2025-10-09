@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">All users</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ __('All Users') }}</h1>
 
     @if (session('error'))
         <p class="text-sm text-red-600 font-medium mb-3">
@@ -39,8 +39,8 @@
                         @can('editUser', App\User::class)
                             <a href="{{ route('users.edit', $user->id) }}"
                                 class="px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-md shadow hover:bg-indigo-700"
-                                title="Edit this user">
-                                Edit
+                                title="{{ __('Edit this user.') }}">
+                                {{ __('Edit') }}
                             </a>
                         @endcan
                     </td>
@@ -65,9 +65,9 @@
             responsive: true,
             language: {
                 paginate: {
-                    emptyTable: "No columns found.",
-                    previous: 'Previous',
-                    next: 'Next'
+                    emptyTable: "{{ __('No columns found.') }}",
+                    previous: "{{ __('Previous') }}",
+                    next: "{{ __('Next') }}"
                 },
                 lengthMenu: "Show _MENU_ entries"
             },

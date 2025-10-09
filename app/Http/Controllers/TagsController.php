@@ -37,8 +37,8 @@ class TagsController extends Controller
 
     public function create()
     {
-        $title = 'New tag';
-        $button = 'Create';
+        $title = __('New Tag');
+        $button = __('Create');
         $policy = 'createTag';
         $route = route('tags.store');
         $routeMethod = 'POST';
@@ -57,8 +57,8 @@ class TagsController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit tag';
-        $button = 'Save';
+        $title = __('Edit Tag');
+        $button = __('Save');
         $policy = 'editTag';
         $route = route('tags.update', $id);
         $routeMethod = 'PATCH';
@@ -81,7 +81,7 @@ class TagsController extends Controller
         $tag = Tag::findOrFail($id);
 
         if ($tag->tasks()->count() > 0) {
-            return redirect(route("tags.index"))->with('error', 'You cannot delete this tag because it has tasks.');
+            return redirect(route("tags.index"))->with('error', __('You cannot delete this tag because it has tasks.'));
         }
 
         $tag->delete();
