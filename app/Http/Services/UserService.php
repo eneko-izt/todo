@@ -33,6 +33,7 @@ class UserService
         $user->name = request('name');
         $user->email = request('email');
         $user->active = request('active') == 'on' ? 1 : 0;
+        $user->language = request('language');
 
         if (request()->has('password')) {
             $user->password = bcrypt(request('password'));

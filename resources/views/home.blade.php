@@ -15,7 +15,7 @@
                 <h2 class="font-bold">{{ $column->name }}</h2>
                 <button class="bg-blue-500 text-white text-sm px-2 py-1 rounded"
                         @click="open = true">
-                    + Task
+                    {{ __('+ Task') }}
                 </button>
             </div>
 
@@ -42,7 +42,7 @@
                     >
                         {{-- Header --}}
                         <div class="flex justify-between items-center border-b px-4 py-2">
-                            <h3 class="text-lg font-bold text-gray-800">New Task</h3>
+                            <h3 class="text-lg font-bold text-gray-800">{{ __('New Task') }}</h3>
                             <button type="button"
                                     class="text-gray-500 hover:text-gray-800"
                                     @click="open = false">
@@ -60,11 +60,11 @@
                             <button type="button"
                                     class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
                                     @click="open = false">
-                                Cancel
+                                {{ __('Cancel') }}
                             </button>
                             <button type="submit"
                                     class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                                Create New Task
+                                {{ __('Create New Task') }}
                             </button>
                         </div>
                     </div>
@@ -74,6 +74,6 @@
         </div>
 
     @empty
-        <p>No columns found.</p>
+        <p>{{ __('No columns found.') }}</p>
     @endforelse
 @endsection

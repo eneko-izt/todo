@@ -19,9 +19,11 @@ class LanguageTest extends TestCase
         $userEu = factory(\App\User::class)->create(['language' => 'eu']);
 
         $this->actingAs($userEn)->get(route('home'));
+        $loginText = __("I love programming.");
         $this->assertEquals(__('auth.failed'), 'These credentials do not match our records.');
 
         $this->actingAs($userEu)->get(route('home'));
+        $loginText = __("I love programming.");
         $this->assertEquals(__('auth.failed'), 'Kredentzial hauek ez datoz bat gure erregistroekin.');
     }
 }

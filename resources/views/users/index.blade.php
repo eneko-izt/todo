@@ -15,6 +15,7 @@
             <tr>
                 <th class="px-4 py-2 font-semibold w-1/5">Name</th>
                 <th class="px-4 py-2 font-semibold w-1/5">Email</th>
+                <th class="px-4 py-2 font-semibold w-1/5">Language</th>
                 <th class="px-4 py-2 font-semibold w-1/10">Active</th>
                 <th class="px-4 py-2 font-semibold w-1/5">Roles</th>
                 <th class="px-4 py-2 font-semibold w-1/10 text-right">Actions</th>
@@ -25,6 +26,7 @@
                 <tr>
                     <td class="px-4 py-2">{{ $user->name }}</td>
                     <td class="px-4 py-2">{{ $user->email }}</td>
+                    <td class="px-4 py-2">{{ $user->language }}</td>
                     <td class="px-4 py-2">{{ $user->active ? 'Yes' : 'No' }}</td>
                     <td class="px-4 py-2">
                         @forelse ($user->roles as $role)

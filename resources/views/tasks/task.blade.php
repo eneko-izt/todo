@@ -4,7 +4,7 @@
                 shareOpen: false }">
 
      <div class="p-3">
-        <p class="font-medium mb-2">{{ $task->id }}: {{ $task->text }}</p>
+        <p class="font-medium mb-2">{{ $task->text }}</p>
         <div class="flex flex-wrap gap-2 mb-2">
             @foreach ($task->tags()->active()->get() as $tag)
                 <span class="bg-gray-200 px-2 py-1 rounded text-xs">{{ $tag->getUpperName() }}</span>
@@ -14,7 +14,7 @@
         <!-- Assigned Users -->
         <div class="flex flex-col mb-2">
             @if (auth()->check() && auth()->user()->can('shareTask', $task))
-                <h3 class="text-xs font-semibold mb-1">Assigned Users</h3>
+                <h3 class="text-xs font-semibold mb-1">{{ __('Sharing Users') }}</h3>
                 <div class="flex flex-wrap gap-1">
                     @foreach ($task->sharingUsers()->active()->get() as $user)
                         <div class="flex items-center gap-1 bg-gray-100 px-1 py-0 rounded shadow-sm">
@@ -28,7 +28,7 @@
                                 @method('PATCH')
                                 <button type="submit" title="Remove user"
                                     class="w-4 h-4 flex items-center justify-center text-xs text-red-600 hover:text-red-800 rounded-full bg-gray-200 hover:bg-gray-300"
-                                    onclick="return confirm('Are you sure you want to unshare this task?')">
+                                    onclick="return confirm('{{ __(`Are you sure you want to unshare this task?`) }}')">
                                     &minus;
                                 </button>
                             </form>
@@ -74,7 +74,7 @@
                     @method('POST')
                     <input type="file" name="file{{ $task->id }}" required class="border px-2 py-1 rounded text-xs">
                     <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">
-                        Upload
+                        {{ __('Upload') }}
                     </button>
                 </form>
             @endif
@@ -86,7 +86,7 @@
                  <button type="button" 
                         class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
                         @click="open = true">
-                    Edit
+                    {{ __('Edit') }}
                 </button>
             @endif
 
@@ -94,7 +94,7 @@
                 <button type="button"
                         class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
                         @click="shareOpen = !shareOpen">
-                    Share
+                    {{ __('Share') }}
                 </button>
             @endif
 
@@ -103,9 +103,9 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
-                        title="Remove this task"
-                        onclick="return confirm('Are you sure you want to remove this task?')">
-                        Delete
+                        title="{{ __('Delete this task') }}"
+                        onclick="return confirm('{{ __(`Are you sure you want to delete this task?`) }}')">
+                        {{ __('Delete') }}
                     </button>
                 </form>
             @endif
@@ -124,8 +124,8 @@
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600" title="Share task with user">
-                        Save
+                    <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">
+                        {{ __('Save') }}
                     </button>
                 </form>
             @endif
@@ -150,7 +150,7 @@
                     
                     <!-- Header -->
                     <div class="flex justify-between items-center border-b px-4 py-2">
-                        <h3 class="text-lg font-bold text-gray-800">Edit Task</h3>
+                        <h3 class="text-lg font-bold text-gray-800">{{ __('Edit Task') }}</h3>
                         <button type="button" class="text-gray-500 hover:text-gray-800" @click="open = false">&times;</button>
                     </div>
 

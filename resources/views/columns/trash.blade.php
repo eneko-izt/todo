@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Columns Trash</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ __('Columns Trash') }}</h1>
 
     @if (session('error'))
         <p class="text-sm text-red-600 font-medium mb-3">
@@ -13,10 +13,10 @@
     <table id="myTable" class="min-w-full text-sm" role="grid">
         <thead class="bg-gray-100 text-left text-gray-700">
             <tr>
-                <th class="px-4 py-2 font-semibold">Column</th>
-                <th class="px-4 py-2 font-semibold">Colour</th>
-                <th class="px-4 py-2 font-semibold">Active</th>
-                <th class="px-4 py-2 font-semibold text-right">Actions</th>
+                <th class="px-4 py-2 font-semibold">{{ __('Column') }}</th>
+                <th class="px-4 py-2 font-semibold">{{ __('Colour') }}</th>
+                <th class="px-4 py-2 font-semibold">{{ __('Active') }}</th>
+                <th class="px-4 py-2 font-semibold text-right">{{ __('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -29,27 +29,27 @@
                             {{ $column->colour }}
                         </span>
                     </td>
-                    <td class="px-4 py-2">{{ $column->active ? 'Yes' : 'No' }}</td>
+                    <td class="px-4 py-2">{{ $column->active ? __('Yes') : __('No') }}</td>
                     <td class="px-4 py-2 flex space-x-2 justify-end">
                         @if(auth()->user()->can('deleteColumn', App\Column::class))
                             <div class="flex space-x-2">
                                 <form action="{{ route('columns.restore', $column->id) }}" method="POST"
-                                    onsubmit="return confirm('Restore this column?')">
+                                    onsubmit="return confirm('{{ __(`Restore this column?`) }}')">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit"
                                             class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-md shadow hover:bg-green-700">
-                                        Restore
+                                        {{ __('Restore') }}
                                     </button>
                                 </form>
 
                                 <form action="{{ route('columns.destroy', $column->id) }}" method="POST"
-                                    onsubmit="return confirm('Delete permanently?')">
+                                    onsubmit="return confirm('{{ __(`Delete permanently?`) }}')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
                                             class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700">
-                                        Delete
+                                        {{ __('Delete') }}
                                     </button>
                                 </form>
                             </div>
@@ -79,8 +79,11 @@
                 autoWidth: false,
                 responsive: true,
                 language: {
-                    emptyTable: "No columns found.",
-                    paginate: { previous: 'Previous', next: 'Next' },
+                    paginate: {
+                        emptyTable: "{{ __('No columns found.') }}",
+                        previous: "{{ __('Previous') }}",
+                        next: "{{ __('Next') }}"
+                    },
                     lengthMenu: "Show _MENU_ entries"
                 },
                 dom: '<"flex justify-between items-center mb-2"<"flex items-center space-x-2"l><"ml-auto"f>>t<"flex justify-between items-center mt-2"ip>'
