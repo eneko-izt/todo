@@ -1,50 +1,79 @@
 @extends('layouts.app')
 
 @section('content')
+    @forelse ($columns as $column)
 
-    <h3>{{ Date('Y-m-d') }}</h3>
-    <a href="{{ route('welcome') }}" class="btn btn-primary" title="Go to Welcome page">Home</a>
-    <a href="{{ route('home') }}" class="btn btn-primary" title="Go to Dashboard">Go to Dashboard</a>
-    @can('viewColumn', 'App\Column')
-        <a href="{{ route('columns.index') }}" class="btn btn-primary" title="Go to Columns page">Columns</a>
-    @endcan
-    @can('viewTag', 'App\Tag')
-        <a href="{{ route('tags.index') }}" class="btn btn-primary" title="Go to Tags page">Tags</a>
-    @endcan
-    @can('viewUser', 'App\User')
-        <a href="{{ route('users.index') }}" class="btn btn-primary" title="Go to Users page">Users</a>
-    @endcan
-    <div id="new-task-accordion" class="d-lg-flex justify-content-between w-100 mt-5">
-        @forelse ($columns as $column)
-            <div class="p-2 text-white @if (!$loop->first) ml-lg-2 @endif"
-                style="min-width: {{ 100 / $columns->count() }}%; min-height: 150px; background-color: {{ $column->colour }};">
-                {{ $column->name }}
+        {{-- Alpine component per column --}}
+        <div class="w-80 rounded-xl p-4" 
+             style="background-color: {{ $column->colour }};"
+             x-data="{ 
+                 open: {{ (old('column_id') == $column->id || session('open_modal') == $column->id) ? 'true' : 'false' }} 
+             }">
 
-                @foreach ($column->viewableTasks() as $task)
-                    @include('tasks.task', ['task' => $task])
-                @endforeach
-
-                <button class="btn btn-primary" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#new-content-{{ $column->id }}"
-                        aria-expanded="false"
-                        id="new-btn-{{ $column->id }}">
-                    New Task
+            {{-- Column header --}}
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-bold">{{ $column->name }}</h2>
+                <button class="bg-blue-500 text-white text-sm px-2 py-1 rounded"
+                        @click="open = true">
+                    + Task
                 </button>
-
-                <div id="new-content-{{ $column->id }}" class="collapse" data-bs-parent="#new-task-accordion">
-                    @include('tasks.new', ['column' => $column])
-                </div>
-
             </div>
 
-        @empty
-            <p>No columns found.</p>
-        @endforelse
-    </div>
+            {{-- Tasks --}}
+            @foreach ($column->viewableTasks() as $task)
+                @include('tasks.task', ['task' => $task])
+            @endforeach
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            {{-- Modal form --}}
+            <form action="{{ route('tasks.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="column_id" value="{{ $column->id }}">
 
+                {{-- Modal overlay --}}
+                <div x-show="open"
+                     x-transition.opacity
+                     x-cloak
+                     @click.self="open = false"
+                     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    
+                    {{-- Modal card --}}
+                    <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-2 border border-gray-200"
+                         style="background-color: {{ $column->colour }};"
+                    >
+                        {{-- Header --}}
+                        <div class="flex justify-between items-center border-b px-4 py-2">
+                            <h3 class="text-lg font-bold text-gray-800">New Task</h3>
+                            <button type="button"
+                                    class="text-gray-500 hover:text-gray-800"
+                                    @click="open = false">
+                                &times;
+                            </button>
+                        </div>
 
+                        {{-- Body --}}
+                        <div class="px-4 py-4">
+                            @include('tasks.new', ['column' => $column])
+                        </div>
+
+                        {{-- Footer --}}
+                        <div class="flex justify-end gap-2 border-t px-4 py-2">
+                            <button type="button"
+                                    class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
+                                    @click="open = false">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                                Create New Task
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    @empty
+        <p>No columns found.</p>
+    @endforelse
 @endsection

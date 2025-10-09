@@ -1,113 +1,97 @@
 @extends('layouts.app')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('users.index') }}" alt="Users">Users</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
-@endsection
-
 @section('content')
-    <h1 class="title">{{ $title }}</h1>
+<div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ $title }}</h1>
 
-    <form action="{{ $route }}" method="POST">
+    <form action="{{ $route }}" method="POST" class="space-y-6 bg-white shadow-md rounded-lg p-6">
         @csrf
         @method($routeMethod)
 
-        <div class="field">
-            <label class="label" for="name">Name</label>
-            <div class="control">
-                <input class="input @error('name') help is-danger @enderror" type="text"
-                    name="name" id="name" value="{{ old('name', $user->name ?? '') }}"
-                    maxlength="255" style="@error('name') color:#d8000c @enderror" required>
-
-                @error('name')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('name') }}</p>
-                @enderror
-            </div>
+        <!-- Name -->
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input type="text" name="name" id="name"
+                   value="{{ old('name', $user->name ?? '') }}"
+                   maxlength="255" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('name') border-red-500 text-red-600 @enderror">
+            @error('name')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="field">
-            <label class="label" for="email">Email</label>
-            <div class="control">
-                <input class="input @error('email') is-danger @enderror" type="email" name="email"
-                    id="email" value="{{ old('email', $user->email ?? '') }}" maxlength="255"
-                    style="@error('email') color:#d8000c @enderror" required>
-
-                @error('email')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('email') }}</p>
-                @enderror
-            </div>
+        <!-- Email -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="email" id="email"
+                   value="{{ old('email', $user->email ?? '') }}"
+                   maxlength="255" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('email') border-red-500 text-red-600 @enderror">
+            @error('email')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="field">
-            <label class="label" for="password">Password</label>
-            <div class="control">
-                <input class="input @error('password') is-danger @enderror" type="password"
-                    name="password" id="password" value="" maxlength="255"
-                    style="@error('password') color:#d8000c @enderror"
-                    @if ($routeMethod == 'POST') required @endif>
-
-                @error('password')
-                    <p class="help is-danger" style="color:#d8000c">{{ $errors->first('password') }}</p>
-                @enderror
-            </div>
+        <!-- Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" name="password" id="password"
+                   maxlength="255" @if ($routeMethod == 'POST') required @endif
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('password') border-red-500 text-red-600 @enderror">
+            @error('password')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="field">
-            <label class="label" for="password_confirmation">Password confirmation</label>
-            <div class="control">
-                <input class="input @error('password_confirmation') is-danger @enderror" type="password"
-                    name="password_confirmation" id="password_confirmation" value=""
-                    maxlength="255" style="@error('password_confirmation') color:#d8000c @enderror">
-
-                @error('password_confirmation')
-                    <p class="help is-danger" style="color:#d8000c">
-                        {{ $errors->first('password_confirmation') }}</p>
-                @enderror
-            </div>
+        <!-- Password Confirmation -->
+        <div>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Password Confirmation</label>
+            <input type="password" name="password_confirmation" id="password_confirmation"
+                   maxlength="255"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('password_confirmation') border-red-500 text-red-600 @enderror">
+            @error('password_confirmation')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="field">
-            <div class="control">
-                <input type="checkbox" name="active"
-                    @if (old('active') == 'on' && !$user->exists) checked
-                    @elseif (old('active') == null && !$user->exists && $errors->isEmpty())
-                        checked
-                    @elseif (old('active') == 'on' && $user->exists)
-                        checked
-                    @elseif ($user->exists && $user->active && old('active') == null && $errors->isEmpty())
-                        checked
-                    @elseif ($user->exists && old('active') == 'on')
-                        checked @endif>
-                <label class="label" for="active">Active</label>
-            </div>
+        <!-- Active -->
+        <div class="flex items-center">
+            <input type="checkbox" name="active" id="active"
+                   class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                   @if (old('active') == 'on' && !$user->exists) checked
+                   @elseif (old('active') == null && !$user->exists && $errors->isEmpty()) checked
+                   @elseif (old('active') == 'on' && $user->exists) checked
+                   @elseif ($user->exists && $user->active && old('active') == null && $errors->isEmpty()) checked
+                   @elseif ($user->exists && old('active') == 'on') checked @endif>
+            <label for="active" class="ml-2 text-sm text-gray-700">Active</label>
         </div>
 
-        <div class="field">
-            <label for="input">Roles:</label>
-            <div class="control">
-                <select class="form-control select2" name="roles[]" id="roles[]" style="width: 100%;"
-                    multiple>
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->id }}" @if (in_array($role->id, old('roles', [])) || ($errors->isEmpty() && $user->hasRoleId($role->id))) selected @endif>
-                            {{ $role->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('roles')
-                    <p class="help is-danger" style="color:#d8000c">
-                        {{ $errors->first('roles') }}</p>
-                @enderror
-            </div>
+        <!-- Roles -->
+        <div>
+            <label for="roles" class="block text-sm font-medium text-gray-700 mb-1">Roles</label>
+            <select name="roles[]" id="roles" multiple
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('roles') border-red-500 text-red-600 @enderror">
+                @foreach ($roles as $role)
+                    <option value="{{ $role->id }}"
+                        @if (in_array($role->id, old('roles', [])) || ($errors->isEmpty() && $user->hasRoleId($role->id))) selected @endif>
+                        {{ $role->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('roles')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="field is-grouped">
-            <div class="control">
-                @if (auth()->user()->can($policy, App\User::class))
-                    <button class="btn btn-primary is-link" type="submit"
-                        title={{ $button }}>{{ $button }}</button>
-                @endif
-            </div>
+        <!-- Submit -->
+        <div>
+            @if (auth()->user()->can($policy, App\User::class))
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {{ $button }}
+                </button>
+            @endif
         </div>
-
     </form>
+</div>
 @endsection
