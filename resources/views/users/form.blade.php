@@ -37,8 +37,9 @@
             <label for="language" class="block text-sm font-medium text-gray-700">{{ __('Language') }}</label>
             <select name="language" id="language"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('language') border-red-500 text-red-600 @enderror">
-                <option value="en" @if (old('language', $user->language ?? '') == 'en') selected @endif>English</option>
-                <option value="eu" @if (old('language', $user->language ?? '') == 'eu') selected @endif>Euskera</option>
+                @foreach ($languages as $code => $name)
+                    <option value="{{ $code }}" @if (old('language', $user->language ?? '') == $code) selected @endif>{{ $name }}</option>
+                @endforeach
             </select>
             @error('language')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

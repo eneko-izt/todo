@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
+use App\Classes\Languages;
 use App\Http\Services\UserService;
 
 use Illuminate\Support\Facades\Validator;
@@ -49,8 +50,9 @@ class UsersController extends Controller
         $routeMethod = 'POST';
         $user = new User();
         $roles = Role::all();
+        $languages = Languages::getAll();
 
-        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles'));
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles', 'languages'));
     }
 
     public function store()
@@ -79,8 +81,9 @@ class UsersController extends Controller
         $routeMethod = 'PATCH';
         $user = User::findOrFail($id);
         $roles = Role::all();
+        $languages = Languages::getAll();
 
-        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles'));
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles', 'languages'));
     }
 
     public function update($id)
