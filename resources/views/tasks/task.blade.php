@@ -69,11 +69,37 @@
                 </div>
 
                 <!-- Upload Form -->
-                <form action="{{ route('tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col space-y-2">
+                <form action="{{ route('tasks.upload', $task->id) }}" 
+                    method="POST" 
+                    enctype="multipart/form-data"
+                    x-data="{ filename: '' }"
+                    class="flex flex-col space-y-2">
                     @csrf
-                    @method('POST')
-                    <input type="file" name="file{{ $task->id }}" required class="border px-2 py-1 rounded text-xs">
-                    <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">
+
+                    <!-- Hidden real input -->
+                    <input type="file"
+                        id="file{{ $task->id }}"
+                        name="file{{ $task->id }}"
+                        class="hidden"
+                        required
+                        @change="filename = $event.target.files.length ? $event.target.files[0].name : ''">
+
+                    <!-- Custom choose button -->
+                    <label for="file{{ $task->id }}"
+                        class="bg-gray-200 px-3 py-1 rounded text-sm hover:bg-gray-300 cursor-pointer inline-block text-center">
+                        {{ __('Choose File') }}
+                    </label>
+
+                    <!-- Show selected filename -->
+                    <template x-if="filename">
+                        <span class="text-xs text-gray-600">
+                            {{ __('Selected:') }} <span x-text="filename"></span>
+                        </span>
+                    </template>
+
+                    <!-- Upload button -->
+                    <button type="submit"
+                            class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600">
                         {{ __('Upload') }}
                     </button>
                 </form>
@@ -165,11 +191,11 @@
                         <button type="button" 
                                 class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
                                 @click="open = false">
-                            Cancel
+                            {{ __('Cancel') }}
                         </button>
                         <button type="submit" 
                                 class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                            Update Task
+                            {{ __('Update Task') }}
                         </button>
                     </div>
 
