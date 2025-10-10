@@ -26,9 +26,10 @@
                             <form action="{{ route('tasks.unshare', [$task->id, $user->id]) }}" method="POST" class="inline-block ml-1">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" title="Remove user"
+                                <button type="submit" 
+                                    title="{{ __('Remove user') }}"
                                     class="w-4 h-4 flex items-center justify-center text-xs text-red-600 hover:text-red-800 rounded-full bg-gray-200 hover:bg-gray-300"
-                                    onclick="return confirm('{{ __(`Are you sure you want to unshare this task?`) }}')">
+                                    onclick="return confirm({{ json_encode(__('Are you sure you want to unshare this task?')) }})">
                                     &minus;
                                 </button>
                             </form>
@@ -130,7 +131,7 @@
                     @method('DELETE')
                     <button type="submit" class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
                         title="{{ __('Delete this task') }}"
-                        onclick="return confirm('{{ __(`Are you sure you want to delete this task?`) }}')">
+                        onclick="return confirm({{ json_encode(__('Are you sure you want to delete this task?')) }})">
                         {{ __('Delete') }}
                     </button>
                 </form>

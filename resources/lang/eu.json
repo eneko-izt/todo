@@ -92,5 +92,6 @@
     "You have been granted access to task :task_text.": "Ataza honetara sarbidea eman zaizu: :task_text.",
     "Thanks,": "Eskerrik asko,",
     "+ Task": "+ Ataza",
-    "Update Task": "Eguneratu Ataza"
+    "Update Task": "Eguneratu Ataza",
+    "Task Shared": "Ataza Partekatua"
 }
