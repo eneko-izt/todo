@@ -6,6 +6,8 @@ use App\Task;
 use App\User;
 use App\Column;
 use App\File;
+use App\Classes\Languages;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@izt.eus',
             'email_verified_at' => now(),
             'password' => bcrypt('pasahitza'),
-            'language' => 'eu',
+            'language' => array_rand(Languages::getAll()),
             'remember_token' => ''
         ]);
 
