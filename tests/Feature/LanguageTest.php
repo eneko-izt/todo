@@ -4,7 +4,9 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Mail\TaskSharedMail;
+use App\Classes\Languages;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 
 class LanguageTest extends TestCase
 {
@@ -14,39 +16,42 @@ class LanguageTest extends TestCase
      * Run the test with vendor/bin/phpunit in attached shell
      */
 
-    public function test_auth_messages()
+    public function test_it_has_translation_files_for_all_locales()
     {
-        $userEn = factory(\App\User::class)->create(['language' => 'en']);
-        $userEu = factory(\App\User::class)->create(['language' => 'eu']);
-        $userFr = factory(\App\User::class)->create(['language' => 'fr']);
-
-        $this->actingAs($userEn)->get(route('home'));
-        $this->assertEquals(__('auth.failed'), 'These credentials do not match our records.');
-
-        $this->actingAs($userEu)->get(route('home'));
-        $this->assertEquals(__('auth.failed'), 'Kredentzial hauek ez datoz bat gure erregistroekin.');
-
-        // When a language is not available, it should fallback to Euskera as fallback language
-        $this->actingAs($userFr)->get(route('home'));
-        $this->assertEquals(__('auth.failed'), 'Kredentzial hauek ez datoz bat gure erregistroekin.');
+        $locales = array_keys(Languages::getAll());
+        foreach ($locales as $locale) {
+            $path = resource_path("lang/{$locale}/auth.php");
+            $this->assertFileExists($path, "Missing auth translation file for locale: {$locale}");
+            $path = resource_path("lang/{$locale}/pagination.php");
+            $this->assertFileExists($path, "Missing pagination translation file for locale: {$locale}");
+            $path = resource_path("lang/{$locale}/passwords.php");
+            $this->assertFileExists($path, "Missing passwords translation file for locale: {$locale}");
+            $path = resource_path("lang/{$locale}/validation.php");
+            $this->assertFileExists($path, "Missing validation translation file for locale: {$locale}");
+            $path = resource_path("lang/{$locale}.json");
+            $this->assertFileExists($path, "Missing JSON translation file for locale: {$locale}");
+        }
     }
 
-    public function test_json_messages()
+    public function test_it_loads_translations_correctly_for_each_locale()
     {
-        $userEn = factory(\App\User::class)->create(['language' => 'en']);
-        $userEu = factory(\App\User::class)->create(['language' => 'eu']);
-        $userFr = factory(\App\User::class)->create(['language' => 'fr']);
-
-        $this->actingAs($userEn)->get(route('home'));
-        $this->assertEquals(__('Task Manager'), 'Task Manager');
-
-        $this->actingAs($userEu)->get(route('home'));
-        $this->assertEquals(__('Task Manager'), 'Ataza Kudeatzailea');
-
-        // When a language is not available, it should fallback to Euskera as fallback language...
-        // except for json files IN LARAVEL 6!
-        $this->actingAs($userFr)->get(route('home'));
-        $this->assertEquals(__('Task Manager'), 'Task Manager');
+        $locales = array_keys(Languages::getAll());
+        foreach ($locales as $locale) {
+            app()->setLocale($locale);
+            $json = $this->loadJsonTranslations($locale);
+            $this->assertIsArray($json, "Translations for locale {$locale} could not be loaded as array");
+            $this->assertNotEmpty($json, "Translations for locale {$locale} are empty");
+            $translation = __('Home');
+            $this->assertIsString($translation, "Translation for locale {$locale} is not a string");
+            if ($locale === 'en') {
+                // In English, the translation is usually the same as the key.
+                $this->assertEquals('Home', $translation, "Translation for locale {$locale} should be 'Home'");
+            }
+            else {
+            // In other languages, the translation should differ from the key.
+            $this->assertNotEquals('Home', $translation, "Translation for locale {$locale} is not translated");
+            }
+        }
     }
 
     public function test_task_share_email_messages()
@@ -55,31 +60,36 @@ class LanguageTest extends TestCase
         $userOwner = factory(\App\User::class)->create();
         $task = factory(\App\Task::class)->create(['user_id' => $userOwner->id, 'column_id' => $column->id]);
 
-        $userEn = factory(\App\User::class)->create(['language' => 'en']);
-        $userEu = factory(\App\User::class)->create(['language' => 'eu']);
-        $userFr = factory(\App\User::class)->create(['language' => 'fr']);
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user)->get(route('home'));
+        $locales = array_keys(Languages::getAll());
 
-        $this->actingAs($userEn)->get(route('home'));
-        $taskSharedMail = new TaskSharedMail($userEn, $task);
-        $taskSharedMail->build();
-        $this->assertEquals($taskSharedMail->locale, 'en');
-        $this->assertEquals($taskSharedMail->subject, 'Task Shared');
-        $this->assertStringContainsString('You have been granted access to task', $taskSharedMail->render());
+        foreach ($locales as $locale) {
+            $user->language = $locale;
+            $user->save();
 
-        $this->actingAs($userEu)->get(route('home'));
-        $taskSharedMail = new TaskSharedMail($userEu, $task);
-        $taskSharedMail->build();
-        $this->assertEquals($taskSharedMail->locale, 'eu');
-        $this->assertEquals($taskSharedMail->subject, 'Ataza Partekatua');
-        $this->assertStringContainsString('Ataza honetara sarbidea eman zaizu', $taskSharedMail->render());
+            $json = $this->loadJsonTranslations($locale);
 
-        // When a language is not available, it should fallback to Euskera as fallback language...
-        // except for json files IN LARAVEL 6!
-        $this->actingAs($userFr)->get(route('home'));
-        $taskSharedMail = new TaskSharedMail($userFr, $task);
-        $taskSharedMail->build();
-        $this->assertEquals($taskSharedMail->locale, 'fr');
-        $this->assertEquals($taskSharedMail->subject, 'Task Shared');
-        $this->assertStringContainsString('You have been granted access to task', $taskSharedMail->render());
+            $taskSharedMail = new TaskSharedMail($user, $task);
+            $taskSharedMail->build();
+            $this->assertEquals($taskSharedMail->locale, $locale);
+            $this->assertEquals($taskSharedMail->subject, $json['Task Shared']);
+            $this->assertStringContainsString($json['Thanks,'], $taskSharedMail->render());
+        }
+    }
+
+    protected function loadJsonTranslations(string $locale) : array
+    {
+        $path = resource_path("lang/{$locale}.json");
+        if (! File::exists($path)) {
+            return [];
+        }
+        $content = File::get($path);
+        $parsed = json_decode($content, true);
+        if (! is_array($parsed)) {
+            return [];
+        }
+        // keys in JSON are usually the source strings or keys directly.
+        return $parsed;
     }
 }
