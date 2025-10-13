@@ -406,4 +406,40 @@ class CacheServiceTest extends TestCase
         $this->assertEquals(1, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->count());
         $this->assertContains($task->id, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
     }
+
+    public function test_tasks_cache_refresh_after_column_id_update_with_sharing_user()
+    {
+        $cacheService = new CacheService();
+
+        $column = factory(Column::class)->create();
+        $anotherColumn = factory(Column::class)->create();
+        $userOwner = factory(User::class)->create();
+        $anotherUser = factory(User::class)->create();
+        $task = factory(Task::class)->create(['column_id' => $column->id, 'user_id' => $userOwner->id, 'text' => 'Initial text']);
+        $task->sharingUsers()->attach($anotherUser->id);
+
+        $cacheService->userViewableTasks($userOwner, $column);
+        $cacheService->userViewableTasks($anotherUser, $column);
+
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+
+        $this->assertEquals(1, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->pluck('id'));
+
+        $task->update(['column_id' => $anotherColumn->id]);
+        $cacheService->userViewableTasks($userOwner, $column);
+        $cacheService->userViewableTasks($anotherUser, $column);
+        $cacheService->userViewableTasks($userOwner, $anotherColumn);
+        $cacheService->userViewableTasks($anotherUser, $anotherColumn);
+
+        $this->assertEquals(0, Cache::get("user_{$userOwner->id}_column_{$column->id}_viewable_tasks")->count());
+        $this->assertEquals(0, Cache::get("user_{$anotherUser->id}_column_{$column->id}_viewable_tasks")->count());
+
+        $this->assertEquals(1, Cache::get("user_{$userOwner->id}_column_{$anotherColumn->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$userOwner->id}_column_{$anotherColumn->id}_viewable_tasks")->pluck('id'));
+
+        $this->assertEquals(1, Cache::get("user_{$anotherUser->id}_column_{$anotherColumn->id}_viewable_tasks")->count());
+        $this->assertContains($task->id, Cache::get("user_{$anotherUser->id}_column_{$anotherColumn->id}_viewable_tasks")->pluck('id'));
+    }
 }
