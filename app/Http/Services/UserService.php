@@ -3,29 +3,42 @@
 namespace App\Http\Services;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserService
 {
     public function validateUser($id = null)
     {
-        // default validation rules
-        $nameValidations = ['required', 'max:255'];
-        $emailValidations = ['required', 'email', 'max:255'];
+        // Build the validation rules dynamically
+        $rules = [
+            'name' => ['required', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                $id
+                    ? Rule::unique('users')->ignore($id)
+                    : 'unique:users',
+            ],
+            'password' => ['max:255', 'confirmed'],
+            'roles' => ['exists:roles,id'],
+        ];
 
-        // if an ID is provided, email must be unique but for that user
-        // otherwise, unique email validation is applied
-        $extraEmailValidation = $id ? \Illuminate\Validation\Rule::unique('users')->ignore($id) : 'unique:users';
-        array_push($emailValidations, $extraEmailValidation);
+        // If we're creating a new user, password is required
+        if (!$id) {
+            $rules['password'][] = 'required';
+        }
 
-        // request()->merge([
-        //     'roles' => ['3']
-        // ]);
-        return request()->validate([
-            'name' => $nameValidations,
-            'email' => $emailValidations,
-            'password' => ['confirmed', 'max:255'],
-            'roles' => ['exists:roles,id']
-        ]);
+        // Make the validator instance
+        $validator = Validator::make(request()->all(), $rules);
+
+        // Validate or throw
+        if ($validator->fails()) {
+            // Automatically throws a ValidationException like request()->validate()
+            throw new \Illuminate\Validation\ValidationException($validator);
+        }
+
+        return $validator->validated();
     }
 
     public function fillUser($user)
@@ -34,7 +47,7 @@ class UserService
         $user->email = request('email');
         $user->active = request('active') == 'on' ? 1 : 0;
 
-        if (request()->has('password')) {
+        if (request()->filled('password')) {
             $user->password = bcrypt(request('password'));
         }
 

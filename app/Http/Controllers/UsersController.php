@@ -57,7 +57,7 @@ class UsersController extends Controller
     {
         $this->userService->validateUser();
 
-        $user = new \App\User();
+        $user = new User();
         $user = $this->userService->fillUser($user);
         $user->save();
 
