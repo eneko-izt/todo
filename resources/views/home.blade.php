@@ -1,79 +1,86 @@
 @extends('layouts.app')
 
 @section('content')
-    @forelse ($columns as $column)
 
-        {{-- Alpine component per column --}}
-        <div class="w-80 rounded-xl p-4" 
-             style="background-color: {{ $column->colour }};"
-             x-data="{ 
-                 open: {{ (old('column_id') == $column->id || session('open_modal') == $column->id) ? 'true' : 'false' }} 
-             }">
+    <div x-data="taskModal()" 
+        x-init="
+            @if (old('column_id') || session('open_modal'))
+                openNewTask(
+                    {{ session('open_modal') }},
+                    @json(session('modal_column_colour'))
+                );
+            @endif
+        "
+        x-cloak>
+        <div class="flex gap-4 overflow-x-auto px-4">
 
-            {{-- Column header --}}
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-bold">{{ $column->name }}</h2>
-                <button class="bg-blue-500 text-white text-sm px-2 py-1 rounded"
-                        @click="open = true">
-                    + Task
-                </button>
-            </div>
+            @forelse ($columns as $column)
 
-            {{-- Tasks --}}
-            @foreach ($column->viewableTasks() as $task)
-                @include('tasks.task', ['task' => $task])
-            @endforeach
+                {{-- Alpine component per column --}}
+                <div class="w-80 rounded-xl p-4" 
+                    style="background-color: {{ $column->colour }};">
 
-            {{-- Modal form --}}
-            <form action="{{ route('tasks.store') }}" method="POST">
-                @csrf
-                <input type="hidden" name="column_id" value="{{ $column->id }}">
-
-                {{-- Modal overlay --}}
-                <div x-show="open"
-                     x-transition.opacity
-                     x-cloak
-                     @click.self="open = false"
-                     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    
-                    {{-- Modal card --}}
-                    <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-2 border border-gray-200"
-                         style="background-color: {{ $column->colour }};"
-                    >
-                        {{-- Header --}}
-                        <div class="flex justify-between items-center border-b px-4 py-2">
-                            <h3 class="text-lg font-bold text-gray-800">New Task</h3>
-                            <button type="button"
-                                    class="text-gray-500 hover:text-gray-800"
-                                    @click="open = false">
-                                &times;
-                            </button>
-                        </div>
-
-                        {{-- Body --}}
-                        <div class="px-4 py-4">
-                            @include('tasks.new', ['column' => $column])
-                        </div>
-
-                        {{-- Footer --}}
-                        <div class="flex justify-end gap-2 border-t px-4 py-2">
-                            <button type="button"
-                                    class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
-                                    @click="open = false">
-                                Cancel
-                            </button>
-                            <button type="submit"
-                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                                Create New Task
-                            </button>
-                        </div>
+                    {{-- Column header --}}
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="font-bold">{{ $column->name }}</h2>
+                        <button class="bg-blue-500 text-white text-sm px-2 py-1 rounded"
+                                @click="openNewTask({{ $column->id }}, '{{ $column->colour }}')">
+                            + Task
+                        </button>
                     </div>
-                </div>
-            </form>
 
+                    {{-- Tasks --}}
+                    @foreach ($column->viewableTasks() as $task)
+                        @include('tasks.task', ['task' => $task])
+                    @endforeach
+
+                </div>
+
+            @empty
+                <p>No columns found.</p>
+            @endforelse
+        
         </div>
 
-    @empty
-        <p>No columns found.</p>
-    @endforelse
+        @include('tasks.modal') <!-- shared modal here -->
+
+    </div>
+
+    <script>
+        function taskModal() {
+            return {
+                open: false,
+                isEditing: false,
+                taskId: null,
+                columnId: null,
+                columnName: '',
+                columnColour: '',
+                taskText: '',
+                taskOrder: '',
+                taskTags: [],
+
+                openNewTask(columnId, columnColour) {
+                    this.isEditing = false;
+                    this.taskId = null;
+                    this.columnId = columnId;
+                    this.columnColour = columnColour;
+                    this.taskText = '';
+                    this.taskOrder = '';
+                    this.taskTags = [];
+                    this.open = true;
+                },
+
+                openEditTask(task) {
+                    this.isEditing = true;
+                    this.taskId = task.id;
+                    this.columnId = task.column_id;
+                    this.columnColour = task.column_colour;
+                    this.taskText = task.text;
+                    this.taskOrder = task.order;
+                    this.taskTags = task.tags;
+                    this.open = true;
+                }
+            }
+        }
+    </script>
 @endsection

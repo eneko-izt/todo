@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\User;
+use App\Column;
 use Exception;
 
 use App\Mail\TaskSharedMail;
@@ -48,8 +49,8 @@ class TasksController extends Controller
             $attributes['active'] = 1;
             $attributes['user_id'] = auth()->id();
             $attributes['column_id'] = request('column_id');
-            $attributes['order'] = request('order' . $attributes['column_id'], 0);
-            $attributes['text'] = request('text' . $attributes['column_id']);
+            $attributes['order'] = request('order', 0);
+            $attributes['text'] = request('text');
 
             DB::beginTransaction();
 
@@ -63,16 +64,20 @@ class TasksController extends Controller
             return redirect(route("home"));
 
         } catch (ValidationException $e) {
+            $column = Column::find(request('column_id'));
             return redirect()->back()
                 ->withErrors($e->validator)
                 ->withInput()
-                ->with('modal_id', 'newTaskModal-' . request('column_id'));
+                ->with('open_modal', request('column_id'))
+                ->with('modal_column_colour', "'" . $column->colour . "'");
         } catch (Exception $e) {
             DB::rollBack();
+            $column = Column::find(request('column_id'));
             return redirect()->back()
                 ->withErrors(['creation_error' => 'An error occurred while creating the task'])
                 ->withInput()
-                ->with('modal_id', 'newTaskModal-' . request('column_id'));
+                ->with('open_modal', request('column_id'))
+                ->with('modal_column_colour', "'" . $column->colour . "'");
         }
     }
 

@@ -83,10 +83,19 @@
         <!-- Action Buttons -->
         <div class="flex gap-2">
             @if (auth()->check() && auth()->user()->can('editTask', $task))
-                 <button type="button" 
-                        class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
-                        @click="open = true">
-                    Edit
+                <button type="button" 
+                    class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
+                    data-task={{ '@json([
+                            "id" => $task->id,
+                            "column_id" => $task->column_id,
+                            "column_name" => $column->name,
+                            "column_colour" => $column->colour,
+                            "text" => $task->text,
+                            "order" => $task->order,
+                            "tags" => $task->tags->pluck("id")->toArray()
+                        ])' }}
+                    @click="openEditTask(JSON.parse($el.dataset.task))">
+                Edit
                 </button>
             @endif
 
@@ -130,52 +139,6 @@
                 </form>
             @endif
         </div>
-
-        <!-- Edit Modal -->
-        <form action="{{ route('tasks.update', $task->id) }}" method="POST">
-            @csrf
-            @method('PATCH')
-
-            <!-- Modal overlay -->
-            <div x-show="open"
-                x-transition.opacity
-                x-cloak
-                @click.self="open = false"
-                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-
-                <!-- Modal card (like task card) -->
-                <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-2 border border-gray-200"
-                    style="background-color: {{ $column->colour }};">
-                    
-                    <!-- Header -->
-                    <div class="flex justify-between items-center border-b px-4 py-2">
-                        <h3 class="text-lg font-bold text-gray-800">Edit Task</h3>
-                        <button type="button" class="text-gray-500 hover:text-gray-800" @click="open = false">&times;</button>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="px-4 py-4">
-                        @include('tasks.form', ['task' => $task])
-                        <input type="hidden" name="task_id" value="{{ $task->id }}">
-                    </div>
-
-                    <!-- Footer -->
-                    <div class="flex justify-end gap-2 border-t px-4 py-2">
-                        <button type="button" 
-                                class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
-                                @click="open = false">
-                            Cancel
-                        </button>
-                        <button type="submit" 
-                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                            Update Task
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </form>
 
     </div>
 </div>

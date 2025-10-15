@@ -11,14 +11,14 @@ class TaskService
     {
         $columnId = $requestData['column_id'];
         $rules = $this->getValidationRules($columnId);
-        $requestData += [("user_id"  . $columnId) => auth()->id()];
+        $requestData += [("user_id") => auth()->id()];
         return Validator::make($requestData, $rules);
     }
 
     public function updateValidator($requestData, $task)
     {
         $rules = $this->getValidationRules($task->id, $task);
-        $requestData += [("user_id"  . $task->id) => auth()->id()];
+        $requestData += [("user_id") => auth()->id()];
         return Validator::make($requestData, $rules);
     }
 
@@ -43,11 +43,11 @@ class TaskService
         }
 
         $rules = [
-            'text' . $id => ['required', 'max:255'],
-            'order' . $id => ['required', 'numeric', 'min:0', 'max:100'],
+            'text' => ['required', 'max:255'],
+            'order' => ['required', 'numeric', 'min:0', 'max:100'],
             $columnEntry => ['required', 'exists:columns,id'],
-            'user_id' . $id => $userValidation,
-            'tags' . $id => ['exists:tags,id']
+            'user_id' => $userValidation,
+            'tags' => ['exists:tags,id']
         ];
 
         return $rules;
