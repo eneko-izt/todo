@@ -15,7 +15,7 @@
                 <!-- Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                        {{ __('E-Mail Address') }}
+                        {{ __('e-mail') }}
                     </label>
                     <input id="email" type="email" 
                         name="email" 

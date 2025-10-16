@@ -38,7 +38,7 @@
                 </div>
             @else
                 @if ($task->user->id != auth()->user()->id)
-                    <h3 class="text-xs font-semibold mb-1">Owner</h3>
+                    <h3 class="text-xs font-semibold mb-1">{{ __('Owner') }}</h3>
                     <div class="flex flex-wrap gap-1">
                         <div class="flex items-center gap-1 bg-gray-100 px-1 py-0 rounded shadow-sm">
                             <span class="bg-gray-400 text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-semibold leading-none">
@@ -54,7 +54,7 @@
         <!-- File Upload Section -->
         <div class="mb-2">
             @if (auth()->check() && auth()->user()->can('uploadFile', $task))
-                <h3 class="text-xs font-semibold mb-1">Files</h3>
+                <h3 class="text-xs font-semibold mb-1">{{ __('Files') }}</h3>
 
                 <div class="flex flex-wrap gap-1 mb-2">
                     @foreach ($task->files as $file)

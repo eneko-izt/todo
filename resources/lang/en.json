@@ -6,7 +6,6 @@
     "Please confirm password before continuing.": "Please confirm password before continuing.",
     "Forgot Your Password?": "Forgot Your Password?",
     "Reset Password": "Reset Password",
-    "E-Mail Address": "E-Mail Address",
     "Send Password Reset Link": "Send Password Reset Link",
     "Remember Me": "Remember Me",
     "Register": "Register",
@@ -61,7 +60,7 @@
     "Are you sure you want to delete this task?": "Are you sure you want to delete this task?",
     "Save": "Save",
     "Edit Task": "Edit Task",
-    "E-Mail": "E-Mail",
+    "e-mail": "e-mail",
     "Language": "Language",
     "Roles": "Roles",
     "New Column": "New Column",
@@ -91,5 +90,8 @@
     "+ Task": "+ Task",
     "Update Task": "Update Task",
     "Task Shared": "Task Shared",
-    "You do not have permission to update this task." : "You do not have permission to update this task."
+    "You do not have permission to update this task." : "You do not have permission to update this task.",
+    "No Roles" : "No Roles",
+    "Files" : "Files",
+    "Owner" : "Owner"
 }

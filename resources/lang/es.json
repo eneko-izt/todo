@@ -6,7 +6,6 @@
     "Please confirm password before continuing.": "Por favor confirma tu contraseña antes de continuar.",
     "Forgot Your Password?": "¿Olvidaste tu contraseña?",
     "Reset Password": "Restablecer contraseña",
-    "E-Mail Address": "Dirección de correo electrónico",
     "Send Password Reset Link": "Enviar enlace para restablecer la contraseña",
     "Remember Me": "Recordarme",
     "Register": "Registrarse",
@@ -61,7 +60,7 @@
     "Are you sure you want to delete this task?": "¿Estás seguro de que deseas eliminar esta tarea?",
     "Save": "Guardar",
     "Edit Task": "Editar tarea",
-    "E-Mail": "Correo electrónico",
+    "e-mail": "Correo electrónico",
     "Language": "Idioma",
     "Roles": "Funciones",
     "New Column": "Nueva columna",
@@ -91,5 +90,8 @@
     "+ Task": "+ Tarea",
     "Update Task": "Actualizar tarea",
     "Task Shared": "Tarea compartida",
-    "You do not have permission to update this task." : "No tienes permiso para actualizar esta tarea."
+    "You do not have permission to update this task." : "No tienes permiso para actualizar esta tarea.",
+    "No Roles" : "Sin Funciones",
+    "Files" : "Archivos",
+    "Owner" : "Dueño"
 }

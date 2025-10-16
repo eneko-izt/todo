@@ -4,13 +4,18 @@ namespace App\Classes;
 
 class Languages
 {
+    public const BASQUE = 'eu';
+    public const ENGLISH = 'en';
+    public const SPANISH = 'es';
+    public const FRENCH = 'fr';
+
     public static function getAll()
     {
         return [
-            'eu' => 'Euskera',
-            'en' => 'English',
-            'es' => 'Spanish',
-            'fr' => 'French',
+            self::BASQUE => 'Euskera',
+            self::ENGLISH => 'English',
+            self::SPANISH => 'Spanish',
+            self::FRENCH => 'French',
         ];
     }
 }

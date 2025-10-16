@@ -13,12 +13,12 @@
     <table id="myTable" class="min-w-full text-sm" role="grid">
         <thead class="bg-gray-100 text-left text-gray-700">
             <tr>
-                <th class="px-4 py-2 font-semibold w-1/5">Name</th>
-                <th class="px-4 py-2 font-semibold w-1/5">Email</th>
-                <th class="px-4 py-2 font-semibold w-1/5">Language</th>
-                <th class="px-4 py-2 font-semibold w-1/10">Active</th>
-                <th class="px-4 py-2 font-semibold w-1/5">Roles</th>
-                <th class="px-4 py-2 font-semibold w-1/10 text-right">Actions</th>
+                <th class="px-4 py-2 font-semibold w-1/5">{{ __('Name') }}</th>
+                <th class="px-4 py-2 font-semibold w-1/5">{{ __('e-mail') }}</th>
+                <th class="px-4 py-2 font-semibold w-1/5">{{ __('Language') }}</th>
+                <th class="px-4 py-2 font-semibold w-1/10">{{ __('Active') }}</th>
+                <th class="px-4 py-2 font-semibold w-1/5">{{ __('Roles') }}</th>
+                <th class="px-4 py-2 font-semibold w-1/10 text-right">{{ __('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -27,12 +27,12 @@
                     <td class="px-4 py-2">{{ $user->name }}</td>
                     <td class="px-4 py-2">{{ $user->email }}</td>
                     <td class="px-4 py-2">{{ $user->language }}</td>
-                    <td class="px-4 py-2">{{ $user->active ? 'Yes' : 'No' }}</td>
+                    <td class="px-4 py-2">{{ $user->active ? __('Yes') : __('No') }}</td>
                     <td class="px-4 py-2">
                         @forelse ($user->roles as $role)
                             @if (!$loop->first)/@endif{{ $role->name }}
                         @empty
-                            <span class="text-gray-400">No roles</span>
+                            <span class="text-gray-400">{{ __('No roles') }}</span>
                         @endforelse
                     </td>
                     <td class="px-4 py-2 text-right">
