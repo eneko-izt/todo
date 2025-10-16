@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class UserService
 {
-    public function validateUser($id = null)
+    public function validateUser($requestData, $id = null)
     {
         // Build the validation rules dynamically
         $rules = [
@@ -30,7 +30,7 @@ class UserService
         }
 
         // Make the validator instance
-        $validator = Validator::make(request()->all(), $rules);
+        $validator = Validator::make($requestData, $rules);
 
         // Validate or throw
         if ($validator->fails()) {
@@ -39,18 +39,5 @@ class UserService
         }
 
         return $validator->validated();
-    }
-
-    public function fillUser($user)
-    {
-        $user->name = request('name');
-        $user->email = request('email');
-        $user->active = request('active') == 'on' ? 1 : 0;
-
-        if (request()->filled('password')) {
-            $user->password = bcrypt(request('password'));
-        }
-
-        return $user;
     }
 }
