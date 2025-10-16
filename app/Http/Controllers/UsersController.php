@@ -55,10 +55,10 @@ class UsersController extends Controller
 
     public function store()
     {
-        $this->userService->validateUser();
+        $this->userService->validateUser(request()->all());
 
-        $user = new \App\User();
-        $user = $this->userService->fillUser($user);
+        $user = new User();
+        $user = $this->fillUser($user);
         $user->save();
 
         $roles = request('roles', []);
@@ -85,10 +85,10 @@ class UsersController extends Controller
 
     public function update($id)
     {
-        $this->userService->validateUser($id);
+        $this->userService->validateUser(request()->all(), $id);
 
         $user = \App\User::findOrFail($id);
-        $user = $this->userService->fillUser($user);
+        $user = $this->fillUser($user);
         $user->save();
 
         $roles = request('roles', []);
@@ -112,5 +112,18 @@ class UsersController extends Controller
         }
 
         return redirect(route("users.index"));
+    }
+
+    private function fillUser($user)
+    {
+        $user->name = request('name');
+        $user->email = request('email');
+        $user->active = request('active') == 'on' ? 1 : 0;
+
+        if (request()->filled('password')) {
+            $user->password = bcrypt(request('password'));
+        }
+
+        return $user;
     }
 }
