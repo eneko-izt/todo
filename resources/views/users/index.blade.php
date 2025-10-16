@@ -18,7 +18,7 @@
                 <th class="px-4 py-2 font-semibold w-1/5">{{ __('Language') }}</th>
                 <th class="px-4 py-2 font-semibold w-1/10">{{ __('Active') }}</th>
                 <th class="px-4 py-2 font-semibold w-1/5">{{ __('Roles') }}</th>
-                <th class="px-4 py-2 font-semibold w-1/10 text-right">{{ __('Actions') }}</th>
+                <th class="px-4 py-2 font-semibold w-1/10 text-right"></th>
             </tr>
         </thead>
         <tbody>

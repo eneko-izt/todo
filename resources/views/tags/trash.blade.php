@@ -16,7 +16,7 @@
                 <th class="px-4 py-2 font-semibold">{{ __('Tag') }}</th>
                 <th class="px-4 py-2 font-semibold">{{ __('Colour') }}</th>
                 <th class="px-4 py-2 font-semibold">{{ __('Active') }}</th>
-                <th class="px-4 py-2 font-semibold text-right">{{ __('Actions') }}</th>
+                <th class="px-4 py-2 font-semibold text-right"></th>
             </tr>
         </thead>
         <tbody>
