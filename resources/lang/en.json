@@ -90,5 +90,6 @@
     "Thanks,": "Thanks,",
     "+ Task": "+ Task",
     "Update Task": "Update Task",
-    "Task Shared": "Task Shared"
+    "Task Shared": "Task Shared",
+    "You do not have permission to update this task." : "You do not have permission to update this task."
 }

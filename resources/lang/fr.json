@@ -90,5 +90,6 @@
     "Thanks,": "Merci,",
     "+ Task": "+ Tâche",
     "Update Task": "Mettre à jour la tâche",
-    "Task Shared": "Tâche partagée"
+    "Task Shared": "Tâche partagée",
+    "You do not have permission to update this task." : "Vous n’ pas la permission de mettre à jour cette tâche."
 }
