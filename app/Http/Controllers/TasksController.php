@@ -64,20 +64,14 @@ class TasksController extends Controller
             return redirect(route("home"));
 
         } catch (ValidationException $e) {
-            $column = Column::find(request('column_id'));
             return redirect()->back()
                 ->withErrors($e->validator)
-                ->withInput()
-                ->with('open_modal', request('column_id'))
-                ->with('modal_column_colour', "'" . $column->colour . "'");
+                ->withInput();
         } catch (Exception $e) {
             DB::rollBack();
-            $column = Column::find(request('column_id'));
             return redirect()->back()
                 ->withErrors(['creation_error' => 'An error occurred while creating the task'])
-                ->withInput()
-                ->with('open_modal', request('column_id'))
-                ->with('modal_column_colour', "'" . $column->colour . "'");
+                ->withInput();
         }
     }
 
@@ -102,8 +96,7 @@ class TasksController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
+                ->withInput();
         }
 
         try {
@@ -125,8 +118,7 @@ class TasksController extends Controller
 
             return redirect()->back()
                 ->withErrors(['update_error' => 'An error occurred while updating task ' . $id])
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
+                ->withInput();
         }
 
         return redirect(route("home"));

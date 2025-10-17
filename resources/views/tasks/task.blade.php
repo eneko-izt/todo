@@ -83,18 +83,20 @@
         <!-- Action Buttons -->
         <div class="flex gap-2">
             @if (auth()->check() && auth()->user()->can('editTask', $task))
+                @php
+                $taskData = [
+                    'id' => $task->id,
+                    'column_id' => $task->column_id,
+                    'column_colour' => $column->colour,
+                    'text' => $task->text,
+                    'order' => $task->order,
+                    'tags' => $task->tags->pluck('id')->toArray(),
+                ];
+                @endphp
                 <button type="button" 
                     class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600"
-                    data-task={{ '@json([
-                            "id" => $task->id,
-                            "column_id" => $task->column_id,
-                            "column_name" => $column->name,
-                            "column_colour" => $column->colour,
-                            "text" => $task->text,
-                            "order" => $task->order,
-                            "tags" => $task->tags->pluck("id")->toArray()
-                        ])' }}
-                    @click="openEditTask(JSON.parse($el.dataset.task))">
+                    data-task='@json($taskData)'
+                    @click="$dispatch('edit-task', { task: JSON.parse($el.dataset.task) })">
                 Edit
                 </button>
             @endif

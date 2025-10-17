@@ -3,14 +3,27 @@
 @section('content')
 
     <div x-data="taskModal()" 
-        x-init="
-            @if (old('column_id') || session('open_modal'))
-                openNewTask(
-                    {{ session('open_modal') }},
-                    @json(session('modal_column_colour'))
-                );
+        x-on:edit-task.window="openEditTask($event.detail.task)"
+        x-init='
+            @if ($errors->any())
+                @if(old("task_id"))
+                    // Edit task with old input
+                    openEditTask({
+                        id: {!! json_encode(old("task_id")) !!},
+                        column_id: {!! json_encode(old("column_id")) !!},
+                        column_colour: {!! json_encode(old("column_colour", "#ffffff")) !!},
+                        text: {!! json_encode(old("text")) !!},
+                        order: {!! json_encode(old("order")) !!},
+                        tags: {!! json_encode(old("tags", [])) !!}
+                    });
+                @else
+                    openNewTask(
+                        {{ old("column_id") ?? "null" }},
+                        {!! json_encode(old("column_colour", "#ffffff")) !!},
+                    );
+                @endif
             @endif
-        "
+        '
         x-cloak>
         <div class="flex gap-4 overflow-x-auto px-4">
 
@@ -64,9 +77,9 @@
                     this.taskId = null;
                     this.columnId = columnId;
                     this.columnColour = columnColour;
-                    this.taskText = '';
-                    this.taskOrder = '';
-                    this.taskTags = [];
+                    this.taskText = '{{ old("text", "") }}';
+                    this.taskOrder = '{{ old("order", "") }}';
+                    this.taskTags = @json(old('tags', []));
                     this.open = true;
                 },
 

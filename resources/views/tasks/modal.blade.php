@@ -3,6 +3,7 @@
                 x-transition.opacity
                 x-cloak
                 @click.self="open = false"
+                @keydown.escape.window="open = false"
                 class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             
             {{-- Modal card --}}
@@ -24,10 +25,11 @@
 
                     {{-- Body --}}
                     <template x-if="isEditing">
-                        <input type="hidden" name="_method" value="PUT">
+                        <input type="hidden" name="_method" value="PATCH">
                     </template>
 
-                    <input type="hidden" name="column_id" :value="columnId">
+                    <input type="hidden" name="column_colour" :value="columnColour">
+                    <input type="hidden" name="task_id" x-model="taskId">
 
                     <div class="px-4 py-4">
 
@@ -46,7 +48,7 @@
                                 <label class="text-sm font-medium text-gray-700 mb-1">Text</label>
                                 <textarea name="text" rows="3" maxlength="255"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
-                                    x-model="taskText" required>{{ old("text{$column->id}") }}</textarea>
+                                    x-model="taskText" required></textarea>
                                 @error('text')
                                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                                 @enderror
@@ -56,7 +58,6 @@
                             <div class="flex flex-col">
                                 <label class="text-sm font-medium text-gray-700 mb-1">Order</label>
                                 <input type="number" name="order" min="0" max="100"
-                                    value="{{ old('order') }}"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
                                     x-model="taskOrder" required>
                                 @error('order')
@@ -67,10 +68,11 @@
                             <!-- Column -->
                             <div class="flex flex-col" x-show="isEditing" x-transition>
                                 <label class="text-sm font-medium text-gray-700 mb-1">Column</label>
-                                <select name="column_id_select"
+                                <select name="column_id"
+                                    x-model="columnId"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400">
                                     @foreach ($columns as $column)
-                                        <option value="{{ $column->id }}"></option>
+                                        <option value="{{ $column->id }}">{{ $column->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -80,13 +82,11 @@
                                 <label class="text-sm font-medium text-gray-700 mb-1">Tags</label>
                                 <select name="tags[]" multiple
                                     size="8"
-                                    class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400">
+                                    class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
+                                    x-model="taskTags">
 
                                     @foreach ($tags as $tag)
-                                        <option value="{{ $tag->id }}"
-                                            :selected="taskTags.includes({{ $tag->id }})">{{ $tag->name }}
-                                            {{ $tag->name }}
-                                        </option>
+                                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
