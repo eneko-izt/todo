@@ -9,6 +9,8 @@ class Languages
     public const SPANISH = 'es';
     public const FRENCH = 'fr';
 
+    public const LOCALES = [self::BASQUE, self::ENGLISH, self::SPANISH, self::FRENCH];
+
     public static function getAll()
     {
         return [

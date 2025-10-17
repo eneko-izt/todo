@@ -80,12 +80,12 @@ class LanguageTest extends TestCase
 
     public function localeProvider(): array
     {
-        $locales = \App\Classes\Languages::getAll();
+        $locales = Languages::LOCALES;
 
         $provider = [];
-        foreach ($locales as $key => $name) {
+        foreach ($locales as $locale) {
             // Use the key (locale code) as both the dataset name and the parameter
-            $provider[$key] = [$key];
+            $provider[$locale] = [$locale];
         }
 
         return $provider;
