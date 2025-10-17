@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\Languages;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -21,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('language')->default(Languages::BASQUE);
             $table->timestamps();
         });
     }

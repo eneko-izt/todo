@@ -21,7 +21,7 @@ class UserModelTest extends TestCase
     {
         $user = new User();
 
-        $columnNames = ['name', 'active', 'email', 'password'];
+        $columnNames = ['name', 'active', 'email', 'password', 'language'];
 
         $arraysAreEqual = empty(array_diff($columnNames, $user->getFillable()))
             && empty(array_diff($user->getFillable(), $columnNames));

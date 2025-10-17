@@ -29,7 +29,7 @@ class TaskService
         if ($task != null) {
             $extraUserValidation = function ($attribute, $value, $fail) use ($task) {
                 if ($task->user_id != $value) {
-                    $fail('You do not have permission to update this task.');
+                    $fail(__('You do not have permission to update this task.'));
                 }
             };
 

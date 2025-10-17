@@ -142,7 +142,7 @@ class TasksController extends Controller
             catch (Exception $e) {
                 DB::rollBack();
                 return redirect()->back()
-                    ->withErrors(['email' => 'An error occurred while sharing task ' . $taskId . ' with user ' . $user->name])
+                    ->withErrors(['email' => __('An error occurred while sharing the task.')])
                     ->withInput();
             }
         }
