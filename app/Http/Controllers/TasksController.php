@@ -70,7 +70,7 @@ class TasksController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()
-                ->withErrors(['creation_error' => 'An error occurred while creating the task'])
+                ->withErrors(['db_error' => 'An error occurred while creating the task'])
                 ->withInput();
         }
     }
@@ -102,13 +102,13 @@ class TasksController extends Controller
         try {
             DB::beginTransaction();
             // update task
-            $task->text = request('text' . $id);
-            $task->order = request('order' . $id);
-            $task->column_id = request('column_id' . $id);
+            $task->text = request('text');
+            $task->order = request('order');
+            $task->column_id = request('column_id');
             $task->save();
 
             // update tags
-            $tags = request('tags' . $id, []);
+            $tags = request('tags', []);
             $task->tags()->sync($tags);
 
             DB::commit();
@@ -117,7 +117,7 @@ class TasksController extends Controller
             DB::rollBack();
 
             return redirect()->back()
-                ->withErrors(['update_error' => 'An error occurred while updating task ' . $id])
+                ->withErrors(['db_error' => 'An error occurred while updating task ' . $id])
                 ->withInput();
         }
 

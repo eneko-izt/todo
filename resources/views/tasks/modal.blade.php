@@ -35,7 +35,7 @@
 
                         <div class="bg-white shadow rounded-xl p-4 space-y-4">
 
-                            @error('creation_error')
+                            @error('db_error')
                                 <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                             @enderror
 
