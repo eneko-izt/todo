@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
+use App\Classes\Languages;
 use App\Http\Services\UserService;
 
 use Illuminate\Support\Facades\Validator;
@@ -42,15 +43,16 @@ class UsersController extends Controller
 
     public function create()
     {
-        $title = 'New user';
-        $button = 'Create';
+        $title = __('New User');
+        $button = __('Create');
         $policy = 'createUser';
         $route = route('users.store');
         $routeMethod = 'POST';
         $user = new User();
         $roles = Role::all();
+        $languages = Languages::getAll();
 
-        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles'));
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles', 'languages'));
     }
 
     public function store()
@@ -72,15 +74,16 @@ class UsersController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit user';
-        $button = 'Save';
+        $title = __('Edit User');
+        $button = __('Save');
         $policy = 'editUser';
         $route = route('users.update', $id);
         $routeMethod = 'PATCH';
         $user = User::findOrFail($id);
         $roles = Role::all();
+        $languages = Languages::getAll();
 
-        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles'));
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles', 'languages'));
     }
 
     public function update($id)
@@ -119,7 +122,8 @@ class UsersController extends Controller
         $user->name = request('name');
         $user->email = request('email');
         $user->active = request('active') == 'on' ? 1 : 0;
-
+        $user->language = request('language');
+        
         if (request()->filled('password')) {
             $user->password = bcrypt(request('password'));
         }

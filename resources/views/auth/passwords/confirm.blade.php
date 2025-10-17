@@ -14,7 +14,7 @@
             <!-- Card Body -->
             <div class="p-6">
                 <p class="mb-4 text-sm text-gray-600">
-                    {{ __('Please confirm your password before continuing.') }}
+                    {{ __('Please confirm password before continuing.') }}
                 </p>
 
                 <form method="POST" action="{{ route('password.confirm') }}">

@@ -119,7 +119,7 @@ class TasksController extends Controller
             DB::rollBack();
 
             return redirect()->back()
-                ->withErrors(['update_error' => 'An error occurred while updating task ' . $id])
+                ->withErrors(['update_error' => __('An error occurred while updating the task.')])
                 ->withInput()
                 ->with('modal_id', 'staticBackdrop-' . $task->id);
         }
@@ -145,7 +145,7 @@ class TasksController extends Controller
             catch (Exception $e) {
                 DB::rollBack();
                 return redirect()->back()
-                    ->withErrors(['email' => 'An error occurred while sharing task ' . $taskId . ' with user ' . $user->name])
+                    ->withErrors(['email' => __('An error occurred while sharing the task.')])
                     ->withInput();
             }
         }

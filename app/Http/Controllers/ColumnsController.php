@@ -37,8 +37,8 @@ class ColumnsController extends Controller
 
     public function create()
     {
-        $title = 'New column';
-        $button = 'Create';
+        $title = __('New Column');
+        $button = __('Create');
         $policy = 'createColumn';
         $route = route('columns.store');
         $routeMethod = 'POST';
@@ -57,8 +57,8 @@ class ColumnsController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit column';
-        $button = 'Save';
+        $title = __('Edit Column');
+        $button = __('Save');
         $policy = 'editColumn';
         $route = route('columns.update', $id);
         $routeMethod = 'PATCH';

@@ -16,7 +16,7 @@
 
         <!-- Name -->
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Name') }}</label>
             <input type="text" name="name" id="name"
                    value="{{ old('name', $column->name ?? '') }}"
                    maxlength="255" required
@@ -29,7 +29,7 @@
 
         <!-- Colour -->
         <div>
-            <label for="colour" class="block text-sm font-medium text-gray-700">Colour</label>
+            <label for="colour" class="block text-sm font-medium text-gray-700">{{ __('Colour') }}</label>
             <input type="text" name="colour" id="colour"
                    value="{{ old('colour', $column->colour ?? '') }}"
                    maxlength="10" required
@@ -49,7 +49,7 @@
                    @elseif (old('active') == 'on' && $column->exists) checked
                    @elseif ($column->exists && $column->active && old('active') == null && $errors->isEmpty()) checked
                    @elseif ($column->exists && old('active') == 'on') checked @endif>
-            <label for="active" class="ml-2 text-sm text-gray-700">Active</label>
+            <label for="active" class="ml-2 text-sm text-gray-700">{{ __('Active') }}</label>
         </div>
 
         <!-- Submit -->

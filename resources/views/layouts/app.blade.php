@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Task Manager Dashboard</title>
+    <title>{{ __('Task Manager') }}</title>
 
     <!-- Tailwind CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -30,14 +30,14 @@
         <!-- Home -->
         <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
             href="{{ route('welcome') }}">
-            Home
+            {{ __('Home') }}
         </a>
 
         <!-- Dashboard -->
         @if(auth()->check())
             <a class="block w-full bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded flex items-center justify-center mb-2"
                 href="{{ route('home') }}">
-                Dashboard
+                {{ __('Dashboard') }}
             </a>
         @endif
 
@@ -46,7 +46,7 @@
             <div x-data="{ open: {{ Str::startsWith($currentRoute, 'columns.') ? 'true' : 'false' }} }" class="mb-2">
                 <button @click="open = !open"
                     class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
-                    <span>Columns</span>
+                    <span>{{ __('Columns') }}</span>
                     <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
                         fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -55,18 +55,18 @@
                 <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
                     <a href="{{ route('columns.index') }}"
                         class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'columns.index') ? 'bg-gray-600' : '' }}">
-                        List
+                        {{ __('List') }}
                     </a>
                     @can('createColumn', App\Column::class)
                         <a href="{{ route('columns.create') }}"
                             class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'columns.create') ? 'bg-gray-600' : '' }}">
-                            New
+                            {{ __('New') }}
                         </a>
                     @endcan
                     @can('viewColumn', App\Column::class)
                         <a href="{{ route('columns.trash') }}"
                             class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'columns.trash') ? 'bg-gray-600' : '' }}">
-                            Trash
+                            {{ __('Trash') }}
                         </a>
                     @endcan
                 </div>
@@ -78,7 +78,7 @@
             <div x-data="{ open: {{ Str::startsWith($currentRoute, 'tags.') ? 'true' : 'false' }} }" class="mb-2">
                 <button @click="open = !open"
                     class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
-                    <span>Tags</span>
+                    <span>{{ __('Tags') }}</span>
                     <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
                         fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -87,18 +87,18 @@
                 <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
                     <a href="{{ route('tags.index') }}"
                         class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tags.index') ? 'bg-gray-600' : '' }}">
-                        List
+                        {{ __('List') }}
                     </a>
                     @can('createTag', App\Tag::class)
                         <a href="{{ route('tags.create') }}"
                             class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tags.create') ? 'bg-gray-600' : '' }}">
-                            New
+                            {{ __('New') }}
                         </a>
                     @endcan
                     @can('viewTrash', App\Tag::class)
                         <a href="{{ route('tags.trash') }}"
                             class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tags.trash') ? 'bg-gray-600' : '' }}">
-                            Trash
+                            {{ __('Trash') }}
                         </a>
                     @endcan
                 </div>
@@ -110,7 +110,7 @@
             <div x-data="{ open: {{ Str::startsWith($currentRoute, 'users.') ? 'true' : 'false' }} }" class="mb-2">
                 <button @click="open = !open"
                     class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
-                    <span>Users</span>
+                    <span>{{ __('Users') }}</span>
                     <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
                         fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -119,12 +119,12 @@
                 <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
                     <a href="{{ route('users.index') }}"
                         class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'users.index') ? 'bg-gray-600' : '' }}">
-                        List
+                        {{ __('List') }}
                     </a>
                     @can('createUser', App\User::class)
                         <a href="{{ route('users.create') }}"
                             class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'users.create') ? 'bg-gray-600' : '' }}">
-                            New
+                            {{ __('New') }}
                         </a>
                     @endcan
                 </div>
@@ -147,14 +147,13 @@
             <!-- Header -->
             <header class="flex justify-between items-center mb-6 border-b pb-3 pl-14 relative z-40 bg-white">
                 <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-bold text-gray-900">Task Manager</h1>
-                    <span id="currentDate" class="text-gray-600 font-medium"></span>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ __('Task Manager') }}</h1>
+                    <span class="text-gray-600 font-medium">{{ now()->locale(app()->getLocale())->isoFormat('LL') }}</span>
                 </div>
 
                 @error('email')
                     <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
                 @enderror
-
 
                 @auth
                     <div class="relative" x-data="{ open: false }">
@@ -169,7 +168,7 @@
                              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                               class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+                               class="block px-4 py-2 text-gray-700 hover:bg-gray-100">{{ __('Logout') }}</a>
                         </div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
@@ -177,8 +176,8 @@
                     </div>
                 @else
                     <div class="flex items-center space-x-4">
-                        <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Login</a>
-                        <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register</a>
+                        <a href="{{ route('login') }}" class="text-blue-600 hover:underline">{{ __('Login') }}</a>
+                        <a href="{{ route('register') }}" class="text-blue-600 hover:underline">{{ __('Register') }}</a>
                     </div>
                 @endauth
             </header>
@@ -202,18 +201,11 @@
     <!-- App.js -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <!-- Sidebar toggle & current date -->
+    <!-- Sidebar toggle -->
     <script>
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
         const toggleBtn = document.getElementById('toggleSidebar');
-
-        // Display current date
-        const currentDate = document.getElementById("currentDate");
-        if (currentDate) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            currentDate.textContent = new Date().toLocaleDateString(undefined, options);
-        }
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');

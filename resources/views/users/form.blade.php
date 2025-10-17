@@ -10,7 +10,7 @@
 
         <!-- Name -->
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Name') }}</label>
             <input type="text" name="name" id="name"
                    value="{{ old('name', $user->name ?? '') }}"
                    maxlength="255" required
@@ -22,7 +22,7 @@
 
         <!-- Email -->
         <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <label for="email" class="block text-sm font-medium text-gray-700">{{ __('Email') }}</label>
             <input type="email" name="email" id="email" autocomplete="new-email"
                    value="{{ old('email', $user->email ?? '') }}"
                    maxlength="255" required
@@ -32,9 +32,23 @@
             @enderror
         </div>
 
+        <!-- Language -->
+        <div>
+            <label for="language" class="block text-sm font-medium text-gray-700">{{ __('Language') }}</label>
+            <select name="language" id="language"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('language') border-red-500 text-red-600 @enderror">
+                @foreach ($languages as $code => $name)
+                    <option value="{{ $code }}" @if (old('language', $user->language ?? '') == $code) selected @endif>{{ $name }}</option>
+                @endforeach
+            </select>
+            @error('language')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
         <!-- Password -->
         <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <label for="password" class="block text-sm font-medium text-gray-700">{{ __('Password') }}</label>
             <input type="password" name="password" id="password" autocomplete="new-password"
                    maxlength="255" @if ($routeMethod == 'POST') required @endif
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('password') border-red-500 text-red-600 @enderror">
@@ -45,7 +59,7 @@
 
         <!-- Password Confirmation -->
         <div>
-            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Password Confirmation</label>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">{{ __('Password Confirmation') }}</label>
             <input type="password" name="password_confirmation" id="password_confirmation"
                    maxlength="255"
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('password_confirmation') border-red-500 text-red-600 @enderror">
@@ -63,12 +77,12 @@
                    @elseif (old('active') == 'on' && $user->exists) checked
                    @elseif ($user->exists && $user->active && old('active') == null && $errors->isEmpty()) checked
                    @elseif ($user->exists && old('active') == 'on') checked @endif>
-            <label for="active" class="ml-2 text-sm text-gray-700">Active</label>
+            <label for="active" class="ml-2 text-sm text-gray-700">{{ __('Active') }}</label>
         </div>
 
         <!-- Roles -->
         <div>
-            <label for="roles" class="block text-sm font-medium text-gray-700 mb-1">Roles</label>
+            <label for="roles" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Roles') }}</label>
             <select name="roles[]" id="roles" multiple
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 @error('roles') border-red-500 text-red-600 @enderror">
                 @foreach ($roles as $role)

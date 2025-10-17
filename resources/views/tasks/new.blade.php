@@ -6,7 +6,7 @@
 
     <!-- Text -->
     <div class="flex flex-col">
-        <label for="text{{ $column->id }}" class="text-sm font-medium text-gray-700 mb-1">Text:</label>
+        <label for="text{{ $column->id }}" class="text-sm font-medium text-gray-700 mb-1">{{ __('Text') }}</label>
         <textarea name="text{{ $column->id }}" id="text{{ $column->id }}" rows="3" maxlength="255"
             class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400 @error('text' . $column->id) border-red-500 @enderror"
             required>{{ old("text{$column->id}") }}</textarea>
@@ -17,7 +17,7 @@
 
     <!-- Order -->
     <div class="flex flex-col">
-        <label for="order{{ $column->id }}" class="text-sm font-medium text-gray-700 mb-1">Order:</label>
+        <label for="order{{ $column->id }}" class="text-sm font-medium text-gray-700 mb-1">{{ __('Order') }}</label>
         <input type="number" name="order{{ $column->id }}" id="order{{ $column->id }}" min="0" max="100"
             value="{{ old('order' . $column->id) }}"
             class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400 @error('order' . $column->id) border-red-500 @enderror"
@@ -29,7 +29,7 @@
 
     <!-- Tags -->
     <div class="flex flex-col">
-        <label for="tags{{ $column->id }}[]" class="text-sm font-medium text-gray-700 mb-1">Tags:</label>
+        <label for="tags{{ $column->id }}[]" class="text-sm font-medium text-gray-700 mb-1">{{ __('Tags') }}:</label>
         <select name="tags{{ $column->id }}[]" id="tags{{ $column->id }}[]" multiple
             size="8"
             class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400">
