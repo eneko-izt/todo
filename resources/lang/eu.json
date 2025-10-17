@@ -92,5 +92,9 @@
     "You do not have permission to update this task." : "Ez duzu baimenik ataza hau eguneratzeko.",
     "No Roles" : "Rolik ez",
     "Files" : "Artxiboak",
-    "Owner" : "Jabea"
+    "Owner" : "Jabea",
+    "Basque" : "Euskera",
+    "English" : "Ingelera",
+    "Spanish" : "Gaztelera",
+    "French" : "Frantsesa"
 }

@@ -12,10 +12,10 @@ class Languages
     public static function getAll()
     {
         return [
-            self::BASQUE => 'Euskera',
-            self::ENGLISH => 'English',
-            self::SPANISH => 'Spanish',
-            self::FRENCH => 'French',
+            self::BASQUE => __('Basque'),
+            self::ENGLISH => __('English'),
+            self::SPANISH => __('Spanish'),
+            self::FRENCH => __('French'),
         ];
     }
 }

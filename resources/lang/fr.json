@@ -92,5 +92,9 @@
     "You do not have permission to update this task." : "Vous n’ pas la permission de mettre à jour cette tâche.",
     "No Roles" : "Sans Roles",
     "Files" : "Fichiers",
-    "Owner" : "Propriétaire"
+    "Owner" : "Propriétaire",
+    "Basque": "Basque",
+    "English": "Anglais",
+    "Spanish": "Espagnol",
+    "French": "Français"
 }

@@ -92,5 +92,9 @@
     "You do not have permission to update this task." : "You do not have permission to update this task.",
     "No Roles" : "No Roles",
     "Files" : "Files",
-    "Owner" : "Owner"
+    "Owner" : "Owner",
+    "Basque" : "Basque",
+    "English" : "English",
+    "Spanish" : "Spanish",
+    "French" : "French"
 }
