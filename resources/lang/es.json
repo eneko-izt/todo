@@ -96,5 +96,9 @@
     "Basque" : "Euskera",
     "English" : "Inglés",
     "Spanish" : "Español",
-    "French" : "Frances"
+    "French" : "Frances",
+    "Tasks" : "Tareas",
+    "All Tasks": "Todas las Tareas",
+    "Task": "Tarea",
+    "Shared with": "Compartida con"
 }

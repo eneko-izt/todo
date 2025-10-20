@@ -163,4 +163,14 @@ class TasksController extends Controller
 
         return redirect(route("home"));
     }
+
+    public function index()
+    {
+        $this->authorize('viewAllTasks', Task::class);
+
+        $tasks = Task::with(['user', 'column', 'tags', 'sharingUsers'])->active()->orderBy('created_at', 'desc')->get();
+        $users = User::orderBy('name')->get();
+
+        return view('tasks.index', compact('tasks', 'users'));
+    }
 }

@@ -96,5 +96,9 @@
     "Basque" : "Basque",
     "English" : "English",
     "Spanish" : "Spanish",
-    "French" : "French"
+    "French" : "French",
+    "Tasks" : "Tasks",
+    "All Tasks": "All tasks",
+    "Task": "Task",
+    "Shared with": "Shared with"
 }
