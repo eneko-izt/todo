@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use App\User;
-use App\Column;
 use Exception;
 
 use App\Mail\TaskSharedMail;
@@ -70,7 +69,7 @@ class TasksController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()
-                ->withErrors(['db_error' => 'An error occurred while creating the task'])
+                ->withErrors(['db_error' => __('An error occurred while creating the task.')])
                 ->withInput();
         }
     }
@@ -117,7 +116,7 @@ class TasksController extends Controller
             DB::rollBack();
 
             return redirect()->back()
-                ->withErrors(['db_error' => 'An error occurred while updating task ' . $id])
+                ->withErrors(['db_error' => __('An error occurred while updating the task.')])
                 ->withInput();
         }
 

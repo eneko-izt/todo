@@ -12,7 +12,10 @@
             >
                 {{-- Header --}}
                 <div class="flex justify-between items-center border-b px-4 py-2">
-                    <h3 class="text-lg font-bold text-gray-800" x-text="isEditing ? 'Edit Task' : 'New Task'"></h3>
+                    <h3 
+                        class="text-lg font-bold text-gray-800" 
+                        x-text="isEditing ? '{{ __('Edit Task') }}' : '{{ __('New Task') }}'">
+                    </h3>
                     <button type="button"
                             class="text-gray-500 hover:text-gray-800"
                             @click="open = false">
@@ -45,7 +48,7 @@
 
                             <!-- Text -->
                             <div class="flex flex-col">
-                                <label class="text-sm font-medium text-gray-700 mb-1">Text</label>
+                                <label class="text-sm font-medium text-gray-700 mb-1">{{ __('Text') }}</label>
                                 <textarea name="text" rows="3" maxlength="255"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
                                     x-model="taskText" required></textarea>
@@ -56,7 +59,7 @@
 
                             <!-- Order -->
                             <div class="flex flex-col">
-                                <label class="text-sm font-medium text-gray-700 mb-1">Order</label>
+                                <label class="text-sm font-medium text-gray-700 mb-1">{{ __('Order') }}</label>
                                 <input type="number" name="order" min="0" max="100"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
                                     x-model="taskOrder" required>
@@ -67,7 +70,7 @@
 
                             <!-- Column -->
                             <div class="flex flex-col" x-show="isEditing" x-transition>
-                                <label class="text-sm font-medium text-gray-700 mb-1">Column</label>
+                                <label class="text-sm font-medium text-gray-700 mb-1">{{ __('Column') }}</label>
                                 <select name="column_id"
                                     x-model="columnId"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400">
@@ -79,7 +82,7 @@
 
                             <!-- Tags -->
                             <div class="flex flex-col">
-                                <label class="text-sm font-medium text-gray-700 mb-1">Tags</label>
+                                <label class="text-sm font-medium text-gray-700 mb-1">{{ __('Tags') }}</label>
                                 <select name="tags[]" multiple
                                     size="8"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
@@ -100,11 +103,11 @@
                         <button type="button"
                                 class="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
                                 @click="open = false">
-                            Cancel
+                            {{ __('Cancel') }}
                         </button>
                         <button type="submit"
                                 class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                            <span x-text="isEditing ? 'Update Task' : 'Create Task'"></span>
+                            {{ __('Save') }}
                         </button>
                     </div>
 

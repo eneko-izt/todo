@@ -9,20 +9,19 @@ class TaskService
 
     public function createValidator($requestData)
     {
-        $columnId = $requestData['column_id'];
-        $rules = $this->getValidationRules($columnId);
-        $requestData += [("user_id") => auth()->id()];
+        $rules = $this->getValidationRules();
+        $requestData += ["user_id" => auth()->id()];
         return Validator::make($requestData, $rules);
     }
 
     public function updateValidator($requestData, $task)
     {
-        $rules = $this->getValidationRules($task->id, $task);
-        $requestData += [("user_id") => auth()->id()];
+        $rules = $this->getValidationRules($task);
+        $requestData += ["user_id" => auth()->id()];
         return Validator::make($requestData, $rules);
     }
 
-    private function getValidationRules($id, $task = null)
+    private function getValidationRules($task = null)
     {
         $userValidation = ['required', 'exists:users,id'];
 

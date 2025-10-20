@@ -38,7 +38,7 @@
                         <h2 class="font-bold">{{ $column->name }}</h2>
                         <button class="bg-blue-500 text-white text-sm px-2 py-1 rounded"
                                 @click="openNewTask({{ $column->id }}, '{{ $column->colour }}')">
-                            + Task
+                            {{ __('+ Task') }}
                         </button>
                     </div>
 
