@@ -55,7 +55,7 @@ class TasksController extends Controller
 
             $task = Task::create($attributes);
 
-            $tags = request('tags' . $attributes['column_id'], []);
+            $tags = request('tags', []);
             $task->tags()->attach($tags);
 
             DB::commit();
