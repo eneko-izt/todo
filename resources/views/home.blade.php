@@ -22,6 +22,20 @@
                         {!! json_encode(old("column_colour", "#ffffff")) !!},
                     );
                 @endif
+                errors = {
+                    @if($errors->has("db_error"))
+                        db_error: {!! json_encode($errors->first("db_error")) !!},
+                    @endif
+                    @if($errors->has("user_id"))
+                        user_id: {!! json_encode($errors->first("user_id")) !!},
+                    @endif
+                    @if($errors->has("text"))
+                        text: {!! json_encode($errors->first("text")) !!},
+                    @endif
+                    @if($errors->has("order"))
+                        order: {!! json_encode($errors->first("order")) !!},
+                    @endif
+                };
             @endif
         '
         x-cloak>
@@ -71,6 +85,7 @@
                 taskText: '',
                 taskOrder: '',
                 taskTags: [],
+                errors: {},
 
                 openNewTask(columnId, columnColour) {
                     this.isEditing = false;
@@ -80,6 +95,7 @@
                     this.taskText = '{{ old("text", "") }}';
                     this.taskOrder = '{{ old("order", "") }}';
                     this.taskTags = @json(old('tags', []));
+                    this.errors = {};
                     this.open = true;
                 },
 
@@ -91,6 +107,7 @@
                     this.taskText = task.text;
                     this.taskOrder = task.order;
                     this.taskTags = task.tags;
+                    this.errors = {};
                     this.open = true;
                 }
             }

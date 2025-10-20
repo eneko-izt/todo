@@ -38,13 +38,13 @@
 
                         <div class="bg-white shadow rounded-xl p-4 space-y-4">
 
-                            @error('db_error')
-                                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
-                            @enderror
+                            <div x-show="errors.db_error">
+                                <p class="help is-danger" style="color:#d8000c" x-text="errors.db_error"></p>
+                            </div>
 
-                            @error('user_id')
-                                <p class="help is-danger" style="color:#d8000c">{{ $message }}</p>
-                            @enderror
+                            <div x-show="errors.user_id">
+                                <p class="help is-danger" style="color:#d8000c" x-text="errors.user_id"></p>
+                            </div>
 
                             <!-- Text -->
                             <div class="flex flex-col">
@@ -52,9 +52,9 @@
                                 <textarea name="text" rows="3" maxlength="255"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
                                     x-model="taskText" required></textarea>
-                                @error('text')
-                                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                                @enderror
+                                <div x-show="errors.text">
+                                    <p class="text-xs text-red-600 mt-1" style="color:#d8000c" x-text="errors.text"></p>
+                                </div>
                             </div>
 
                             <!-- Order -->
@@ -63,9 +63,9 @@
                                 <input type="number" name="order" min="0" max="100"
                                     class="border rounded p-2 text-sm focus:ring-1 focus:ring-blue-400"
                                     x-model="taskOrder" required>
-                                @error('order')
-                                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                                @enderror
+                                <div x-show="errors.order">
+                                    <p class="text-xs text-red-600 mt-1" style="color:#d8000c" x-text="errors.order"></p>
+                                </div>
                             </div>
 
                             <!-- Column -->

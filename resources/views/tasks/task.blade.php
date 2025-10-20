@@ -87,7 +87,7 @@
 
                     <!-- Custom choose button -->
                     <label for="file{{ $task->id }}"
-                        class="bg-gray-200 px-3 py-1 rounded text-sm hover:bg-gray-300 cursor-pointer inline-block text-center">
+                        class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-600 flex justify-center items-center">
                         {{ __('Choose File') }}
                     </label>
 
@@ -118,6 +118,7 @@
                     'text' => $task->text,
                     'order' => $task->order,
                     'tags' => $task->tags->pluck('id')->toArray(),
+                    'error' => null,
                 ];
                 @endphp
                 <button type="button" 
