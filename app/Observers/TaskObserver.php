@@ -29,6 +29,11 @@ class TaskObserver
     public function updated(Task $task)
     {
         if ($task->wasChanged('active') || (!$task->wasChanged('active') && $task->active)) {
+            if ($task->wasChanged('column_id')) {
+                // Clear cache for old column
+                $originalColumnId = $task->getOriginal('column_id');
+                app(CacheService::class)->clearTaskCacheWhenTaskCrudChange($task, $originalColumnId);
+            }
             app(CacheService::class)->clearTaskCacheWhenTaskCrudChange($task);
         }
     }

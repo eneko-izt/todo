@@ -49,14 +49,14 @@ class TasksController extends Controller
             $attributes['active'] = 1;
             $attributes['user_id'] = auth()->id();
             $attributes['column_id'] = request('column_id');
-            $attributes['order'] = request('order' . $attributes['column_id'], 0);
-            $attributes['text'] = request('text' . $attributes['column_id']);
+            $attributes['order'] = request('order', 0);
+            $attributes['text'] = request('text');
 
             DB::beginTransaction();
 
             $task = Task::create($attributes);
 
-            $tags = request('tags' . $attributes['column_id'], []);
+            $tags = request('tags', []);
             $task->tags()->attach($tags);
 
             DB::commit();
@@ -66,14 +66,12 @@ class TasksController extends Controller
         } catch (ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->validator)
-                ->withInput()
-                ->with('modal_id', 'newTaskModal-' . request('column_id'));
+                ->withInput();
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()
-                ->withErrors(['creation_error' => 'An error occurred while creating the task'])
-                ->withInput()
-                ->with('modal_id', 'newTaskModal-' . request('column_id'));
+                ->withErrors(['db_error' => __('An error occurred while creating the task.')])
+                ->withInput();
         }
     }
 
@@ -98,20 +96,19 @@ class TasksController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
+                ->withInput();
         }
 
         try {
             DB::beginTransaction();
             // update task
-            $task->text = request('text' . $id);
-            $task->order = request('order' . $id);
-            $task->column_id = request('column_id' . $id);
+            $task->text = request('text');
+            $task->order = request('order');
+            $task->column_id = request('column_id');
             $task->save();
 
             // update tags
-            $tags = request('tags' . $id, []);
+            $tags = request('tags', []);
             $task->tags()->sync($tags);
 
             DB::commit();
@@ -120,9 +117,8 @@ class TasksController extends Controller
             DB::rollBack();
 
             return redirect()->back()
-                ->withErrors(['update_error' => __('An error occurred while updating the task.')])
-                ->withInput()
-                ->with('modal_id', 'staticBackdrop-' . $task->id);
+                ->withErrors(['db_error' => __('An error occurred while updating the task.')])
+                ->withInput();
         }
 
         return redirect(route("home"));

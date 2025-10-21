@@ -49,9 +49,9 @@ class TaskCRUDTest extends TestCase
     public function test_User_Can_Update_Their_Own_Task()
     {
         $response = $this->actingAs($this->userOwner)->patch(route('tasks.update', ['id' => $this->task->id]), [
-            'text' . $this->task->id => 'Updated Task',
-            'order' . $this->task->id => 1,
-            'column_id' . $this->task->id => $this->column->id
+            'text' => 'Updated Task',
+            'order' => 1,
+            'column_id' => $this->column->id
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
@@ -63,9 +63,9 @@ class TaskCRUDTest extends TestCase
     public function test_User_Not_Owner_Cannot_Update_Task()
     {
         $response = $this->actingAs($this->userNotOwner)->patch(route('tasks.update', ['id' => $this->task->id]), [
-            'text' . $this->task->id => 'Updated Task',
-            'order' . $this->task->id => 1,
-            'column_id' . $this->task->id => $this->column->id
+            'text' => 'Updated Task',
+            'order' => 1,
+            'column_id' => $this->column->id
         ]);
         $response->assertStatus(403);
     }
@@ -192,9 +192,9 @@ class TaskCRUDTest extends TestCase
 
         $response = $this->actingAs($this->userOwner)->post(route('tasks.store'), [
             'column_id' => $this->column->id,
-            'order' . $this->column->id => 1,
-            'text' . $this->column->id => 'test_Cannot_Create_Task_With_Invalid_Tags',
-            'tags' . $this->column->id => [$tag->id]
+            'order' => 1,
+            'text' => 'test_Cannot_Create_Task_With_Invalid_Tags',
+            'tags' => [$tag->id]
         ]);
 
         $response->assertStatus(302);
@@ -211,9 +211,9 @@ class TaskCRUDTest extends TestCase
 
         $response = $this->actingAs($this->userOwner)->post(route('tasks.store'), [
             'column_id' => $this->column->id,
-            'order' . $this->column->id => 1,
-            'text' . $this->column->id => 'test_Cannot_Create_Task_With_Invalid_Tags',
-            'tags' . $this->column->id => [$tag->id, $tag->id + 1]
+            'order' => 1,
+            'text' => 'test_Cannot_Create_Task_With_Invalid_Tags',
+            'tags' => [$tag->id, $tag->id + 1]
         ]);
 
         $response->assertStatus(302);
