@@ -35,7 +35,7 @@ Route::post('/tasks/upload/{id}', 'FileController@store')->name('tasks.upload');
 Route::get('/tasks/download/{id}', 'FileController@download')->name('tasks.download');
 
 Route::get('/tasks/all', 'TasksController@index')->name('tasks.index')->middleware('can:viewAllTasks, App\Task');
-Route::get('/api/tasks', 'TasksController@getAllTasks')->name('api.alltasks');
+Route::get('/api/tasks', 'TasksController@getAllTasks')->name('api.alltasks')->middleware('can:viewAllTasks, App\Task');
 
 /*
 |--------------------------------------------------------------------------
