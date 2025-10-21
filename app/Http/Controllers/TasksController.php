@@ -11,6 +11,7 @@ use App\Http\Services\TaskService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
@@ -167,10 +168,87 @@ class TasksController extends Controller
     public function index()
     {
         $this->authorize('viewAllTasks', Task::class);
+        return view('tasks.index');
+    }
 
-        $tasks = Task::with(['user', 'column', 'tags', 'sharingUsers'])->active()->orderBy('created_at', 'desc')->get();
-        $users = User::orderBy('name')->get();
+    public function getAllTasks(Request $request)
+    {
+        $this->authorize('viewAllTasks', Task::class);
 
-        return view('tasks.index', compact('tasks', 'users'));
+        // Only columns that can be safely ordered
+        $columns = ['text', 'user_name', 'column_name'];
+
+        // Base query with joins for ordering related columns
+        $query = Task::with(['tags', 'sharingUsers'])
+            ->leftJoin('users', 'tasks.user_id', '=', 'users.id')
+            ->leftJoin('columns', 'tasks.column_id', '=', 'columns.id')
+            ->select('tasks.*')  // important to avoid ambiguity
+            ->where('tasks.active', 1);
+
+        // Searching
+        if ($search = $request->input('search.value')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('tasks.text', 'like', "%{$search}%")
+                ->orWhere('users.name', 'like', "%{$search}%")
+                ->orWhere('columns.name', 'like', "%{$search}%")
+                ->orWhereHas('sharingUsers', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('tags', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Count before filtering
+        $recordsTotal = Task::active()->count();
+        $recordsFiltered = $query->count();
+
+        // Ordering
+        if ($order = $request->input('order.0')) {
+            $columnIndex = $order['column'];
+            $direction = $order['dir'];
+
+            // Map columnIndex to actual column
+            switch ($columnIndex) {
+                case 0: // column
+                    $query->orderBy('columns.name', $direction);
+                    break;
+                case 1: // text
+                    $query->orderBy('tasks.text', $direction);
+                    break;
+                case 2: // owner
+                    $query->orderBy('users.name', $direction);
+                    break;
+                default:
+                    $query->orderBy('users.name', 'asc');
+            }
+        } else {
+            $query->orderBy('users.name', 'asc');
+        }
+
+        // Pagination
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $tasks = $query->skip($start)->take($length)->get();
+
+        // Format Data for DataTables
+        $data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'text' => $task->text,
+                'owner' => $task->user ? $task->user->name : null,
+                'column' => $task->column ? $task->column->name : null,
+                'tags' => $task->tags->pluck('name')->join(', '),
+                'sharingUsers' => $task->sharingUsers->pluck('name')->join(', '),
+            ];
+        });
+
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ]);
     }
 }
