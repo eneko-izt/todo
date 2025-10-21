@@ -40,13 +40,13 @@ class CacheService
         Cache::forget('active_tags');
     }
 
-    public function clearTaskCacheWhenTaskCrudChange($task)
+    public function clearTaskCacheWhenTaskCrudChange($task, $oldColumnId = null)
     {
         $task->refresh();
+        $columnId = $oldColumnId ?? $task->column_id;
         $users = array($task->user_id, ...$task->sharingUsers->pluck('id')->toArray());
-        $column = $task->column;
         foreach ($users as $userId) {
-            Cache::forget("user_{$userId}_column_{$column->id}_viewable_tasks");
+            Cache::forget("user_{$userId}_column_{$columnId}_viewable_tasks");
         }
     }
 
