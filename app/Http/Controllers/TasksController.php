@@ -171,8 +171,13 @@ class TasksController extends Controller
     {
         $this->authorize('viewAllTasks', Task::class);
 
-        // Only columns that can be safely ordered
-        $columns = ['column_name', 'text', 'user_name'];
+        // Only columns that can be safely ordered.
+        // Keys refer to the index of the column in the datatable
+        $orderableColumns = [
+            0 => 'columns.name',
+            1 => 'tasks.text',
+            3 => 'users.name',
+        ];
 
         // Base query with joins for ordering related columns
         $query = Task::with(['tags', 'sharingUsers'])
@@ -205,17 +210,8 @@ class TasksController extends Controller
             $columnIndex = $order['column'];
             $direction = $order['dir'];
 
-            // Map columnIndex to actual column
-            switch ($columnIndex) {
-                case 0: // column
-                    $query->orderBy('columns.name', $direction);
-                    break;
-                case 1: // text
-                    $query->orderBy('tasks.text', $direction);
-                    break;
-                case 3: // owner
-                    $query->orderBy('users.name', $direction);
-                    break;
+            if (isset($orderableColumns[$columnIndex])) {
+                $query->orderBy($orderableColumns[$columnIndex], $direction);
             }
         }
 
