@@ -42,6 +42,26 @@
             </a>
         @endif
 
+        <!-- TasksAdmin -->
+        @can('viewAllTasks', App\Task::class)
+            <div x-data="{ open: {{ Str::startsWith($currentRoute, 'tasks.') ? 'true' : 'false' }} }" class="mb-2">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center bg-gray-700 hover:bg-gray-600 py-2 px-3 rounded">
+                    <span>{{ __('Tasks') }}</span>
+                    <svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform duration-200"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div x-show="open" x-transition class="mt-1 ml-3 flex flex-col space-y-1">
+                    <a href="{{ route('tasks.index') }}"
+                        class="px-3 py-1 text-sm hover:bg-gray-600 rounded {{ Str::endsWith($currentRoute, 'tasks.index') ? 'bg-gray-600' : '' }}">
+                        {{ __('List') }}
+                    </a>
+                </div>
+            </div>
+        @endif
+
         <!-- Columns -->
         @can('viewColumn', App\Column::class)
             <div x-data="{ open: {{ Str::startsWith($currentRoute, 'columns.') ? 'true' : 'false' }} }" class="mb-2">

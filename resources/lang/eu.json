@@ -96,5 +96,9 @@
     "Basque" : "Euskera",
     "English" : "Ingelera",
     "Spanish" : "Gaztelera",
-    "French" : "Frantsesa"
+    "French" : "Frantsesa",
+    "Tasks" : "Atazak",
+    "All Tasks": "Ataza Guztiak",
+    "Task": "Ataza",
+    "Shared with": "Partekatua"
 }
