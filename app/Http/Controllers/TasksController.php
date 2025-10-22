@@ -172,7 +172,7 @@ class TasksController extends Controller
         $this->authorize('viewAllTasks', Task::class);
 
         // Only columns that can be safely ordered
-        $columns = ['text', 'user_name', 'column_name'];
+        $columns = ['column_name', 'text', 'user_name'];
 
         // Base query with joins for ordering related columns
         $query = Task::with(['tags', 'sharingUsers'])
@@ -213,14 +213,10 @@ class TasksController extends Controller
                 case 1: // text
                     $query->orderBy('tasks.text', $direction);
                     break;
-                case 2: // owner
+                case 3: // owner
                     $query->orderBy('users.name', $direction);
                     break;
-                default:
-                    $query->orderBy('users.name', 'asc');
             }
-        } else {
-            $query->orderBy('users.name', 'asc');
         }
 
         // Pagination

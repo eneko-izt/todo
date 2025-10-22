@@ -28,9 +28,9 @@
             columns: [
                 { data: 'column', name: 'column' },
                 { data: 'text', name: 'text' },
-                { data: 'tags', name: 'tags' },
+                { data: 'tags', name: 'tags', orderable: false },
                 { data: 'owner', name: 'owner' },
-                { data: 'sharingUsers', name: 'sharingUsers' },
+                { data: 'sharingUsers', name: 'sharingUsers', orderable: false },
             ],
             language: {
                 paginate: {
