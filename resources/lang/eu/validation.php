@@ -177,5 +177,7 @@ return [
         'message'               => 'mezua',
         'available'             => 'erabilgarria',
         'size'                  => 'neurria',
+        'text'                  => 'testua',
+        'order'                 => 'ordena',
     ],
 ];

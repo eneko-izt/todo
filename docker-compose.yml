@@ -85,7 +85,7 @@ services:
       composer config -g cache-dir /composerCache
       && composer install --no-progress
       && php artisan migrate:fresh
-      && php artisan izt:basics-migrations-seeds
+      && php artisan db:seed
       && chown -R ${DC_UID:-1000}:${DC_GID:-1000} vendor"
     depends_on:
       - db
@@ -106,7 +106,6 @@ services:
     command: bash -c "
       composer config -g cache-dir /composerCache
       && composer install --no-progress
-      && php artisan izt:basics-migrations-seeds
       && chown -R ${DC_UID:-1000}:${DC_GID:-1000} vendor"
     depends_on:
       - db

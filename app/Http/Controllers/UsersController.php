@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Role;
+use App\User;
+use App\Classes\Languages;
+use App\Http\Services\UserService;
+
+use Illuminate\Support\Facades\Validator;
+
+
+class UsersController extends Controller
+{
+    /**
+     * The user service instance.
+     *
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->middleware('auth');
+        $this->userService = $userService;
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        $users = User::with('roles')->get();
+        return view('users.index', compact('users'));
+    }
+
+    public function create()
+    {
+        $title = __('New User');
+        $button = __('Create');
+        $policy = 'createUser';
+        $route = route('users.store');
+        $routeMethod = 'POST';
+        $user = new User();
+        $roles = Role::all();
+        $languages = Languages::getAll();
+
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles', 'languages'));
+    }
+
+    public function store()
+    {
+        $this->userService->validateUser(request()->all());
+
+        $user = new User();
+        $user = $this->fillUser($user);
+        $user->save();
+
+        $roles = request('roles', []);
+
+        if (count($roles) > 0) {
+            $user->roles()->attach($roles);
+        }
+
+        return redirect(route("users.index"));
+    }
+
+    public function edit($id)
+    {
+        $title = __('Edit User');
+        $button = __('Save');
+        $policy = 'editUser';
+        $route = route('users.update', $id);
+        $routeMethod = 'PATCH';
+        $user = User::findOrFail($id);
+        $roles = Role::all();
+        $languages = Languages::getAll();
+
+        return view('users.form', compact('title', 'button', 'policy', 'route', 'routeMethod', 'user', 'roles', 'languages'));
+    }
+
+    public function update($id)
+    {
+        $this->userService->validateUser(request()->all(), $id);
+
+        $user = \App\User::findOrFail($id);
+        $user = $this->fillUser($user);
+        $user->save();
+
+        $roles = request('roles', []);
+
+        foreach ($user->roles as $role) {
+            // If the role is not in the new roles, we mark it as deleted
+            if (!in_array($role->id, $roles)) {
+                $user->roles()->updateExistingPivot($role->id, ['deleted_at' => now()]);
+            }
+        }
+
+        foreach ($roles as $role) {
+            if ($user->rolesWithTrashed()->where('role_user.role_id', $role)->exists()) {
+                // If the role already exists, we just update the deleted_at field
+                $user->roles()->updateExistingPivot($role, ['deleted_at' => null]);
+                continue;
+            } else {
+                // If the role does not exist, we attach it
+                $user->roles()->attach($role);
+            }
+        }
+
+        return redirect(route("users.index"));
+    }
+
+    private function fillUser($user)
+    {
+        $user->name = request('name');
+        $user->email = request('email');
+        $user->active = request('active') == 'on' ? 1 : 0;
+        $user->language = request('language');
+        
+        if (request()->filled('password')) {
+            $user->password = bcrypt(request('password'));
+        }
+
+        return $user;
+    }
+}

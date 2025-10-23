@@ -6,8 +6,11 @@
 .env
 .env.backup
 .phpunit.result.cache
+/tests/coverage
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
 /dc-data
+/public/css
+/public/js
